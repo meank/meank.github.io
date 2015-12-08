@@ -49,25 +49,16 @@
 
 
 
-<meta name="description" content="接着上一篇的内容
-model averaging我们将多个模型融合的结果作为最后提交的内容
-1）Test-time augmentation对于每一个单独的模型，我们使用不同的augmentation得到不同的预测结果，然后将这些结果融合，这对performence的提升有很大的帮助。我们将Test-time augmentation简写为TTA。
-开始的时候，我们使用人工创造的仿射变换（affi">
+<meta name="description" content="-Chapter 16: Representation Learning什么是好的Representation？有很多种可能的答案，这也是一个在以后的研究中还需要进行探索的问题。在本书中，我们给Representation下的定义则是Representation Learning能够使加下来的Learning task变得更加的简单。In an unsupervised learning sett">
 <meta property="og:type" content="article">
-<meta property="og:title" content="kaggle-浮游生物分类比赛一等奖---译文（第三部分）">
-<meta property="og:url" content="http://yoursite.com/2015/12/08/‎Summarize/kaggle-浮游生物分类--译文（三）/index.html">
+<meta property="og:title" content="DeepLearning--Part3--Chapter16:Representation Learning(1)">
+<meta property="og:url" content="http://yoursite.com/2015/12/08/DeepLearning译文/DeepLearningPart3Chapter16RepresentationLearning1/index.html">
 <meta property="og:site_name" content="Meank's Learning Blog">
-<meta property="og:description" content="接着上一篇的内容
-model averaging我们将多个模型融合的结果作为最后提交的内容
-1）Test-time augmentation对于每一个单独的模型，我们使用不同的augmentation得到不同的预测结果，然后将这些结果融合，这对performence的提升有很大的帮助。我们将Test-time augmentation简写为TTA。
-开始的时候，我们使用人工创造的仿射变换（affi">
-<meta property="og:updated_time" content="2015-11-22T05:19:13.000Z">
+<meta property="og:description" content="-Chapter 16: Representation Learning什么是好的Representation？有很多种可能的答案，这也是一个在以后的研究中还需要进行探索的问题。在本书中，我们给Representation下的定义则是Representation Learning能够使加下来的Learning task变得更加的简单。In an unsupervised learning sett">
+<meta property="og:updated_time" content="2015-12-08T08:04:59.899Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="kaggle-浮游生物分类比赛一等奖---译文（第三部分）">
-<meta name="twitter:description" content="接着上一篇的内容
-model averaging我们将多个模型融合的结果作为最后提交的内容
-1）Test-time augmentation对于每一个单独的模型，我们使用不同的augmentation得到不同的预测结果，然后将这些结果融合，这对performence的提升有很大的帮助。我们将Test-time augmentation简写为TTA。
-开始的时候，我们使用人工创造的仿射变换（affi">
+<meta name="twitter:title" content="DeepLearning--Part3--Chapter16:Representation Learning(1)">
+<meta name="twitter:description" content="-Chapter 16: Representation Learning什么是好的Representation？有很多种可能的答案，这也是一个在以后的研究中还需要进行探索的问题。在本书中，我们给Representation下的定义则是Representation Learning能够使加下来的Learning task变得更加的简单。In an unsupervised learning sett">
 
 
 
@@ -79,7 +70,7 @@ model averaging我们将多个模型融合的结果作为最后提交的内容
   };
 </script>
 
-  <title> kaggle-浮游生物分类比赛一等奖---译文（第三部分） | Meank's Learning Blog </title>
+  <title> DeepLearning--Part3--Chapter16:Representation Learning(1) | Meank's Learning Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -199,7 +190,7 @@ model averaging我们将多个模型融合的结果作为最后提交的内容
             
             
               
-                kaggle-浮游生物分类比赛一等奖---译文（第三部分）
+                DeepLearning--Part3--Chapter16:Representation Learning(1)
               
             
           </h1>
@@ -208,7 +199,7 @@ model averaging我们将多个模型融合的结果作为最后提交的内容
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2015-12-08T13:08:03+08:00" content="2015-12-08">
+            <time itemprop="dateCreated" datetime="2015-12-08T16:04:59+08:00" content="2015-12-08">
               2015-12-08
             </time>
           </span>
@@ -218,8 +209,8 @@ model averaging我们将多个模型融合的结果作为最后提交的内容
               &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Summarize/" itemprop="url" rel="index">
-                    <span itemprop="name">Summarize</span>
+                  <a href="/categories/Deep-Learning-译文/" itemprop="url" rel="index">
+                    <span itemprop="name">Deep Learning 译文</span>
                   </a>
                 </span>
 
@@ -247,48 +238,14 @@ model averaging我们将多个模型融合的结果作为最后提交的内容
       
 
       
-        <span itemprop="articleBody"><p>接着<a href="http://meank.github.io/2015/10/09/%E2%80%8ESummarize/keggle-%E6%B5%AE%E6%B8%B8%E7%94%9F%E7%89%A9%E5%88%86%E7%B1%BB--%E8%AF%91%E6%96%87%EF%BC%88%E7%AC%AC%E4%BA%8C%E9%83%A8%E5%88%86%EF%BC%89/" target="_blank" rel="external">上一篇</a>的内容</p>
-<h2 id="model_averaging"><a href="#model_averaging" class="headerlink" title="model averaging"></a>model averaging</h2><p>我们将多个模型融合的结果作为最后提交的内容</p>
-<h3 id="1_uFF09Test-time_augmentation"><a href="#1_uFF09Test-time_augmentation" class="headerlink" title="1）Test-time augmentation"></a>1）Test-time augmentation</h3><p>对于每一个单独的模型，我们使用不同的augmentation得到不同的预测结果，然后将这些结果融合，这对performence的提升有很大的帮助。我们将Test-time augmentation简写为TTA。</p>
-<p>开始的时候，我们使用人工创造的仿射变换（affine transformations ）数据集应用于每一张图片来进行augmentation，这样比随机的选择参数进行augmentation得到的performence要更好。接下来，我们寻找更好的augmentation的方法，最终确定使用<a href="http://mathworld.wolfram.com/QuasirandomSequence.html" target="_blank" rel="external">quasi-random </a>进行70次转换，采用比训练时更加modest的参数。</p>
-<p>使用TTA得到预测结果花费大约12小时。</p>
-<h3 id="2_uFF09Finding_the_optimal_transformation_instead_of_averaging"><a href="#2_uFF09Finding_the_optimal_transformation_instead_of_averaging" class="headerlink" title="2）Finding the optimal transformation instead of averaging"></a>2）Finding the optimal transformation instead of averaging</h3><p>观察到上述TTA过程相对的提高了performence，我们在想有没有可能在预测的时候继续优化augmentation的参数。这是有可能的，因为仿射变换本身随着参数的不同而不同，也就是说具有可区分性。</p>
-<p>为了做到这一点，我们将仿射变换（affine transformations ）作为网络的layer，这样的话网络在训练的时候，就能通过BP来更新augmentation的参数。但是求导有些复杂。</p>
-<p>我们尝试了几个不同的方法来寻找优化的augmentation：</p>
-<ul>
-<li>优化augmentation的参数来最大化预测结果的置信度</li>
-<li>训练一个卷积网络来预测augmentation的参数，然后传递给另外一个卷积网络使用。</li>
-</ul>
-<p>不幸的是这些方法都没有提升performence，我们在我们提交的结果中没有采用这个方法，但是我们以后会进一步的研究。</p>
-<h3 id="3_uFF09Combining_different_models"><a href="#3_uFF09Combining_different_models" class="headerlink" title="3）Combining different models"></a>3）Combining different models</h3><p>我们总共训练的模型超过300个，所以我们必须从中选择好模型然后进行最终的融合。我们使用validation数据集来选择模型。我们优化模型的参数来减小模型在训练时的loss。</p>
-<p>我们有规律的测试一些top-weights模型融合后的整体perforemence，然后在test数据集上进行预测。最后，大致的找到了融合模型的idea。</p>
-<p>一旦融合模型选择好后，我们将他们均匀融合，或者用validation数据集来优化weighs。两种方法得到的performence不相上下。</p>
-<p>选择要进行融合的模型并不一定是TTA过程中performence表现好的。一些performence很低也可以被选中，因为这些模型得到的预测结果与其他模型差异非常大。一些由于overfitting而performence低的模型也可以用来融合，因为模型的融合可以减小overfitting。</p>
-<h3 id="4_uFF09Bagging"><a href="#4_uFF09Bagging" class="headerlink" title="4）Bagging"></a>4）Bagging</h3><p>为了更好的提升融合模型的performence，我们将其中的某些模型（大部分5个）用由不同的子数据集训练得到的模型代替。</p>
-<h2 id="Miscellany"><a href="#Miscellany" class="headerlink" title="Miscellany"></a>Miscellany</h2><p>下面这些是我们尝试的其他一些方法，不同的方法有不同的提升效果：</p>
-<ol>
-<li>untied biases：提升的performence微乎其微</li>
-<li>在FC层用winner take all nonlinearity （WTA）取代Relus/maxout。</li>
-<li>smooth nonlinearities：用smooth nonlinearities取代LRelu，得到的performence更差。</li>
-<li>specialist models：对于一些难以进行分类的类别，我们使用了额外的模型来训练，使用了包括 <a href="http://arxiv.org/abs/1503.02531" target="_blank" rel="external">knowledge distillation</a>和<a href="http://arxiv.org/abs/1412.6563" target="_blank" rel="external">self-informed neural network structure learning</a> 两种方法，但是都没有得到更好的performence。</li>
-<li>batch normalization: 遗憾的是我们没有获得和<a href="http://arxiv.org/abs/1502.03167" target="_blank" rel="external">Ioffe and Szegedy </a>描述的一样的效果.</li>
-<li>使用 <a href="http://arxiv.org/abs/1412.6630" target="_blank" rel="external">FaMe regularization</a> ，效果没有dropout好。</li>
-<li>使用 <a href="http://arxiv.org/abs/1412.6596" target="_blank" rel="external">Reed</a>描述的 Semi-supervised learning 没有得到更好的performence，也没有降低overfitting。</li>
-</ol>
-<p>下面是一些我们测试能防止overfitting的一些方法（有遗漏）：</p>
-<ul>
-<li>dropout（传统以及变种）</li>
-<li>好的 data augmentation</li>
-<li>合适的模型结构（深度以及每一层的宽度都会影响overfitting）</li>
-<li>weight-decay</li>
-<li>无监督预训练（unsupervised pre-training）</li>
-<li>cyclic pooling（特别是其中的 root-mean-square pooling）</li>
-<li>leaky Relu</li>
-<li>pseudo-labeling</li>
-</ul>
-<p>我们记录了比赛期间的准确率。最好的模型在validation上的准确率为82％,top-5准确率超过98％。这使得我们可以用模型作为工具加速人工注释．</p>
-<p><a href="https://github.com/benanne/kaggle-ndsb" target="_blank" rel="external">code</a></p>
-<p><strong>本篇译文系作者原创，转载请先联系作者: 18254275587@163.com</strong></p>
+        <span itemprop="articleBody"><h2 id="Chapter_16_3A_Representation_Learning"><a href="#Chapter_16_3A_Representation_Learning" class="headerlink" title="-Chapter 16: Representation Learning"></a>-Chapter 16: Representation Learning</h2><p>什么是好的Representation？有很多种可能的答案，这也是一个在以后的研究中还需要进行探索的问题。在本书中，我们给Representation下的定义则是Representation Learning能够使加下来的Learning task变得更加的简单。In an unsupervised learning setting, this could mean that the joint distribution of the different elements of the representation (e.g., elements of the representation vector h) is one that is easy to model (e.g., in the extreme, these elements are marginally independent of each other).但这并不够： 一个丢弃的所有信息的Representation（例如给定一个inputx，使Representation <strong>h</strong>=0）很容易建模，但是这对模型无用。因此，我们需要我们学习到的Representation既能够保留住信息的（至少能够保留住在对supervised阶段有益的信息），并且能够使得其他模型能够简单高效的从这些Representation中获取到对其有用，感兴趣的信息。</p>
+<p>在Chapter 1中，我们介绍了Representation的概念，其中有一个idea是一些Representations会比其他的要好一些（例如给图片中的目标或者语音中的音素分类）。正如Chapter 1中讨论的，表明通过优化原始数据映射到Representation的方程的这种系统性的方法，要比handcrafting要好。基于这个动机，Section 6.7讨论了如何学习到输入数据的features，学习到input的features也是现在的前向深度神经网络的一个“副作用”（Chapter 6），特别是对于supervised Learning，通过匹配的（input，target）组合，能够直接获取到提升当前task performance的Representation。</p>
+<p>本书的作者认为以后研究以及工业应用会主要集中在unsupervised learning of representation。</p>
+<p>那么，我们如何从无标签或者少数有标签的数据中挖掘出信息呢？单纯的监督算法在少量的有标签数据上学习容易造成overfit。但另一方面， 人类（或者其他动物）却能够从少量的例子（有标签数据）中学习。 这在于他们先前获取到了足够的知识， 或者依靠直觉， 以及之前的学习经验（这个更符合人类）。 我们能够从无标签数据中发现好的Representation嘛（first four section in this Chapter）？ 我们能把无标签数据和有标签数据结合起来吗（semi-supervised Section 16.3）？ 如何将相同的Representation应用在多个任务中（multi-task Section 7.12）。 What<br>if we have “training tasks” (on which enough labeled examples are available) as well as “test tasks” (not known at the time of learning the representation, and for which only very few labeled examples will be provided)? 如果test task相似， 但是train task不相似(transfer learning， domain adaptation Section 16.2), 又该如何呢？ </p>
+<h3 id="16-1__uFF1A_Greedy_Layerwise_Unsupervised_Pre-Training"><a href="#16-1__uFF1A_Greedy_Layerwise_Unsupervised_Pre-Training" class="headerlink" title="16.1 ： Greedy Layerwise Unsupervised Pre-Training"></a>16.1 ： Greedy Layerwise Unsupervised Pre-Training</h3><p>无监督学习在深度神经网络的复兴中扮演了一个很重要的历史角色， 它使得训练深度监督网络成为可能。 我们把这类流程成为unsupervised pre-training（无监督预训练）， 或者更确切的说， 贪心逐层无监督预训练， 这是这个Section的主要讨论内容。</p>
+<p>一开始深度监督网络的成功秘诀依赖于这部分提及到的一些单层的Representation Learning算法： 比如Autoencoder， RBM。 每一层都通过无监督算法进行预训练， 将上一层的输出作为输入的新Representation， 其概率分布是相似的。</p>
+<p>基于无监督训练的贪心逐层训练标准很好地克服了训练深度监督网络的困难， 这种方法可以追溯到Neocognitron(Fukushima, 1975)， 贪心逐层训练被发现可以找到训练深度监督网络的好的初始点， 在学术上， 运用这种策略打破了SVM算法的benchmark。</p>
+<p>被称为逐层是因为训练时一次只会训练一层， 训练第k层时，前面所有层的Weights会保持不变。 被称为无监督是因为每一层都是使用无监督Representation算法进行训练。 被称为贪心是因为不同层的training objective是不一样的，不同于global training objective，而global training objective会造成局部最优。  </p>
 </span>
       
     </div>
@@ -300,17 +257,13 @@ model averaging我们将多个模型融合的结果作为最后提交的内容
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/12/08/UFLDL/DeepLearningbyAndrewNg---stackedautoencoder/" rel="next" title="UFLDL-Stacked Autoencoder">
-                <i class="fa fa-chevron-left"></i> UFLDL-Stacked Autoencoder
+              <a href="/2015/12/08/闲谈/Github部署Hexo/" rel="next" title="Github部署Hexo">
+                <i class="fa fa-chevron-left"></i> Github部署Hexo
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2015/12/08/‎Summarize/DeepLearning资料汇总/" rel="prev" title="深度学习资料汇总">
-                深度学习资料汇总 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -424,7 +377,7 @@ model averaging我们将多个模型融合的结果作为最后提交的内容
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#model_averaging"><span class="nav-number">1.</span> <span class="nav-text">model averaging</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1_uFF09Test-time_augmentation"><span class="nav-number">1.1.</span> <span class="nav-text">1）Test-time augmentation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2_uFF09Finding_the_optimal_transformation_instead_of_averaging"><span class="nav-number">1.2.</span> <span class="nav-text">2）Finding the optimal transformation instead of averaging</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3_uFF09Combining_different_models"><span class="nav-number">1.3.</span> <span class="nav-text">3）Combining different models</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4_uFF09Bagging"><span class="nav-number">1.4.</span> <span class="nav-text">4）Bagging</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Miscellany"><span class="nav-number">2.</span> <span class="nav-text">Miscellany</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Chapter_16_3A_Representation_Learning"><span class="nav-number">1.</span> <span class="nav-text">-Chapter 16: Representation Learning</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#16-1__uFF1A_Greedy_Layerwise_Unsupervised_Pre-Training"><span class="nav-number">1.1.</span> <span class="nav-text">16.1 ： Greedy Layerwise Unsupervised Pre-Training</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
