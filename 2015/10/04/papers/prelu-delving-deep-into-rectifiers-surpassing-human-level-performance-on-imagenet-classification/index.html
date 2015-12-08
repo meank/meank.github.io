@@ -1,0 +1,659 @@
+<!doctype html>
+<html class="theme-next   use-motion ">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+
+
+
+
+<meta name="description" content="微软研究院2015的一篇论文。
+1.概要：PRelu其实是Relu的增强版，PRelu使得模型在ImageNet2012上的结果提高到4.94%，超过普通人的正确率；PRelu需要像更新权重weights一样使用BP更新一个额外的参数，但是相较于weights的数量来说，PRelu需要更新的参数总数可以忽略不计，所以不会加重overfitting的影响。如果PRelu的参数为0，那其实就是Relu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PRelu--Delving Deep into Rectifiers: Surpassing Human-Level Performance on ImageNet Classification">
+<meta property="og:url" content="http://yoursite.com/2015/10/04/papers/prelu-delving-deep-into-rectifiers-surpassing-human-level-performance-on-imagenet-classification/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="微软研究院2015的一篇论文。
+1.概要：PRelu其实是Relu的增强版，PRelu使得模型在ImageNet2012上的结果提高到4.94%，超过普通人的正确率；PRelu需要像更新权重weights一样使用BP更新一个额外的参数，但是相较于weights的数量来说，PRelu需要更新的参数总数可以忽略不计，所以不会加重overfitting的影响。如果PRelu的参数为0，那其实就是Relu">
+<meta property="og:image" content="http://img.blog.csdn.net/20150928190107016">
+<meta property="og:image" content="http://img.blog.csdn.net/20150928190132211">
+<meta property="og:image" content="http://img.blog.csdn.net/20150928191127468">
+<meta property="og:image" content="http://img.blog.csdn.net/20150928191206609">
+<meta property="og:updated_time" content="2015-11-22T05:23:15.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PRelu--Delving Deep into Rectifiers: Surpassing Human-Level Performance on ImageNet Classification">
+<meta name="twitter:description" content="微软研究院2015的一篇论文。
+1.概要：PRelu其实是Relu的增强版，PRelu使得模型在ImageNet2012上的结果提高到4.94%，超过普通人的正确率；PRelu需要像更新权重weights一样使用BP更新一个额外的参数，但是相较于weights的数量来说，PRelu需要更新的参数总数可以忽略不计，所以不会加重overfitting的影响。如果PRelu的参数为0，那其实就是Relu">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post',
+    motion: true
+  };
+</script>
+
+  <title> PRelu--Delving Deep into Rectifiers: Surpassing Human-Level Performance on ImageNet Classification | Hexo </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Hexo</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                PRelu--Delving Deep into Rectifiers: Surpassing Human-Level Performance on ImageNet Classification
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2015-10-04T19:27:50+08:00" content="2015-10-04">
+              2015-10-04
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分類於
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/papers/" itemprop="url" rel="index">
+                    <span itemprop="name">papers</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>微软研究院2015的一篇论文。</p>
+<h1 id="1-_u6982_u8981_uFF1A"><a href="#1-_u6982_u8981_uFF1A" class="headerlink" title="1.概要："></a>1.概要：</h1><h4 id="PRelu_u5176_u5B9E_u662FRelu_u7684_u589E_u5F3A_u7248_uFF0CPRelu_u4F7F_u5F97_u6A21_u578B_u5728ImageNet2012_u4E0A_u7684_u7ED3_u679C_u63D0_u9AD8_u52304-94_25_uFF0C_u8D85_u8FC7_u666E_u901A_u4EBA_u7684_u6B63_u786E_u7387_uFF1BPRelu_u9700_u8981_u50CF_u66F4_u65B0_u6743_u91CDweights_u4E00_u6837_u4F7F_u7528BP_u66F4_u65B0_u4E00_u4E2A_u989D_u5916_u7684_u53C2_u6570_uFF0C_u4F46_u662F_u76F8_u8F83_u4E8Eweights_u7684_u6570_u91CF_u6765_u8BF4_uFF0CPRelu_u9700_u8981_u66F4_u65B0_u7684_u53C2_u6570_u603B_u6570_u53EF_u4EE5_u5FFD_u7565_u4E0D_u8BA1_uFF0C_u6240_u4EE5_u4E0D_u4F1A_u52A0_u91CDoverfitting_u7684_u5F71_u54CD_u3002"><a href="#PRelu_u5176_u5B9E_u662FRelu_u7684_u589E_u5F3A_u7248_uFF0CPRelu_u4F7F_u5F97_u6A21_u578B_u5728ImageNet2012_u4E0A_u7684_u7ED3_u679C_u63D0_u9AD8_u52304-94_25_uFF0C_u8D85_u8FC7_u666E_u901A_u4EBA_u7684_u6B63_u786E_u7387_uFF1BPRelu_u9700_u8981_u50CF_u66F4_u65B0_u6743_u91CDweights_u4E00_u6837_u4F7F_u7528BP_u66F4_u65B0_u4E00_u4E2A_u989D_u5916_u7684_u53C2_u6570_uFF0C_u4F46_u662F_u76F8_u8F83_u4E8Eweights_u7684_u6570_u91CF_u6765_u8BF4_uFF0CPRelu_u9700_u8981_u66F4_u65B0_u7684_u53C2_u6570_u603B_u6570_u53EF_u4EE5_u5FFD_u7565_u4E0D_u8BA1_uFF0C_u6240_u4EE5_u4E0D_u4F1A_u52A0_u91CDoverfitting_u7684_u5F71_u54CD_u3002" class="headerlink" title="PRelu其实是Relu的增强版，PRelu使得模型在ImageNet2012上的结果提高到4.94%，超过普通人的正确率；PRelu需要像更新权重weights一样使用BP更新一个额外的参数，但是相较于weights的数量来说，PRelu需要更新的参数总数可以忽略不计，所以不会加重overfitting的影响。"></a>PRelu其实是Relu的增强版，PRelu使得模型在ImageNet2012上的结果提高到4.94%，超过普通人的正确率；PRelu需要像更新权重weights一样使用BP更新一个额外的参数，但是相较于weights的数量来说，PRelu需要更新的参数总数可以忽略不计，所以不会加重overfitting的影响。</h4><h4 id="u5982_u679CPRelu_u7684_u53C2_u6570_u4E3A0_uFF0C_u90A3_u5176_u5B9E_u5C31_u662FRelu_uFF1B_u5982_u679CPRelu_u7684_u53C2_u6570_u4E3A_u4E00_u4E2A_u5F88_u5C0F_u7684_u5E38_u6570constant_uFF0C_u6BD4_u59820-01_2C_u90A3_u5176_u5B9E_u5C31_u662FLeaky_Relu_28LRelu_29_u3002"><a href="#u5982_u679CPRelu_u7684_u53C2_u6570_u4E3A0_uFF0C_u90A3_u5176_u5B9E_u5C31_u662FRelu_uFF1B_u5982_u679CPRelu_u7684_u53C2_u6570_u4E3A_u4E00_u4E2A_u5F88_u5C0F_u7684_u5E38_u6570constant_uFF0C_u6BD4_u59820-01_2C_u90A3_u5176_u5B9E_u5C31_u662FLeaky_Relu_28LRelu_29_u3002" class="headerlink" title="如果PRelu的参数为0，那其实就是Relu；如果PRelu的参数为一个很小的常数constant，比如0.01,那其实就是Leaky Relu(LRelu)。"></a>如果PRelu的参数为0，那其实就是Relu；如果PRelu的参数为一个很小的常数constant，比如0.01,那其实就是Leaky Relu(LRelu)。</h4><h4 id="Relu_u4E0EPRelu_u7684_u6BD4_u8F83_uFF1A"><a href="#Relu_u4E0EPRelu_u7684_u6BD4_u8F83_uFF1A" class="headerlink" title="Relu与PRelu的比较："></a>Relu与PRelu的比较：</h4><p><img src="http://img.blog.csdn.net/20150928190107016" alt="这里写图片描述"></p>
+<h4 id="PRelu_u7684_u8868_u8FBE_u5F0F_uFF1A"><a href="#PRelu_u7684_u8868_u8FBE_u5F0F_uFF1A" class="headerlink" title="PRelu的表达式："></a>PRelu的表达式：</h4><p><img src="http://img.blog.csdn.net/20150928190132211" alt="这里写图片描述"></p>
+<h1 id="2-idea_uFF1A"><a href="#2-idea_uFF1A" class="headerlink" title="2.idea："></a>2.idea：</h1><h4 id="1_29_3A__u6BCF_u4E00_u4E2Afeature_map_uFF08CNN_uFF09_u5BF9_u5E94_u7684PRelu_u7684_u7CFB_u6570_u90FD_u53EF_u4EE5_u662F_u4E0D_u540C_u7684_2C_u4E5F_u53EF_u4EE5_u662F_u76F8_u540C_u5C42_u7684PRelu_u7684_u7CFB_u6570_u90FD_u4E00_u6837_uFF0C_u5C42_u95F4_u4E0D_u540C_u3002"><a href="#1_29_3A__u6BCF_u4E00_u4E2Afeature_map_uFF08CNN_uFF09_u5BF9_u5E94_u7684PRelu_u7684_u7CFB_u6570_u90FD_u53EF_u4EE5_u662F_u4E0D_u540C_u7684_2C_u4E5F_u53EF_u4EE5_u662F_u76F8_u540C_u5C42_u7684PRelu_u7684_u7CFB_u6570_u90FD_u4E00_u6837_uFF0C_u5C42_u95F4_u4E0D_u540C_u3002" class="headerlink" title="1): 每一个feature map（CNN）对应的PRelu的系数都可以是不同的,也可以是相同层的PRelu的系数都一样，层间不同。"></a>1): 每一个feature map（CNN）对应的PRelu的系数都可以是不同的,也可以是相同层的PRelu的系数都一样，层间不同。</h4><h4 id="2_29_3A__u4F5C_u8005_u5728_u5B9E_u9A8C_u7684_u65F6_u5019_u90FD_u662F_u5C06_u7CFB_u6570_u521D_u59CB_u5316_u4E3A0-25"><a href="#2_29_3A__u4F5C_u8005_u5728_u5B9E_u9A8C_u7684_u65F6_u5019_u90FD_u662F_u5C06_u7CFB_u6570_u521D_u59CB_u5316_u4E3A0-25" class="headerlink" title="2): 作者在实验的时候都是将系数初始化为0.25"></a>2): 作者在实验的时候都是将系数初始化为0.25</h4><h4 id="3_29_3A__u4F18_u5316_u7684_u65F6_u5019_u4E0D_u4F1A_u5BF9PRelu_u7684_u7CFB_u6570_u8FDB_u884Cregularization_uFF0C_u5426_u5219_u4F1A_u8BA9_u7CFB_u6570_u8D8B_u8FD1_u4E8E0_uFF0C_u57FA_u672C_u76F8_u5F53_u4E8ELRelu_u6216_u8005Relu_u4E86_u3002"><a href="#3_29_3A__u4F18_u5316_u7684_u65F6_u5019_u4E0D_u4F1A_u5BF9PRelu_u7684_u7CFB_u6570_u8FDB_u884Cregularization_uFF0C_u5426_u5219_u4F1A_u8BA9_u7CFB_u6570_u8D8B_u8FD1_u4E8E0_uFF0C_u57FA_u672C_u76F8_u5F53_u4E8ELRelu_u6216_u8005Relu_u4E86_u3002" class="headerlink" title="3): 优化的时候不会对PRelu的系数进行regularization，否则会让系数趋近于0，基本相当于LRelu或者Relu了。"></a>3): 优化的时候不会对PRelu的系数进行regularization，否则会让系数趋近于0，基本相当于LRelu或者Relu了。</h4><h1 id="3-_u6D41_u7A0B_uFF1A"><a href="#3-_u6D41_u7A0B_uFF1A" class="headerlink" title="3.流程："></a>3.流程：</h1><h4 id="PRelu_u7684_u7CFB_u6570_u4E5F_u662F_u5728BP_u7684_u65F6_u5019_u8FDB_u884C_u4F18_u5316_u7684_uFF0C_u4E0Eweights_u7684_u65B9_u5F0F_u4E00_u6837"><a href="#PRelu_u7684_u7CFB_u6570_u4E5F_u662F_u5728BP_u7684_u65F6_u5019_u8FDB_u884C_u4F18_u5316_u7684_uFF0C_u4E0Eweights_u7684_u65B9_u5F0F_u4E00_u6837" class="headerlink" title="PRelu的系数也是在BP的时候进行优化的，与weights的方式一样"></a>PRelu的系数也是在BP的时候进行优化的，与weights的方式一样</h4><h4 id="u76EE_u6807_u51FD_u6570_u5BF9PRelu_u7684_u7CFB_u6570_u6C42_u504F_u5BFC_uFF1A"><a href="#u76EE_u6807_u51FD_u6570_u5BF9PRelu_u7684_u7CFB_u6570_u6C42_u504F_u5BFC_uFF1A" class="headerlink" title="目标函数对PRelu的系数求偏导："></a>目标函数对PRelu的系数求偏导：</h4><p><img src="http://img.blog.csdn.net/20150928191127468" alt="这里写图片描述"></p>
+<h4 id="u4F18_u5316_uFF1A"><a href="#u4F18_u5316_uFF1A" class="headerlink" title="优化："></a>优化：</h4><p><img src="http://img.blog.csdn.net/20150928191206609" alt="这里写图片描述"></p>
+<h1 id="4-_u4EE3_u7801_uFF08keras_uFF09_uFF1A"><a href="#4-_u4EE3_u7801_uFF08keras_uFF09_uFF1A" class="headerlink" title="4.代码（keras）："></a>4.代码（keras）：</h1><pre><code>def __init__(self, input_shape, init=&amp;#039;zero&amp;#039;, weights=None):
+    super(PReLU, self).__init__()
+    self.init = initializations.get(init)
+    self.alphas = self.init(input_shape)
+    self.params = [self.alphas]
+    self.input_shape = input_shape
+
+    if weights is not None:
+        self.set_weights(weights)
+
+def get_output(self, train):
+    X = self.get_input(train)
+    pos = ((X + abs(X)) / 2.0)
+    neg = self.alphas * ((X - abs(X)) / 2.0)
+    return pos + neg
+
+def get_config(self):
+    return {&amp;quot;name&amp;quot;: self.__class__.__name__,
+            &amp;quot;input_shape&amp;quot;: self.input_shape,
+            &amp;quot;init&amp;quot;: self.init.__name__}
+</code></pre><p><strong>本文系作者原创，转载请先联系作者: 18254275587@163.com</strong></p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/10/04/papers/lstm-e4-b8-8egru-e7-9a-84-e4-b8-80-e4-ba-9b-e6-af-94-e8-be-83-e8-ae-ba-e6-96-87-e7-ac-94-e8-ae-b0/" rel="next" title="LSTM与GRU的一些比较--论文笔记">
+                <i class="fa fa-chevron-left"></i> LSTM与GRU的一些比较--论文笔记
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/10/04/papers/network-in-network-e8-ae-ba-e6-96-87-e7-ac-94-e8-ae-b0/" rel="prev" title="Network in Network -- 论文笔记">
+                Network in Network -- 论文笔记 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+        </div>
+
+        
+
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="John Doe" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">John Doe</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-_u6982_u8981_uFF1A"><span class="nav-number">1.</span> <span class="nav-text">1.概要：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#PRelu_u5176_u5B9E_u662FRelu_u7684_u589E_u5F3A_u7248_uFF0CPRelu_u4F7F_u5F97_u6A21_u578B_u5728ImageNet2012_u4E0A_u7684_u7ED3_u679C_u63D0_u9AD8_u52304-94_25_uFF0C_u8D85_u8FC7_u666E_u901A_u4EBA_u7684_u6B63_u786E_u7387_uFF1BPRelu_u9700_u8981_u50CF_u66F4_u65B0_u6743_u91CDweights_u4E00_u6837_u4F7F_u7528BP_u66F4_u65B0_u4E00_u4E2A_u989D_u5916_u7684_u53C2_u6570_uFF0C_u4F46_u662F_u76F8_u8F83_u4E8Eweights_u7684_u6570_u91CF_u6765_u8BF4_uFF0CPRelu_u9700_u8981_u66F4_u65B0_u7684_u53C2_u6570_u603B_u6570_u53EF_u4EE5_u5FFD_u7565_u4E0D_u8BA1_uFF0C_u6240_u4EE5_u4E0D_u4F1A_u52A0_u91CDoverfitting_u7684_u5F71_u54CD_u3002"><span class="nav-number">1.0.0.1.</span> <span class="nav-text">PRelu其实是Relu的增强版，PRelu使得模型在ImageNet2012上的结果提高到4.94%，超过普通人的正确率；PRelu需要像更新权重weights一样使用BP更新一个额外的参数，但是相较于weights的数量来说，PRelu需要更新的参数总数可以忽略不计，所以不会加重overfitting的影响。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u5982_u679CPRelu_u7684_u53C2_u6570_u4E3A0_uFF0C_u90A3_u5176_u5B9E_u5C31_u662FRelu_uFF1B_u5982_u679CPRelu_u7684_u53C2_u6570_u4E3A_u4E00_u4E2A_u5F88_u5C0F_u7684_u5E38_u6570constant_uFF0C_u6BD4_u59820-01_2C_u90A3_u5176_u5B9E_u5C31_u662FLeaky_Relu_28LRelu_29_u3002"><span class="nav-number">1.0.0.2.</span> <span class="nav-text">如果PRelu的参数为0，那其实就是Relu；如果PRelu的参数为一个很小的常数constant，比如0.01,那其实就是Leaky Relu(LRelu)。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Relu_u4E0EPRelu_u7684_u6BD4_u8F83_uFF1A"><span class="nav-number">1.0.0.3.</span> <span class="nav-text">Relu与PRelu的比较：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#PRelu_u7684_u8868_u8FBE_u5F0F_uFF1A"><span class="nav-number">1.0.0.4.</span> <span class="nav-text">PRelu的表达式：</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-idea_uFF1A"><span class="nav-number">2.</span> <span class="nav-text">2.idea：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1_29_3A__u6BCF_u4E00_u4E2Afeature_map_uFF08CNN_uFF09_u5BF9_u5E94_u7684PRelu_u7684_u7CFB_u6570_u90FD_u53EF_u4EE5_u662F_u4E0D_u540C_u7684_2C_u4E5F_u53EF_u4EE5_u662F_u76F8_u540C_u5C42_u7684PRelu_u7684_u7CFB_u6570_u90FD_u4E00_u6837_uFF0C_u5C42_u95F4_u4E0D_u540C_u3002"><span class="nav-number">2.0.0.1.</span> <span class="nav-text">1): 每一个feature map（CNN）对应的PRelu的系数都可以是不同的,也可以是相同层的PRelu的系数都一样，层间不同。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2_29_3A__u4F5C_u8005_u5728_u5B9E_u9A8C_u7684_u65F6_u5019_u90FD_u662F_u5C06_u7CFB_u6570_u521D_u59CB_u5316_u4E3A0-25"><span class="nav-number">2.0.0.2.</span> <span class="nav-text">2): 作者在实验的时候都是将系数初始化为0.25</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3_29_3A__u4F18_u5316_u7684_u65F6_u5019_u4E0D_u4F1A_u5BF9PRelu_u7684_u7CFB_u6570_u8FDB_u884Cregularization_uFF0C_u5426_u5219_u4F1A_u8BA9_u7CFB_u6570_u8D8B_u8FD1_u4E8E0_uFF0C_u57FA_u672C_u76F8_u5F53_u4E8ELRelu_u6216_u8005Relu_u4E86_u3002"><span class="nav-number">2.0.0.3.</span> <span class="nav-text">3): 优化的时候不会对PRelu的系数进行regularization，否则会让系数趋近于0，基本相当于LRelu或者Relu了。</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-_u6D41_u7A0B_uFF1A"><span class="nav-number">3.</span> <span class="nav-text">3.流程：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#PRelu_u7684_u7CFB_u6570_u4E5F_u662F_u5728BP_u7684_u65F6_u5019_u8FDB_u884C_u4F18_u5316_u7684_uFF0C_u4E0Eweights_u7684_u65B9_u5F0F_u4E00_u6837"><span class="nav-number">3.0.0.1.</span> <span class="nav-text">PRelu的系数也是在BP的时候进行优化的，与weights的方式一样</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u76EE_u6807_u51FD_u6570_u5BF9PRelu_u7684_u7CFB_u6570_u6C42_u504F_u5BFC_uFF1A"><span class="nav-number">3.0.0.2.</span> <span class="nav-text">目标函数对PRelu的系数求偏导：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u4F18_u5316_uFF1A"><span class="nav-number">3.0.0.3.</span> <span class="nav-text">优化：</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-_u4EE3_u7801_uFF08keras_uFF09_uFF1A"><span class="nav-number">4.</span> <span class="nav-text">4.代码（keras）：</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+    
+    
+
+  
+
+
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
+
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    motionMiddleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+  
+  
+
+  
+  
+
+</body>
+</html>

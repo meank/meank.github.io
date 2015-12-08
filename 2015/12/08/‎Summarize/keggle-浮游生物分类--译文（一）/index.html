@@ -1,0 +1,745 @@
+<!doctype html>
+<html class="theme-next   use-motion ">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+
+
+
+
+<meta name="description" content="原文 ：Classifying plankton with deep neural network
+code：code
+作者在这次的比赛中获得了一等奖，team name是Deep Sea
+概要
+1）介绍
+2）预处理和data augmentation
+3）network 结构
+4）模型训练
+5）非监督和半监督方法
+6）model averaging
+7）汇总（Miscellany）
+8）总结">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kaggle-浮游生物分类比赛一等奖---译文（第一部分）">
+<meta property="og:url" content="http://yoursite.com/2015/12/08/‎Summarize/keggle-浮游生物分类--译文（一）/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="原文 ：Classifying plankton with deep neural network
+code：code
+作者在这次的比赛中获得了一等奖，team name是Deep Sea
+概要
+1）介绍
+2）预处理和data augmentation
+3）network 结构
+4）模型训练
+5）非监督和半监督方法
+6）model averaging
+7）汇总（Miscellany）
+8）总结">
+<meta property="og:image" content="http://i.imgur.com/vq2qDH7.png">
+<meta property="og:image" content="http://i.imgur.com/k6ym7Bo.png">
+<meta property="og:image" content="http://i.imgur.com/Uq7WJDr.png">
+<meta property="og:image" content="http://i.imgur.com/svWgljA.png">
+<meta property="og:updated_time" content="2015-11-22T05:18:12.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="kaggle-浮游生物分类比赛一等奖---译文（第一部分）">
+<meta name="twitter:description" content="原文 ：Classifying plankton with deep neural network
+code：code
+作者在这次的比赛中获得了一等奖，team name是Deep Sea
+概要
+1）介绍
+2）预处理和data augmentation
+3）network 结构
+4）模型训练
+5）非监督和半监督方法
+6）model averaging
+7）汇总（Miscellany）
+8）总结">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post',
+    motion: true
+  };
+</script>
+
+  <title> kaggle-浮游生物分类比赛一等奖---译文（第一部分） | Hexo </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Hexo</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                kaggle-浮游生物分类比赛一等奖---译文（第一部分）
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2015-12-08T13:08:04+08:00" content="2015-12-08">
+              2015-12-08
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分類於
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Summarize/" itemprop="url" rel="index">
+                    <span itemprop="name">Summarize</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>原文 ：<a href="http://benanne.github.io/2015/03/17/plankton.html" target="_blank" rel="external">Classifying plankton with deep neural network</a></p>
+<p>code：<a href="https://github.com/benanne/kaggle-ndsb" target="_blank" rel="external">code</a></p>
+<p>作者在这次的比赛中获得了一等奖，team name是Deep Sea</p>
+<h2 id="u6982_u8981"><a href="#u6982_u8981" class="headerlink" title="概要"></a>概要</h2><ul>
+<li>1）介绍</li>
+<li>2）预处理和data augmentation</li>
+<li>3）network 结构</li>
+<li>4）模型训练</li>
+<li>5）非监督和半监督方法</li>
+<li>6）model averaging</li>
+<li>7）汇总（Miscellany）</li>
+<li>8）总结</li>
+</ul>
+<h2 id="u4ECB_u7ECD"><a href="#u4ECB_u7ECD" class="headerlink" title="介绍"></a>介绍</h2><h3 id="1_uFF09_u8981_u89E3_u51B3_u7684_u95EE_u9898_uFF1A"><a href="#1_uFF09_u8981_u89E3_u51B3_u7684_u95EE_u9898_uFF1A" class="headerlink" title="1）要解决的问题："></a>1）要解决的问题：</h3><p>这个比赛是要对121类的海洋浮游生物的灰度图片进行分类，这些图片由水下摄像机拍摄。科学家用这些图片来判断哪些浮游生物物种会出现在这个区域。这类图片有非常多，在科学家做这些判断之前必须对这些图片进行标注，自动标注则能节省大量的时间。</p>
+<p>比赛用的图片已经通过分割算法进行个体生物的识别与分离，并且进行了切割。最后的图片依各类浮游生物的大小不一，切割后的图片的大小也不一样，有趣的是，图片中的浮游生物得大小和实际的大小一致（与距摄像头的距离无关，可以理解为进行了认为处理）。也就是说，训练集的图片的size的大小是不一样的。</p>
+<p>大赛希望参赛者能够建立一个模型，能够得到121类中每一张图片的概率分布，接着使用log loss进行打分，对应负似然方程（negative log likelihood）以及交叉熵(cross-entropy loss)。</p>
+<p>对于这个比赛，loss 方程有几个有趣的特性：首先，如果你预测一张图片的置信度为1，但是却预测为错误的类，那么loss 方程的值会变得无限大。其次，它又是可区分的，也就是说，可以通过一个基于梯度的方法来求解（比如NN）；并且不需要使用surrogate loss 方程。</p>
+<p>优化loss 方程并不完全等同于优化分类正确率。虽然这两个很明显是相关联的，但是我们观察到，经常出现loss 方程的优化有明显的提升，但是分类正确率却几乎没有什么影响。</p>
+<h3 id="2_uFF09_u89E3_u51B3_u65B9_u6848_uFF1AConVNets_uFF01"><a href="#2_uFF09_u89E3_u51B3_u65B9_u6848_uFF1AConVNets_uFF01" class="headerlink" title="2）解决方案：ConVNets！"></a>2）解决方案：ConVNets！</h3><p>因为ConVNet在一些困难得task总是能够打破以前的记录，所以现在很多的图像分类问题采用的模型都是ConVNet。</p>
+<p>对于这个竞赛来说，数据集过小是一个很大的挑战：共有30000张图片，分为121类，有的类别的图片甚至仅仅只有20张。深度学习普遍被认为需要非常多的数据才能获得好的结果，但是这个观念正在被打破，而我们得到的结果也表明这并不是非却不可。像dropout，weight decay, data augmentation, pre-training, pseudo-labeling和parameter sharing这些防止overfitting方法使得我们能够使用这个数据集训练一个包含27m参数的巨大网络。</p>
+<p>作者也参加了<a href="http://benanne.github.io/2014/04/05/galaxy-zoo.html" target="_blank" rel="external">the Galaxy Challenge</a>比赛。比赛的目标是对星系图片进行分类，在the Galaxy Challenge使用的方法和技巧对于这个比赛同样适用。就像星系的图片一样，绝大部分的浮游生物得图片是 rotation invariant（表明可以对图片进行角度转换，flip等操作）的，利用这个特性可以进行有效的data augmentation。</p>
+<h3 id="3_29_u4F7F_u7528_u7684_u8F6F_u4EF6_u4EE5_u53CA_u786C_u4EF6_u5E73_u53F0_uFF1A"><a href="#3_29_u4F7F_u7528_u7684_u8F6F_u4EF6_u4EE5_u53CA_u786C_u4EF6_u5E73_u53F0_uFF1A" class="headerlink" title="3)使用的软件以及硬件平台："></a>3)使用的软件以及硬件平台：</h3><p>我们使用了 Python, NumPy和Theano，也使用了cuDNN库，我们还使用了PyCUDA实现一些kernels。</p>
+<p>我们使用了Lasagne，一个theano-based的深度学习包。</p>
+<p>我们使用scikit-learn进行预处理和data augmentation，使用ghalton 生成随机数。竞赛中，我们的结果保存在Google Drive spreadsheet，代码托管在github的一个私有项目中。</p>
+<p>使用的GPU：GTX 980, GTX 680 和 Tesla K40 cards.</p>
+<h2 id="u9884_u5904_u7406_u548Cdata_augmentation"><a href="#u9884_u5904_u7406_u548Cdata_augmentation" class="headerlink" title="预处理和data augmentation"></a>预处理和data augmentation</h2><p>数据的预处理方面，我们只做了global zero mean unit variance (ZMUV)：首先计算每一个维度上数据的均值（使用全体数据计算），之后在每一个维度上都减去该均值。下一步便是在数据的每一维度上除以该维度上数据的标准差。此方法用于提升训练时的稳定性，并且加速收敛。</p>
+<p>前面已经提到数据集的图片大小是大小不一的，最小的size是40 <em> 40，而最大的size是400 </em> 400。我们实验了很多种rescale的策略，大多数的情况下，我们将一张图片的最大边设置为固定大小。</p>
+<p>我们也使用了图像矩（image moments），但是并没有提升结果。但是他们作为附加特性（additional features）对分类很有帮助，后面会讨论。</p>
+<h3 id="1_uFF09data_augmentation"><a href="#1_uFF09data_augmentation" class="headerlink" title="1）data augmentation"></a>1）data augmentation</h3><p>我们人工的augment了数据集。我们使用了各种仿射变换(affine transforms)，逐渐的增加augmentation的程度，而我们的模型的overfit程度也随着增加。以下是我们data augmentation时的设置：</p>
+<ul>
+<li><strong>旋转（rotation）</strong>：0度至360度之间随机取值（uniform）</li>
+<li><strong>translation</strong>：-10和10像素之间随机偏移（uniform）</li>
+<li><strong>rescaling</strong>：比例为1/1.6和1.6之间的随机值（log-uniform）</li>
+<li><strong>flipping</strong>: yes or no (bernoulli)</li>
+<li><strong>剪切（shearing）</strong>：-20度至20度之间随机取值（uniform）</li>
+<li><strong>延伸stretching</strong>：比例在1/1.3和1.3之间随机取值（log-uniform）</li>
+</ul>
+<p><img src="http://i.imgur.com/vq2qDH7.png" alt=""></p>
+<p>我们进行的是realtime augmentation，也就是说GPU在进行训练时，CPU进行data augmentation的操作。</p>
+<p>我们在一些点试验了弹性变形(elastic distortions),尽管有减小overfitting的作用，但是这并没有改善结果。在data augmentation的时候，我们将均匀（uniform）采样换成了高斯采样，这也没有改善结果。</p>
+<h2 id="NetWork__u7ED3_u6784"><a href="#NetWork__u7ED3_u6784" class="headerlink" title="NetWork 结构"></a>NetWork 结构</h2><p>OxfordNet包含大量的Convolution layer（with 3 * 3 filter），我们使用与OxfordNet相同的Convolution结构：output feature map的大小 input feature map的大小相等。overlapping pooling使用window size = 3，stride = 2。</p>
+<p>我们最先搭建了一个6层的浅层模型，然后逐渐的增加其层数，结果随着层数的增加变得越来越好。在比赛快结束的时候，我们使用的模型变成了一个16层的深度模型。面临的难题就是在提升的performance和增加的overfitting之间作权衡（译者个人理解：如果数据集涵盖了任务的所有可能性（feature），overfitting也没什么影响。如果是一个小的数据集，涵盖的任务的内容（feature）较少，可能更倾向于shallow模型来获取好的performance。应该和具体的任务和数据及有关，需要权衡。术语上：深度模型会造成overfitting，而浅层模型会降低overfitting，但是也会降低capasity）。</p>
+<p>我们也参考了<a href="http://arxiv.org/abs/1502.01852" target="_blank" rel="external">Delving Deep into Rectifiers: Surpassing Human-Level Performance on ImageNet Classification</a>,在第一，二层使用7*7的filter，但是并没有得到类似的performance。</p>
+<h3 id="1_uFF09Cyclic_pooling"><a href="#1_uFF09Cyclic_pooling" class="headerlink" title="1）Cyclic pooling"></a>1）Cyclic pooling</h3><p>在参加 <a href="http://benanne.github.io/2014/04/05/galaxy-zoo.html" target="_blank" rel="external">Galaxy Challenge</a>的时候，我利用图像的旋转对称特性来共享网络的参数。这里我同样使用了与Galaxy Challenge中相同的Convolution layers作用于相同输入图片的不同版本（比如flip，rotated操作后），然后再将每个版本通过Convolution网络得到的feature representation连接成一个大向量，作为输入传递到dense layer（也就是FC层）。这使得网络使用同一个特征提取器来提取输入图片不同角度时的特征。</p>
+<p>我们在此基础上又进一步：与其简单的将这些feature representation连接成大向量，不如在此基础上，对这个大向量进行pool操作以获得旋转不变性（rotation invariance）。实践中的具体操作：mini-batch中的每一张图片都会出现四次，分别对应于不同的旋转角度；再由并行的网络结果分别提取到feature representation，在最顶层，将这些feature representations连接起来后，进行pool操作。我们称之为cyclic pooling：</p>
+<p><img src="http://i.imgur.com/k6ym7Bo.png" alt=""></p>
+<p>4-way cyclic pooling 能非常高效的实现：旋转 0, 90, 180 和 270 度。</p>
+<p>cyclic pooling也能够减少mini-batch的大小：比如原来data augmentation是offline，需要mini-batch的大小为128（可以理解为32张图片*4个角度），而使用cyclic pooling的realtime augmentation后，mini-batch的大小可以减小为32（32张原始图片）。（感觉这个没什么意义，需要处理的图片还是128张）。</p>
+<p>我们试验了很多的 pool 方程（ before the output layer, between hidden layers），结果发现 root-mean-square pooling 取得了更好的结果。我们也不能解释为什么 root-mean-square pooling能取得更好的结果，我们猜测这根旋转相位不变性有关。</p>
+<p>我们试验了两种8-way cyclic pooling：一种是将input图片每隔45度旋转一次，另一种则是将input图片进行flip后得到flip前后flip后的两张图，然后再分别将两张图每隔90度旋转一次，最后得到八张图片。遗憾的是这两种方法相对于4-way并没有获得更好的performance。</p>
+<h3 id="2_29_u2018Rolling_u2019_feature_maps"><a href="#2_29_u2018Rolling_u2019_feature_maps" class="headerlink" title="2)‘Rolling’ feature maps"></a>2)‘Rolling’ feature maps</h3><p>cyclic pooling提高了我们的结果，但是在此基础上还能做一些工作。一个包含cyclic pooling的ConVNet可以提取一张输入图片四个方向（0,90,180,270）的feature representations，也可以解释为这个ConVNet的filters应用于同一输入图片的四个不同方向。也就是说我们可以将4组feature rmaps连接成大的feature maps，然后通过一些组合方式后，再输入下一层。最终的效果是：cyclic pooling ConVNet相当于包含四倍于其实际含有的filters的数量。</p>
+<p>很容易对feature maps进行组合操作，因为feature maps已经计算好了。我们只需要将feature maps以正确的顺序和方位进行组合就可以。我们称这个操作为roll。</p>
+<p><img src="http://i.imgur.com/Uq7WJDr.png" alt=""></p>
+<p>Roll的操作可以在dense layer或者是Convolution layer后；当在Convolution layer后进行roll操作时，需要适当的旋转feature map（应该是考虑到输入图片不是正方形），以便他们能排成一条直线。</p>
+<p>一开始我们基于theano完成了roll操作代码的编写。由于网络的训练随着roll layer的增加会变得越来越慢，后来我们编写了roll操作和其梯度的cuda kernel。使用PyCUDA将theano代码和自己编写的cuda kernel代码结合起来相对来说更简单一些，不需要编写额外的c代码。</p>
+<p>我们更喜欢在Convolution + pool后进行roll操作，因为pool后的feature map相对更小，能够节约复制粘贴以及重新组合操作的时间。</p>
+<p>需要注意的是，ConVNet可以有cyclic pooling层（without roll），但是不能只有roll而没有cyclic pooling层。因为roll的操作是在cyclic pooling层中对四个不同方向的feature map进行组合的操作（考虑到输入的是同一图片的四个不同方向）。</p>
+<h3 id="3_uFF09Nonlinearities"><a href="#3_uFF09Nonlinearities" class="headerlink" title="3）Nonlinearities"></a>3）Nonlinearities</h3><p>我们试验了Relu及其各类各类变种，比如PRelu；在dense layer我们试验了maxout unit。我们还试验了smooth non-linearities。但是这些操作都很容易导致overfiting。</p>
+<p>不过，我们发现LRelu对于我们的模型有很好的performance。</p>
+<p>在相当一部分深度模型（10层以上）中，我们发现将PRelu的参数a设定在【0,1/2】对performance的影响不大，但是这个区域中的较大值（比如1/3）可以降低overfitting的程度。这让我们可以进一步按比例来扩充模型，最后我们选择的a为1/3。</p>
+<h3 id="4_uFF09Spatial_pooling"><a href="#4_uFF09Spatial_pooling" class="headerlink" title="4）Spatial pooling"></a>4）Spatial pooling</h3><p>我们开始的时候使用了2-3个pool层，在最后阶段的大部分模型中，我们使用了4个pool层。</p>
+<p>我们开始使用的是传统的 2 <em> 2 max-pooling，但是最终转换成stride为2的 3 </em> 3 max-pooling（记为3 * 3s2）。因为这能够使我们有更大的input size，并且能保持最顶上的Convolution层中的feature map的大小不变，而且计算消耗没有明显增加。</p>
+<p>对于一个80 <em> 80的输入，网络有四个 2 </em> 2 的pooling层，假设得到的最终的feature map的大小是 5<em>5，那么如果我们用前面提到的 3 </em> 3s2来代替 传统的 2 <em> 2 pooling，那么我们可以使用97 </em> 97的input作为输入，但是最顶层的Convolution得到的feature map的大小依旧为 5 * 5。这样就能提升performance，而代价仅仅是稍微减慢训练速度。</p>
+<h3 id="5_uFF09Multiscale_architectures"><a href="#5_uFF09Multiscale_architectures" class="headerlink" title="5）Multiscale architectures"></a>5）Multiscale architectures</h3><p>我们前面提到过数据集的图片的大小是不一样的，因此我们以图片的最大边为准来rescale图片。但是这明显不是最佳方案，因为图片的大小体现了浮游生物的真实大小，所以图片的大小包含了很多信息（feature）。</p>
+<p>为了使模型能够学会这一点，我们试验了多种rescale策略，然后将不同种rescale得到的数据集输入同一个网络，组合成 ‘Multiscale’ 网络。</p>
+<p>获得最好的performance的’Multiscale’ 网络是基于图片大小rescale的网络以及基于固定比例rescale小网络的组合。这确实是对训练速度有很大影响，但是也的确获得了些许的performance的提升。</p>
+<h3 id="6_uFF09Additional_image_features"><a href="#6_uFF09Additional_image_features" class="headerlink" title="6）Additional image features"></a>6）Additional image features</h3><p>我们将附加特征输入到feature net小网络来纠正ConVNet的预测结果。我们把这叫做 ‘late fusing’，因为ConVNet与feature net（小网络）的连接一般位于ConVNet的最后几层（在softmax前）。我们也试验过在前面几层Convolution layer用feature net来纠正ConVNet，但是由于整个网络的训练参数过多，而造成了overfitting。</p>
+<p>由于feature maps可以有原始图片输入ConVNet网络得到（例如，不同的input size得到的feature maps是不一样的），所以这可以作为附加特征进行分类。下面使我们试验过的一些获取附加特征的方法（加粗的是我们最终的模型使用了的）：</p>
+<ul>
+<li><strong>Image size in pixels</strong></li>
+<li><strong>Size and shape estimates based on image moments</strong></li>
+<li>Hu moments</li>
+<li>Zernike moments</li>
+<li>Parameter Free Threshold Adjacency Statistics</li>
+<li>Linear Binary Patterns</li>
+<li><strong>Haralick texture features</strong></li>
+<li>Features from the competition tutorial</li>
+<li>Combinations of the above</li>
+</ul>
+<p>image size, the features based on image moments 和 Haralick texture features 是获得最好的performance的几个附加特征。这些附加特征作为input，输入到一个两层的dense layer，共80个units。两层dense layer的最后一层与前面ConVNet生成的预测结果融合。因此，我们不需要重新训练ConVNet，也不需要重新生成ConVNet的预测结果，这节省了很多时间。</p>
+<p>为了解决由于feature net权值随机初始化而造成的分歧，我们分别训练了十个网络（基于同样的输入，不同的权重随机初始化），得到十组权重，然后取十组权重的平均。这样做使得最终的valid loss降低了1.8%，在比赛的最后阶段，这样的效果是不容小觑的。</p>
+<p>有趣的是，基于image size, the features based on image moments 和 Haralick texture features 的late fusing对最终结果就像 Multiscale net 之于 常规的ConVNet。有点违反直觉的是：image size, the features based on image moments 和 Haralick texture features这三种获取到的附加特征都是图像的size信息，本以为通过这三类特征的到的performance会有重叠（即用了image size再用 Haralick texture features时对performance的影响不大），结果却表明他们不怎么重叠。</p>
+<h3 id="7_uFF09Example_convnet_architecture"><a href="#7_uFF09Example_convnet_architecture" class="headerlink" title="7）Example convnet architecture"></a>7）Example convnet architecture</h3><p>这是一个performance还不错的网络结构的例子。共13层（10个Convolution layers，3个FC layers）以及4个pooling层。输入shape：（32, 1, 95, 95），遵循bc01(batch size, number of channels, height, width)。输出shape：(32, 121)。对于给定的input，网络输出的是121  个probabilities，对应于121类，总的probabilities的值为1。</p>
+<p><img src="http://i.imgur.com/svWgljA.png" alt=""></p>
+<p> ‘cyclic slice’ layer将batch-size增加了四倍（128）， ‘cyclic pooling’ layer 在最后将batch-size重新减小了四倍（32）. ‘cyclic roll’ layers 将feature maps的数量增大了四倍。</p>
+<p><strong>本篇译文系作者原创，转载请先联系作者: 18254275587@163.com</strong></p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/12/08/UFLDL/DeepLearningbyAndrewNg---self-taught/" rel="next" title="UFLDL-self-taught">
+                <i class="fa fa-chevron-left"></i> UFLDL-self-taught
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+        </div>
+
+        
+
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="John Doe" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">John Doe</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#u6982_u8981"><span class="nav-number">1.</span> <span class="nav-text">概要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u4ECB_u7ECD"><span class="nav-number">2.</span> <span class="nav-text">介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1_uFF09_u8981_u89E3_u51B3_u7684_u95EE_u9898_uFF1A"><span class="nav-number">2.1.</span> <span class="nav-text">1）要解决的问题：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2_uFF09_u89E3_u51B3_u65B9_u6848_uFF1AConVNets_uFF01"><span class="nav-number">2.2.</span> <span class="nav-text">2）解决方案：ConVNets！</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3_29_u4F7F_u7528_u7684_u8F6F_u4EF6_u4EE5_u53CA_u786C_u4EF6_u5E73_u53F0_uFF1A"><span class="nav-number">2.3.</span> <span class="nav-text">3)使用的软件以及硬件平台：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u9884_u5904_u7406_u548Cdata_augmentation"><span class="nav-number">3.</span> <span class="nav-text">预处理和data augmentation</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1_uFF09data_augmentation"><span class="nav-number">3.1.</span> <span class="nav-text">1）data augmentation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NetWork__u7ED3_u6784"><span class="nav-number">4.</span> <span class="nav-text">NetWork 结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1_uFF09Cyclic_pooling"><span class="nav-number">4.1.</span> <span class="nav-text">1）Cyclic pooling</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2_29_u2018Rolling_u2019_feature_maps"><span class="nav-number">4.2.</span> <span class="nav-text">2)‘Rolling’ feature maps</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3_uFF09Nonlinearities"><span class="nav-number">4.3.</span> <span class="nav-text">3）Nonlinearities</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4_uFF09Spatial_pooling"><span class="nav-number">4.4.</span> <span class="nav-text">4）Spatial pooling</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5_uFF09Multiscale_architectures"><span class="nav-number">4.5.</span> <span class="nav-text">5）Multiscale architectures</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6_uFF09Additional_image_features"><span class="nav-number">4.6.</span> <span class="nav-text">6）Additional image features</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7_uFF09Example_convnet_architecture"><span class="nav-number">4.7.</span> <span class="nav-text">7）Example convnet architecture</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+    
+    
+
+  
+
+
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
+
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    motionMiddleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+  
+  
+
+  
+  
+
+</body>
+</html>

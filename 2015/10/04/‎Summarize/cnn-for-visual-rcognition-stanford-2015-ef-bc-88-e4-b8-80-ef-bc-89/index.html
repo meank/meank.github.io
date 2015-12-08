@@ -1,0 +1,679 @@
+<!doctype html>
+<html class="theme-next   use-motion ">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+
+
+
+
+<meta name="description" content="总结斯坦福2015李飞飞教授以及Andrej Karpathy教授的上课的slides中关于CNN的一些内容
+一：神经网络实验的基本策略：
+1.对输入数据进行预处理：
+2.网络结构和数据集设置：（1）-随机初始化weights为一些比较小的数（fan-in，fan-out），bias设置为0（2）-利用好cv集，可以在少量epoch的结果下选择最好的params，然后进行更多的epoch3.分析实">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CNN for Visual Rcognition --- Stanford 2015 （一）">
+<meta property="og:url" content="http://yoursite.com/2015/10/04/‎Summarize/cnn-for-visual-rcognition-stanford-2015-ef-bc-88-e4-b8-80-ef-bc-89/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="总结斯坦福2015李飞飞教授以及Andrej Karpathy教授的上课的slides中关于CNN的一些内容
+一：神经网络实验的基本策略：
+1.对输入数据进行预处理：
+2.网络结构和数据集设置：（1）-随机初始化weights为一些比较小的数（fan-in，fan-out），bias设置为0（2）-利用好cv集，可以在少量epoch的结果下选择最好的params，然后进行更多的epoch3.分析实">
+<meta property="og:image" content="http://img.blog.csdn.net/20150809150601424">
+<meta property="og:image" content="http://img.blog.csdn.net/20150809113841197">
+<meta property="og:image" content="http://img.blog.csdn.net/20150809113922745">
+<meta property="og:image" content="http://img.blog.csdn.net/20150809115128402">
+<meta property="og:image" content="http://img.blog.csdn.net/20150809115343863">
+<meta property="og:image" content="http://img.blog.csdn.net/20150809120641754">
+<meta property="og:image" content="http://img.blog.csdn.net/20150809120739397">
+<meta property="og:image" content="http://img.blog.csdn.net/20150809121143317">
+<meta property="og:image" content="http://img.blog.csdn.net/20150809121212774">
+<meta property="og:image" content="http://img.blog.csdn.net/20150809121448010">
+<meta property="og:image" content="http://img.blog.csdn.net/20150809121730285">
+<meta property="og:image" content="http://img.blog.csdn.net/20150809142934093">
+<meta property="og:image" content="http://img.blog.csdn.net/20150809144048891">
+<meta property="og:image" content="http://img.blog.csdn.net/20150809144229995">
+<meta property="og:image" content="http://img.blog.csdn.net/20150809145227547">
+<meta property="og:image" content="http://img.blog.csdn.net/20150809145628112">
+<meta property="og:image" content="http://img.blog.csdn.net/20150809145749823">
+<meta property="og:image" content="http://img.blog.csdn.net/20150809150512443">
+<meta property="og:image" content="http://img.blog.csdn.net/20150809151212093">
+<meta property="og:image" content="http://img.blog.csdn.net/20150809195717575">
+<meta property="og:image" content="http://img.blog.csdn.net/20150809195935394">
+<meta property="og:image" content="http://img.blog.csdn.net/20150809200356803">
+<meta property="og:updated_time" content="2015-11-22T05:21:06.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CNN for Visual Rcognition --- Stanford 2015 （一）">
+<meta name="twitter:description" content="总结斯坦福2015李飞飞教授以及Andrej Karpathy教授的上课的slides中关于CNN的一些内容
+一：神经网络实验的基本策略：
+1.对输入数据进行预处理：
+2.网络结构和数据集设置：（1）-随机初始化weights为一些比较小的数（fan-in，fan-out），bias设置为0（2）-利用好cv集，可以在少量epoch的结果下选择最好的params，然后进行更多的epoch3.分析实">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post',
+    motion: true
+  };
+</script>
+
+  <title> CNN for Visual Rcognition --- Stanford 2015 （一） | Hexo </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Hexo</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                CNN for Visual Rcognition --- Stanford 2015 （一）
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2015-10-04T19:37:37+08:00" content="2015-10-04">
+              2015-10-04
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分類於
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Summarize/" itemprop="url" rel="index">
+                    <span itemprop="name">Summarize</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>总结斯坦福2015李飞飞教授以及Andrej Karpathy教授的上课的slides中关于CNN的一些内容</p>
+<h1 id="u4E00_uFF1A_u795E_u7ECF_u7F51_u7EDC_u5B9E_u9A8C_u7684_u57FA_u672C_u7B56_u7565_uFF1A"><a href="#u4E00_uFF1A_u795E_u7ECF_u7F51_u7EDC_u5B9E_u9A8C_u7684_u57FA_u672C_u7B56_u7565_uFF1A" class="headerlink" title="一：神经网络实验的基本策略："></a>一：神经网络实验的基本策略：</h1><p><img src="http://img.blog.csdn.net/20150809150601424" alt="这里写图片描述"></p>
+<h3 id="1-_u5BF9_u8F93_u5165_u6570_u636E_u8FDB_u884C_u9884_u5904_u7406_uFF1A"><a href="#1-_u5BF9_u8F93_u5165_u6570_u636E_u8FDB_u884C_u9884_u5904_u7406_uFF1A" class="headerlink" title="1.对输入数据进行预处理："></a>1.对输入数据进行预处理：</h3><p><img src="http://img.blog.csdn.net/20150809113841197" alt="这里写图片描述"><br><img src="http://img.blog.csdn.net/20150809113922745" alt="这里写图片描述"></p>
+<h3 id="2-_u7F51_u7EDC_u7ED3_u6784_u548C_u6570_u636E_u96C6_u8BBE_u7F6E_uFF1A"><a href="#2-_u7F51_u7EDC_u7ED3_u6784_u548C_u6570_u636E_u96C6_u8BBE_u7F6E_uFF1A" class="headerlink" title="2.网络结构和数据集设置："></a>2.网络结构和数据集设置：</h3><h4 id="uFF081_uFF09-_u968F_u673A_u521D_u59CB_u5316weights_u4E3A_u4E00_u4E9B_u6BD4_u8F83_u5C0F_u7684_u6570_uFF08fan-in_uFF0Cfan-out_uFF09_uFF0Cbias_u8BBE_u7F6E_u4E3A0"><a href="#uFF081_uFF09-_u968F_u673A_u521D_u59CB_u5316weights_u4E3A_u4E00_u4E9B_u6BD4_u8F83_u5C0F_u7684_u6570_uFF08fan-in_uFF0Cfan-out_uFF09_uFF0Cbias_u8BBE_u7F6E_u4E3A0" class="headerlink" title="（1）-随机初始化weights为一些比较小的数（fan-in，fan-out），bias设置为0"></a>（1）-随机初始化weights为一些比较小的数（fan-in，fan-out），bias设置为0</h4><h4 id="uFF082_uFF09-_u5229_u7528_u597Dcv_u96C6_uFF0C_u53EF_u4EE5_u5728_u5C11_u91CFepoch_u7684_u7ED3_u679C_u4E0B_u9009_u62E9_u6700_u597D_u7684params_uFF0C_u7136_u540E_u8FDB_u884C_u66F4_u591A_u7684epoch"><a href="#uFF082_uFF09-_u5229_u7528_u597Dcv_u96C6_uFF0C_u53EF_u4EE5_u5728_u5C11_u91CFepoch_u7684_u7ED3_u679C_u4E0B_u9009_u62E9_u6700_u597D_u7684params_uFF0C_u7136_u540E_u8FDB_u884C_u66F4_u591A_u7684epoch" class="headerlink" title="（2）-利用好cv集，可以在少量epoch的结果下选择最好的params，然后进行更多的epoch"></a>（2）-利用好cv集，可以在少量epoch的结果下选择最好的params，然后进行更多的epoch</h4><h3 id="3-_u5206_u6790_u5B9E_u9A8C_u7ED3_u679C_uFF1A"><a href="#3-_u5206_u6790_u5B9E_u9A8C_u7ED3_u679C_uFF1A" class="headerlink" title="3.分析实验结果："></a>3.分析实验结果：</h3><h4 id="uFF081_uFF09-_u5BF9_loss_curve__u8FDB_u884C_u5206_u6790_uFF1A"><a href="#uFF081_uFF09-_u5BF9_loss_curve__u8FDB_u884C_u5206_u6790_uFF1A" class="headerlink" title="（1）-对 loss curve 进行分析："></a>（1）-对 loss curve 进行分析：</h4><p><img src="http://img.blog.csdn.net/20150809115128402" alt="这里写图片描述"></p>
+<h4 id="uFF082_uFF09-_u5BF9accuracy__u8FDB_u884C_u5206_u6790_uFF1A"><a href="#uFF082_uFF09-_u5BF9accuracy__u8FDB_u884C_u5206_u6790_uFF1A" class="headerlink" title="（2）-对accuracy 进行分析："></a>（2）-对accuracy 进行分析：</h4><p><img src="http://img.blog.csdn.net/20150809115343863" alt="这里写图片描述"></p>
+<h4 id="uFF083_uFF09-_u5BF9weight_updates_/_weight_u7684_u6BD4_u503C_u8FDB_u884C_u5206_u6790_uFF1A"><a href="#uFF083_uFF09-_u5BF9weight_updates_/_weight_u7684_u6BD4_u503C_u8FDB_u884C_u5206_u6790_uFF1A" class="headerlink" title="（3）-对weight updates / weight的比值进行分析："></a>（3）-对weight updates / weight的比值进行分析：</h4><p><img src="http://img.blog.csdn.net/20150809120641754" alt="这里写图片描述"></p>
+<h4 id="uFF084_uFF09-_u53EF_u89C6_u5316_u9690_u542B_u5C42_u5355_u5143_uFF1A"><a href="#uFF084_uFF09-_u53EF_u89C6_u5316_u9690_u542B_u5C42_u5355_u5143_uFF1A" class="headerlink" title="（4）-可视化隐含层单元："></a>（4）-可视化隐含层单元：</h4><p><img src="http://img.blog.csdn.net/20150809120739397" alt="这里写图片描述"></p>
+<h4 id="uFF085_uFF09-dropout_uFF08Regularization_uFF09_u7684_u4F7F_u7528_uFF1A"><a href="#uFF085_uFF09-dropout_uFF08Regularization_uFF09_u7684_u4F7F_u7528_uFF1A" class="headerlink" title="（5）-dropout（Regularization）的使用："></a>（5）-dropout（Regularization）的使用：</h4><h5 id="u968F_u673A_u7684_u5C06_u4E00_u4E9B_neuron_u8BBE_u7F6E_u4E3A0_uFF0C_u5728_u4F7F_u7528_u7684_u65F6_u5019_u6CE8_u610Ftrain_u7684_u65F6_u5019_u548Cpredict_u7684_u65F6_u5019_u7684_u533A_u522B_uFF08train_u7684_u65F6_u5019_u8FDB_u884Cdrop_uFF0Cpredict_u7684_u65F6_u5019_u4E0D_u8FDB_u884Cdrop_uFF09_uFF1A"><a href="#u968F_u673A_u7684_u5C06_u4E00_u4E9B_neuron_u8BBE_u7F6E_u4E3A0_uFF0C_u5728_u4F7F_u7528_u7684_u65F6_u5019_u6CE8_u610Ftrain_u7684_u65F6_u5019_u548Cpredict_u7684_u65F6_u5019_u7684_u533A_u522B_uFF08train_u7684_u65F6_u5019_u8FDB_u884Cdrop_uFF0Cpredict_u7684_u65F6_u5019_u4E0D_u8FDB_u884Cdrop_uFF09_uFF1A" class="headerlink" title="随机的将一些 neuron设置为0，在使用的时候注意train的时候和predict的时候的区别（train的时候进行drop，predict的时候不进行drop）："></a>随机的将一些 neuron设置为0，在使用的时候注意train的时候和predict的时候的区别（train的时候进行drop，predict的时候不进行drop）：</h5><p><img src="http://img.blog.csdn.net/20150809121143317" alt="这里写图片描述"><br><img src="http://img.blog.csdn.net/20150809121212774" alt="这里写图片描述"></p>
+<h4 id="uFF086_uFF09-_u5B66_u4E60_u7387_u7B49_u76F8_u5173_u8BBE_u7F6E_uFF1A"><a href="#uFF086_uFF09-_u5B66_u4E60_u7387_u7B49_u76F8_u5173_u8BBE_u7F6E_uFF1A" class="headerlink" title="（6）-学习率等相关设置："></a>（6）-学习率等相关设置：</h4><p><img src="http://img.blog.csdn.net/20150809121448010" alt="这里写图片描述"><br>一般用写好的库就行了，如adagrad等等</p>
+<h1 id="u4E8C_uFF1A_u5377_u79EF_u7F51_u7EDCConVNet_uFF1A"><a href="#u4E8C_uFF1A_u5377_u79EF_u7F51_u7EDCConVNet_uFF1A" class="headerlink" title="二：卷积网络ConVNet："></a>二：卷积网络ConVNet：</h1><p><img src="http://img.blog.csdn.net/20150809121730285" alt="这里写图片描述"></p>
+<h3 id="1-activations_uFF1A"><a href="#1-activations_uFF1A" class="headerlink" title="1.activations："></a>1.activations：</h3><h4 id="ConVNet_u4E2D_u7684activations_u662F_u4E00_u4E2A_u4E09_u7EF4_u7684_u7ACB_u65B9_u4F53_uFF0C_u4F8B_u5982_uFF1A_u5BF9_u4E8E_u4E00_u4E2A32_32_3_u7684RGB_u56FE_u7247_uFF0C_u5BF9_u5E94_u7684activation_u7684_u89C4_u683C_u5C31_u662F32widt_32height_3depth"><a href="#ConVNet_u4E2D_u7684activations_u662F_u4E00_u4E2A_u4E09_u7EF4_u7684_u7ACB_u65B9_u4F53_uFF0C_u4F8B_u5982_uFF1A_u5BF9_u4E8E_u4E00_u4E2A32_32_3_u7684RGB_u56FE_u7247_uFF0C_u5BF9_u5E94_u7684activation_u7684_u89C4_u683C_u5C31_u662F32widt_32height_3depth" class="headerlink" title="ConVNet中的activations是一个三维的立方体，例如：对于一个32_32_3的RGB图片，对应的activation的规格就是32widt_32height_3depth"></a>ConVNet中的activations是一个三维的立方体，例如：对于一个32_32_3的RGB图片，对应的activation的规格就是32widt_32height_3depth</h4><p><img src="http://img.blog.csdn.net/20150809142934093" alt="这里写图片描述"></p>
+<h3 id="2-local_connectivity__u5C40_u90E8_u8FDE_u63A5_uFF1A"><a href="#2-local_connectivity__u5C40_u90E8_u8FDE_u63A5_uFF1A" class="headerlink" title="2.local connectivity 局部连接："></a>2.local connectivity 局部连接：</h3><h4 id="uFF081_uFF09-_u5C40_u90E8_u8FDE_u63A5_u662FConVNet_u4E00_u4E2A_u5F88_u91CD_u8981_u7684_u601D_u60F3_uFF0C_u4F7F_u7528_u5C40_u90E8_u8FDE_u63A5_uFF0C_u51CF_u5C11_u4E86_u5377_u79EF_u5C42_u9700_u8981_u8BAD_u7EC3_u7684params_uFF1A"><a href="#uFF081_uFF09-_u5C40_u90E8_u8FDE_u63A5_u662FConVNet_u4E00_u4E2A_u5F88_u91CD_u8981_u7684_u601D_u60F3_uFF0C_u4F7F_u7528_u5C40_u90E8_u8FDE_u63A5_uFF0C_u51CF_u5C11_u4E86_u5377_u79EF_u5C42_u9700_u8981_u8BAD_u7EC3_u7684params_uFF1A" class="headerlink" title="（1）-局部连接是ConVNet一个很重要的思想，使用局部连接，减少了卷积层需要训练的params："></a>（1）-局部连接是ConVNet一个很重要的思想，使用局部连接，减少了卷积层需要训练的params：</h4><p><img src="http://img.blog.csdn.net/20150809144048891" alt="这里写图片描述"></p>
+<h4 id="uFF082_uFF09-_u4E3E_u4E2A_u6817_u5B50_uFF1A"><a href="#uFF082_uFF09-_u4E3E_u4E2A_u6817_u5B50_uFF1A" class="headerlink" title="（2）-举个栗子：<img src=" http:="" img.blog.csdn.net="" 20150809144229995"="" alt="这里写图片描述">"></a>（2）-举个栗子：<img src="http://img.blog.csdn.net/20150809144229995" alt="这里写图片描述"></h4><h4 id="uFF083_uFF09-_u672F_u8BED_u4E0A_uFF1Afenture_map_u4E2A_u6570_3Dfilter_u4E2A_u6570"><a href="#uFF083_uFF09-_u672F_u8BED_u4E0A_uFF1Afenture_map_u4E2A_u6570_3Dfilter_u4E2A_u6570" class="headerlink" title="（3）-术语上：fenture map个数=filter个数"></a>（3）-术语上：fenture map个数=filter个数</h4><h3 id="3-padding_uFF1A"><a href="#3-padding_uFF1A" class="headerlink" title="3.padding："></a>3.padding：</h3><h4 id="u589E_u52A0nolinearities_u7684_u6570_u91CF_uFF0C_u540C_u65F6_u4E5F_u53EF_u4EE5_u4FDD_u6301map_u7684_u5927_u5C0F_uFF1A"><a href="#u589E_u52A0nolinearities_u7684_u6570_u91CF_uFF0C_u540C_u65F6_u4E5F_u53EF_u4EE5_u4FDD_u6301map_u7684_u5927_u5C0F_uFF1A" class="headerlink" title="增加nolinearities的数量，同时也可以保持map的大小："></a>增加nolinearities的数量，同时也可以保持map的大小：</h4><p><img src="http://img.blog.csdn.net/20150809145227547" alt="这里写图片描述"></p>
+<h3 id="4-pooling_uFF1A"><a href="#4-pooling_uFF1A" class="headerlink" title="4.pooling："></a>4.pooling：</h3><h4 id="u4E00_u822C_u662F2*2_u7684maxpool_uFF1A"><a href="#u4E00_u822C_u662F2*2_u7684maxpool_uFF1A" class="headerlink" title="一般是2*2的maxpool："></a>一般是2*2的maxpool：</h4><p><img src="http://img.blog.csdn.net/20150809145628112" alt="这里写图片描述"></p>
+<h3 id="5-ConVNet_u7684_u8BBE_u7F6E_uFF1A"><a href="#5-ConVNet_u7684_u8BBE_u7F6E_uFF1A" class="headerlink" title="5.ConVNet的设置："></a>5.ConVNet的设置：</h3><p><img src="http://img.blog.csdn.net/20150809145749823" alt="这里写图片描述"></p>
+<h1 id="u4E09_uFF1AVisualizing_and_Understanding_ConVNet_uFF1A"><a href="#u4E09_uFF1AVisualizing_and_Understanding_ConVNet_uFF1A" class="headerlink" title="三：Visualizing and Understanding ConVNet："></a>三：Visualizing and Understanding ConVNet：</h1><p><img src="http://img.blog.csdn.net/20150809150512443" alt="这里写图片描述"></p>
+<h3 id="1-t-SNE_visualization_uFF1A"><a href="#1-t-SNE_visualization_uFF1A" class="headerlink" title="1.t-SNE visualization："></a>1.t-SNE visualization：</h3><h4 id="u4E0B_u56FE_u662Fmnist_u6570_u636E_u96C6_u901A_u8FC7ConVNet_u540E_u538B_u7F29_u6210_u4E8C_u7EF4_u5411_u91CF_u540E_u7684_u70B9_u56FE_uFF1A"><a href="#u4E0B_u56FE_u662Fmnist_u6570_u636E_u96C6_u901A_u8FC7ConVNet_u540E_u538B_u7F29_u6210_u4E8C_u7EF4_u5411_u91CF_u540E_u7684_u70B9_u56FE_uFF1A" class="headerlink" title="下图是mnist数据集通过ConVNet后压缩成二维向量后的点图："></a>下图是mnist数据集通过ConVNet后压缩成二维向量后的点图：</h4><p><img src="http://img.blog.csdn.net/20150809151212093" alt="这里写图片描述"></p>
+<h3 id="2-_u5C06_u6700_u540E_u7684pooling_u5C42_u7684_u7279_u5F81_uFF0C_u91CD_u6784_u6210_u56FE_u7247_uFF1A"><a href="#2-_u5C06_u6700_u540E_u7684pooling_u5C42_u7684_u7279_u5F81_uFF0C_u91CD_u6784_u6210_u56FE_u7247_uFF1A" class="headerlink" title="2.将最后的pooling层的特征，重构成图片："></a>2.将最后的pooling层的特征，重构成图片：</h3><p><img src="http://img.blog.csdn.net/20150809195717575" alt="这里写图片描述"></p>
+<h3 id="3-_u5C06_u4E2D_u95F4_u5C42_u7684_u7279_u5F81_uFF0C_u91CD_u6784_u6210_u56FE_u7247_uFF1A"><a href="#3-_u5C06_u4E2D_u95F4_u5C42_u7684_u7279_u5F81_uFF0C_u91CD_u6784_u6210_u56FE_u7247_uFF1A" class="headerlink" title="3.将中间层的特征，重构成图片："></a>3.将中间层的特征，重构成图片：</h3><p><img src="http://img.blog.csdn.net/20150809195935394" alt="这里写图片描述"></p>
+<h3 id="4-_u5BF9_u4E8E_u4E0D_u53EF_u8BC6_u522B_u7684_u56FE_u7247_uFF0CConVNet_u6709_u65F6_u7ADF_u7136_u4F1A_u6709_u5F88_u9AD8_u7684_u7F6E_u4FE1_u5EA6_uFF1A"><a href="#4-_u5BF9_u4E8E_u4E0D_u53EF_u8BC6_u522B_u7684_u56FE_u7247_uFF0CConVNet_u6709_u65F6_u7ADF_u7136_u4F1A_u6709_u5F88_u9AD8_u7684_u7F6E_u4FE1_u5EA6_uFF1A" class="headerlink" title="4.对于不可识别的图片，ConVNet有时竟然会有很高的置信度："></a>4.对于不可识别的图片，ConVNet有时竟然会有很高的置信度：</h3><p><img src="http://img.blog.csdn.net/20150809200356803" alt="这里写图片描述"></p>
+<h3 id="5-depth_is_important_3A"><a href="#5-depth_is_important_3A" class="headerlink" title="5.depth is important:"></a>5.depth is important:</h3><h4 id="u6539_u53D8FC_u5C42_u7684_u5927_u5C0F_uFF0C_u5BF9_u7ED3_u679C_u5E76_u6CA1_u6709_u591A_u5927_u7684_u63D0_u5347_uFF1B_u800C_u901A_u8FC7_u6539_u53D8_u5377_u79EF_u5C42depth_u7684_u5927_u5C0F_uFF08_u5176_u5B9E_u5C31_u662Ffilter_u7684_u6570_u91CF_uFF09_uFF0C_u5219_u5BF9_u7ED3_u679C_u6709_u8F83_u5927_u7684_u5F71_u54CD_uFF0C_u5E76_u4E14_uFF1Amore_depth__3D_better_improvement_u3002"><a href="#u6539_u53D8FC_u5C42_u7684_u5927_u5C0F_uFF0C_u5BF9_u7ED3_u679C_u5E76_u6CA1_u6709_u591A_u5927_u7684_u63D0_u5347_uFF1B_u800C_u901A_u8FC7_u6539_u53D8_u5377_u79EF_u5C42depth_u7684_u5927_u5C0F_uFF08_u5176_u5B9E_u5C31_u662Ffilter_u7684_u6570_u91CF_uFF09_uFF0C_u5219_u5BF9_u7ED3_u679C_u6709_u8F83_u5927_u7684_u5F71_u54CD_uFF0C_u5E76_u4E14_uFF1Amore_depth__3D_better_improvement_u3002" class="headerlink" title="改变FC层的大小，对结果并没有多大的提升；而通过改变卷积层depth的大小（其实就是filter的数量），则对结果有较大的影响，并且：more depth = better improvement。"></a>改变FC层的大小，对结果并没有多大的提升；而通过改变卷积层depth的大小（其实就是filter的数量），则对结果有较大的影响，并且：more depth = better improvement。</h4><p>normalization对结果也没有很大的影响</p>
+<p><strong>本文系作者原创，转载请先联系作者: 18254275587@163.com</strong></p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/10/04/‎Summarize/e6-b5-85-e6-9e-90sae-e4-b8-8edbm-ef-bc-88deep-learning-ef-bc-89/" rel="next" title="浅析SAE与DBM（Deep Learning）">
+                <i class="fa fa-chevron-left"></i> 浅析SAE与DBM（Deep Learning）
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/10/04/‎Summarize/cnn-for-visual-rcognition-stanford-2015-ef-bc-88-e4-ba-8c-ef-bc-89/" rel="prev" title="CNN for Visual Rcognition --- Stanford 2015 （二）">
+                CNN for Visual Rcognition --- Stanford 2015 （二） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+        </div>
+
+        
+
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="John Doe" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">John Doe</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#u4E00_uFF1A_u795E_u7ECF_u7F51_u7EDC_u5B9E_u9A8C_u7684_u57FA_u672C_u7B56_u7565_uFF1A"><span class="nav-number">1.</span> <span class="nav-text">一：神经网络实验的基本策略：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-_u5BF9_u8F93_u5165_u6570_u636E_u8FDB_u884C_u9884_u5904_u7406_uFF1A"><span class="nav-number">1.0.1.</span> <span class="nav-text">1.对输入数据进行预处理：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-_u7F51_u7EDC_u7ED3_u6784_u548C_u6570_u636E_u96C6_u8BBE_u7F6E_uFF1A"><span class="nav-number">1.0.2.</span> <span class="nav-text">2.网络结构和数据集设置：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#uFF081_uFF09-_u968F_u673A_u521D_u59CB_u5316weights_u4E3A_u4E00_u4E9B_u6BD4_u8F83_u5C0F_u7684_u6570_uFF08fan-in_uFF0Cfan-out_uFF09_uFF0Cbias_u8BBE_u7F6E_u4E3A0"><span class="nav-number">1.0.2.1.</span> <span class="nav-text">（1）-随机初始化weights为一些比较小的数（fan-in，fan-out），bias设置为0</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#uFF082_uFF09-_u5229_u7528_u597Dcv_u96C6_uFF0C_u53EF_u4EE5_u5728_u5C11_u91CFepoch_u7684_u7ED3_u679C_u4E0B_u9009_u62E9_u6700_u597D_u7684params_uFF0C_u7136_u540E_u8FDB_u884C_u66F4_u591A_u7684epoch"><span class="nav-number">1.0.2.2.</span> <span class="nav-text">（2）-利用好cv集，可以在少量epoch的结果下选择最好的params，然后进行更多的epoch</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-_u5206_u6790_u5B9E_u9A8C_u7ED3_u679C_uFF1A"><span class="nav-number">1.0.3.</span> <span class="nav-text">3.分析实验结果：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#uFF081_uFF09-_u5BF9_loss_curve__u8FDB_u884C_u5206_u6790_uFF1A"><span class="nav-number">1.0.3.1.</span> <span class="nav-text">（1）-对 loss curve 进行分析：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#uFF082_uFF09-_u5BF9accuracy__u8FDB_u884C_u5206_u6790_uFF1A"><span class="nav-number">1.0.3.2.</span> <span class="nav-text">（2）-对accuracy 进行分析：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#uFF083_uFF09-_u5BF9weight_updates_/_weight_u7684_u6BD4_u503C_u8FDB_u884C_u5206_u6790_uFF1A"><span class="nav-number">1.0.3.3.</span> <span class="nav-text">（3）-对weight updates / weight的比值进行分析：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#uFF084_uFF09-_u53EF_u89C6_u5316_u9690_u542B_u5C42_u5355_u5143_uFF1A"><span class="nav-number">1.0.3.4.</span> <span class="nav-text">（4）-可视化隐含层单元：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#uFF085_uFF09-dropout_uFF08Regularization_uFF09_u7684_u4F7F_u7528_uFF1A"><span class="nav-number">1.0.3.5.</span> <span class="nav-text">（5）-dropout（Regularization）的使用：</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#u968F_u673A_u7684_u5C06_u4E00_u4E9B_neuron_u8BBE_u7F6E_u4E3A0_uFF0C_u5728_u4F7F_u7528_u7684_u65F6_u5019_u6CE8_u610Ftrain_u7684_u65F6_u5019_u548Cpredict_u7684_u65F6_u5019_u7684_u533A_u522B_uFF08train_u7684_u65F6_u5019_u8FDB_u884Cdrop_uFF0Cpredict_u7684_u65F6_u5019_u4E0D_u8FDB_u884Cdrop_uFF09_uFF1A"><span class="nav-number">1.0.3.5.1.</span> <span class="nav-text">随机的将一些 neuron设置为0，在使用的时候注意train的时候和predict的时候的区别（train的时候进行drop，predict的时候不进行drop）：</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#uFF086_uFF09-_u5B66_u4E60_u7387_u7B49_u76F8_u5173_u8BBE_u7F6E_uFF1A"><span class="nav-number">1.0.3.6.</span> <span class="nav-text">（6）-学习率等相关设置：</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u4E8C_uFF1A_u5377_u79EF_u7F51_u7EDCConVNet_uFF1A"><span class="nav-number">2.</span> <span class="nav-text">二：卷积网络ConVNet：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-activations_uFF1A"><span class="nav-number">2.0.1.</span> <span class="nav-text">1.activations：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ConVNet_u4E2D_u7684activations_u662F_u4E00_u4E2A_u4E09_u7EF4_u7684_u7ACB_u65B9_u4F53_uFF0C_u4F8B_u5982_uFF1A_u5BF9_u4E8E_u4E00_u4E2A32_32_3_u7684RGB_u56FE_u7247_uFF0C_u5BF9_u5E94_u7684activation_u7684_u89C4_u683C_u5C31_u662F32widt_32height_3depth"><span class="nav-number">2.0.1.1.</span> <span class="nav-text">ConVNet中的activations是一个三维的立方体，例如：对于一个32_32_3的RGB图片，对应的activation的规格就是32widt_32height_3depth</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-local_connectivity__u5C40_u90E8_u8FDE_u63A5_uFF1A"><span class="nav-number">2.0.2.</span> <span class="nav-text">2.local connectivity 局部连接：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#uFF081_uFF09-_u5C40_u90E8_u8FDE_u63A5_u662FConVNet_u4E00_u4E2A_u5F88_u91CD_u8981_u7684_u601D_u60F3_uFF0C_u4F7F_u7528_u5C40_u90E8_u8FDE_u63A5_uFF0C_u51CF_u5C11_u4E86_u5377_u79EF_u5C42_u9700_u8981_u8BAD_u7EC3_u7684params_uFF1A"><span class="nav-number">2.0.2.1.</span> <span class="nav-text">（1）-局部连接是ConVNet一个很重要的思想，使用局部连接，减少了卷积层需要训练的params：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#uFF082_uFF09-_u4E3E_u4E2A_u6817_u5B50_uFF1A"><span class="nav-number">2.0.2.2.</span> <span class="nav-text">">（2）-举个栗子：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#uFF083_uFF09-_u672F_u8BED_u4E0A_uFF1Afenture_map_u4E2A_u6570_3Dfilter_u4E2A_u6570"><span class="nav-number">2.0.2.3.</span> <span class="nav-text">（3）-术语上：fenture map个数=filter个数</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-padding_uFF1A"><span class="nav-number">2.0.3.</span> <span class="nav-text">3.padding：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#u589E_u52A0nolinearities_u7684_u6570_u91CF_uFF0C_u540C_u65F6_u4E5F_u53EF_u4EE5_u4FDD_u6301map_u7684_u5927_u5C0F_uFF1A"><span class="nav-number">2.0.3.1.</span> <span class="nav-text">增加nolinearities的数量，同时也可以保持map的大小：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-pooling_uFF1A"><span class="nav-number">2.0.4.</span> <span class="nav-text">4.pooling：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#u4E00_u822C_u662F2*2_u7684maxpool_uFF1A"><span class="nav-number">2.0.4.1.</span> <span class="nav-text">一般是2*2的maxpool：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-ConVNet_u7684_u8BBE_u7F6E_uFF1A"><span class="nav-number">2.0.5.</span> <span class="nav-text">5.ConVNet的设置：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u4E09_uFF1AVisualizing_and_Understanding_ConVNet_uFF1A"><span class="nav-number">3.</span> <span class="nav-text">三：Visualizing and Understanding ConVNet：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-t-SNE_visualization_uFF1A"><span class="nav-number">3.0.1.</span> <span class="nav-text">1.t-SNE visualization：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#u4E0B_u56FE_u662Fmnist_u6570_u636E_u96C6_u901A_u8FC7ConVNet_u540E_u538B_u7F29_u6210_u4E8C_u7EF4_u5411_u91CF_u540E_u7684_u70B9_u56FE_uFF1A"><span class="nav-number">3.0.1.1.</span> <span class="nav-text">下图是mnist数据集通过ConVNet后压缩成二维向量后的点图：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-_u5C06_u6700_u540E_u7684pooling_u5C42_u7684_u7279_u5F81_uFF0C_u91CD_u6784_u6210_u56FE_u7247_uFF1A"><span class="nav-number">3.0.2.</span> <span class="nav-text">2.将最后的pooling层的特征，重构成图片：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-_u5C06_u4E2D_u95F4_u5C42_u7684_u7279_u5F81_uFF0C_u91CD_u6784_u6210_u56FE_u7247_uFF1A"><span class="nav-number">3.0.3.</span> <span class="nav-text">3.将中间层的特征，重构成图片：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-_u5BF9_u4E8E_u4E0D_u53EF_u8BC6_u522B_u7684_u56FE_u7247_uFF0CConVNet_u6709_u65F6_u7ADF_u7136_u4F1A_u6709_u5F88_u9AD8_u7684_u7F6E_u4FE1_u5EA6_uFF1A"><span class="nav-number">3.0.4.</span> <span class="nav-text">4.对于不可识别的图片，ConVNet有时竟然会有很高的置信度：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-depth_is_important_3A"><span class="nav-number">3.0.5.</span> <span class="nav-text">5.depth is important:</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#u6539_u53D8FC_u5C42_u7684_u5927_u5C0F_uFF0C_u5BF9_u7ED3_u679C_u5E76_u6CA1_u6709_u591A_u5927_u7684_u63D0_u5347_uFF1B_u800C_u901A_u8FC7_u6539_u53D8_u5377_u79EF_u5C42depth_u7684_u5927_u5C0F_uFF08_u5176_u5B9E_u5C31_u662Ffilter_u7684_u6570_u91CF_uFF09_uFF0C_u5219_u5BF9_u7ED3_u679C_u6709_u8F83_u5927_u7684_u5F71_u54CD_uFF0C_u5E76_u4E14_uFF1Amore_depth__3D_better_improvement_u3002"><span class="nav-number">3.0.5.1.</span> <span class="nav-text">改变FC层的大小，对结果并没有多大的提升；而通过改变卷积层depth的大小（其实就是filter的数量），则对结果有较大的影响，并且：more depth = better improvement。</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+    
+    
+
+  
+
+
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
+
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    motionMiddleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+  
+  
+
+  
+  
+
+</body>
+</html>

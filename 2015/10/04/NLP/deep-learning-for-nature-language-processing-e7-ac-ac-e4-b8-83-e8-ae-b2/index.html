@@ -1,0 +1,685 @@
+<!doctype html>
+<html class="theme-next   use-motion ">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+
+
+
+
+<meta name="description" content="1.Language Models1,w2…wT)；其中的w1,w2…wT都是词向量。&quot;&amp;gt;语言模型计算的是一连串词的概率：P(w1,w2…wT)；其中的w1,w2…wT都是词向量。这种语言模型有利于机器翻译，例如：1.词序：p(the cat is small) &amp;gt; p(small the is cat)2.词的选取：p(walking home after school) &amp;gt; p(w">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Deep Learning for Nature Language Processing --- 第七讲">
+<meta property="og:url" content="http://yoursite.com/2015/10/04/NLP/deep-learning-for-nature-language-processing-e7-ac-ac-e4-b8-83-e8-ae-b2/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="1.Language Models1,w2…wT)；其中的w1,w2…wT都是词向量。&quot;&amp;gt;语言模型计算的是一连串词的概率：P(w1,w2…wT)；其中的w1,w2…wT都是词向量。这种语言模型有利于机器翻译，例如：1.词序：p(the cat is small) &amp;gt; p(small the is cat)2.词的选取：p(walking home after school) &amp;gt; p(w">
+<meta property="og:image" content="http://img.blog.csdn.net/20150726112343050">
+<meta property="og:image" content="http://img.blog.csdn.net/20150726112832248">
+<meta property="og:image" content="http://img.blog.csdn.net/20150726115849335">
+<meta property="og:image" content="http://img.blog.csdn.net/20150726182122892">
+<meta property="og:image" content="http://img.blog.csdn.net/20150726182855616">
+<meta property="og:image" content="http://img.blog.csdn.net/20150731113738899">
+<meta property="og:image" content="http://img.blog.csdn.net/20150731114908732">
+<meta property="og:image" content="http://img.blog.csdn.net/20150731115701090">
+<meta property="og:image" content="http://img.blog.csdn.net/20150731115633052">
+<meta property="og:image" content="http://img.blog.csdn.net/20150731115736747">
+<meta property="og:image" content="http://img.blog.csdn.net/20150731120038320">
+<meta property="og:image" content="http://img.blog.csdn.net/20150731120456980">
+<meta property="og:image" content="http://img.blog.csdn.net/20150731120711379">
+<meta property="og:image" content="http://img.blog.csdn.net/20150731121414030">
+<meta property="og:image" content="http://img.blog.csdn.net/20150731141012079">
+<meta property="og:image" content="http://img.blog.csdn.net/20150731143046208">
+<meta property="og:image" content="http://img.blog.csdn.net/20150731143603190">
+<meta property="og:image" content="http://img.blog.csdn.net/20150731144210337">
+<meta property="og:image" content="http://img.blog.csdn.net/20150731144934636">
+<meta property="og:image" content="http://img.blog.csdn.net/20150731145422816">
+<meta property="og:image" content="http://img.blog.csdn.net/20150731145734498">
+<meta property="og:image" content="http://img.blog.csdn.net/20150731171607690">
+<meta property="og:image" content="http://img.blog.csdn.net/20150731151125803">
+<meta property="og:image" content="http://img.blog.csdn.net/20150731151757020">
+<meta property="og:image" content="http://img.blog.csdn.net/20150731153119179">
+<meta property="og:image" content="http://img.blog.csdn.net/20150731162718343">
+<meta property="og:image" content="http://img.blog.csdn.net/20150731162847081">
+<meta property="og:image" content="http://img.blog.csdn.net/20150731154817798">
+<meta property="og:image" content="http://img.blog.csdn.net/20150731161946239">
+<meta property="og:image" content="http://img.blog.csdn.net/20150731162159000">
+<meta property="og:image" content="http://img.blog.csdn.net/20150731162307589">
+<meta property="og:image" content="http://img.blog.csdn.net/20150731162334452">
+<meta property="og:updated_time" content="2015-10-05T12:11:05.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Deep Learning for Nature Language Processing --- 第七讲">
+<meta name="twitter:description" content="1.Language Models1,w2…wT)；其中的w1,w2…wT都是词向量。&quot;&amp;gt;语言模型计算的是一连串词的概率：P(w1,w2…wT)；其中的w1,w2…wT都是词向量。这种语言模型有利于机器翻译，例如：1.词序：p(the cat is small) &amp;gt; p(small the is cat)2.词的选取：p(walking home after school) &amp;gt; p(w">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post',
+    motion: true
+  };
+</script>
+
+  <title> Deep Learning for Nature Language Processing --- 第七讲 | Hexo </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Hexo</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Deep Learning for Nature Language Processing --- 第七讲
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2015-10-04T20:04:57+08:00" content="2015-10-04">
+              2015-10-04
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分類於
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/NLP/" itemprop="url" rel="index">
+                    <span itemprop="name">NLP</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h1 id="1-Language_Models"><a href="#1-Language_Models" class="headerlink" title="1.Language Models"></a>1.Language Models</h1><h3 id="u8BED_u8A00_u6A21_u578B_u8BA1_u7B97_u7684_u662F_u4E00_u8FDE_u4E32_u8BCD_u7684_u6982_u7387_uFF1AP_28w1_2Cw2_u2026wT_29_uFF1B_u5176_u4E2D_u7684w1_2Cw2_u2026wT_u90FD_u662F_u8BCD_u5411_u91CF_u3002"><a href="#u8BED_u8A00_u6A21_u578B_u8BA1_u7B97_u7684_u662F_u4E00_u8FDE_u4E32_u8BCD_u7684_u6982_u7387_uFF1AP_28w1_2Cw2_u2026wT_29_uFF1B_u5176_u4E2D_u7684w1_2Cw2_u2026wT_u90FD_u662F_u8BCD_u5411_u91CF_u3002" class="headerlink" title="语言模型计算的是一连串词的概率：P(w<sub>1</sub>,w<sub>2</sub>…w<sub>T</sub>)；其中的w1,w2…wT都是词向量。"></a>语言模型计算的是一连串词的概率：P(w<sub>1</sub>,w<sub>2</sub>…w<sub>T</sub>)；其中的w1,w2…wT都是词向量。</h3><h3 id="u8FD9_u79CD_u8BED_u8A00_u6A21_u578B_u6709_u5229_u4E8E_u673A_u5668_u7FFB_u8BD1_uFF0C_u4F8B_u5982_uFF1A"><a href="#u8FD9_u79CD_u8BED_u8A00_u6A21_u578B_u6709_u5229_u4E8E_u673A_u5668_u7FFB_u8BD1_uFF0C_u4F8B_u5982_uFF1A" class="headerlink" title="这种语言模型有利于机器翻译，例如："></a>这种语言模型有利于机器翻译，例如：</h3><h4 id="1-_u8BCD_u5E8F_uFF1Ap_28the_cat_is_small_29__26gt_3B_p_28small_the_is_cat_29"><a href="#1-_u8BCD_u5E8F_uFF1Ap_28the_cat_is_small_29__26gt_3B_p_28small_the_is_cat_29" class="headerlink" title="1.词序：p(the cat is small) &gt; p(small the is cat)"></a>1.词序：p(the cat is small) &gt; p(small the is cat)</h4><h4 id="2-_u8BCD_u7684_u9009_u53D6_uFF1Ap_28walking_home_after_school_29__26gt_3B_p_28walking_house_after_school_29"><a href="#2-_u8BCD_u7684_u9009_u53D6_uFF1Ap_28walking_home_after_school_29__26gt_3B_p_28walking_house_after_school_29" class="headerlink" title="2.词的选取：p(walking home after school) &gt; p(walking house after school)"></a>2.词的选取：p(walking home after school) &gt; p(walking house after school)</h4><h1 id="2-Traditional_Language_Models"><a href="#2-Traditional_Language_Models" class="headerlink" title="2.Traditional Language Models"></a>2.Traditional Language Models</h1><h3 id="u5728_u4F20_u7EDF_u7684_u8BED_u8A00_u6A21_u578B_u4E2D_uFF0C_u8BA1_u7B97_u7684_u6982_u7387P_u901A_u5E38_u53D6_u51B3_u4E8E_u4E4B_u524D_u7684_u4E00_u4E2A_u5305_u542Bn_u4E2A_u8BCD_u7684_u7A97_uFF08window_uFF09_u4E2D_u7684_u8BCD_u3002"><a href="#u5728_u4F20_u7EDF_u7684_u8BED_u8A00_u6A21_u578B_u4E2D_uFF0C_u8BA1_u7B97_u7684_u6982_u7387P_u901A_u5E38_u53D6_u51B3_u4E8E_u4E4B_u524D_u7684_u4E00_u4E2A_u5305_u542Bn_u4E2A_u8BCD_u7684_u7A97_uFF08window_uFF09_u4E2D_u7684_u8BCD_u3002" class="headerlink" title="在传统的语言模型中，计算的概率P通常取决于之前的一个包含n个词的窗（window）中的词。"></a>在传统的语言模型中，计算的概率P通常取决于之前的一个包含n个词的窗（window）中的词。</h3><h3 id="u4F20_u7EDF_u8BED_u8A00_u6A21_u578B_u53EF_u4EE5_u7406_u89E3_u4E3A_u4E00_u4E2A_u4E0D_u51C6_u786E_u4F46_u662F_u5FC5_u8981_u7684_u9A6C_u5C14_u79D1_u592B_u5047_u8BBE_uFF1A"><a href="#u4F20_u7EDF_u8BED_u8A00_u6A21_u578B_u53EF_u4EE5_u7406_u89E3_u4E3A_u4E00_u4E2A_u4E0D_u51C6_u786E_u4F46_u662F_u5FC5_u8981_u7684_u9A6C_u5C14_u79D1_u592B_u5047_u8BBE_uFF1A" class="headerlink" title="传统语言模型可以理解为一个不准确但是必要的马尔科夫假设："></a>传统语言模型可以理解为一个不准确但是必要的马尔科夫假设：</h3><p><img src="http://img.blog.csdn.net/20150726112343050" alt="这里写图片描述"></p>
+<h3 id="u4EE5_u57FA_u4E8E_u5355_u4E2A_u8BCD_u548C_u4E24_u4E2A_u8BCD_u4E3A_u4F8B_uFF08_u4E00_u5143_u548C_u4E8C_u5143_uFF09_uFF0C_u4F30_u8BA1_u63A5_u4E0B_u6765_u51FA_u73B0_u7684_u8BCD_u7684_u6982_u7387_uFF1A"><a href="#u4EE5_u57FA_u4E8E_u5355_u4E2A_u8BCD_u548C_u4E24_u4E2A_u8BCD_u4E3A_u4F8B_uFF08_u4E00_u5143_u548C_u4E8C_u5143_uFF09_uFF0C_u4F30_u8BA1_u63A5_u4E0B_u6765_u51FA_u73B0_u7684_u8BCD_u7684_u6982_u7387_uFF1A" class="headerlink" title="以基于单个词和两个词为例（一元和二元），估计接下来出现的词的概率："></a>以基于单个词和两个词为例（一元和二元），估计接下来出现的词的概率：</h3><p><img src="http://img.blog.csdn.net/20150726112832248" alt="这里写图片描述"></p>
+<h3 id="u66F4_u9AD8_u7684_u5143_uFF08grams_uFF09_u80FD_u83B7_u5F97_u66F4_u597D_u7ED3_u679C"><a href="#u66F4_u9AD8_u7684_u5143_uFF08grams_uFF09_u80FD_u83B7_u5F97_u66F4_u597D_u7ED3_u679C" class="headerlink" title="更高的元（grams）能获得更好结果"></a>更高的元（grams）能获得更好结果</h3><h3 id="u5355_u4E2A_u8FD9_u6837_u7684_u4F20_u7EDF_u7684_u8BED_u8A00_u6A21_u578B_u5B58_u5728_u975E_u5E38_u591A_u7684n-grams_uFF08n_u5143_uFF09_uFF0C_u6240_u4EE5_u8981_u6C42_u5DE8_u5927_u7684RAM_u3002"><a href="#u5355_u4E2A_u8FD9_u6837_u7684_u4F20_u7EDF_u7684_u8BED_u8A00_u6A21_u578B_u5B58_u5728_u975E_u5E38_u591A_u7684n-grams_uFF08n_u5143_uFF09_uFF0C_u6240_u4EE5_u8981_u6C42_u5DE8_u5927_u7684RAM_u3002" class="headerlink" title="单个这样的传统的语言模型存在非常多的n-grams（n元），所以要求巨大的RAM。"></a>单个这样的传统的语言模型存在非常多的n-grams（n元），所以要求巨大的RAM。</h3><h3 id="u76EE_u524D_u5904_u4E8E_u9886_u5148_u5730_u4F4D_u7684_u7814_u7A76_uFF1A"><a href="#u76EE_u524D_u5904_u4E8E_u9886_u5148_u5730_u4F4D_u7684_u7814_u7A76_uFF1A" class="headerlink" title="目前处于领先地位的研究："></a>目前处于领先地位的研究：</h3><h4 id="u8BBA_u6587_u9898_u76EE_uFF1AScalable_Modified_Kneser-_AD_u2010Ney_Language_Model_Estimation_by_Heafield_et-_u5EFA_u7ACB_u4E86_u4E00_u4E2A_u57FA_u4E8E126_billion_tokens_u7684_u6A21_u578B_uFF0C_u5728140GB_u7684_u673A_u5668_u4E0A_u8BAD_u7EC3_u4E862-8_u5929_u3002"><a href="#u8BBA_u6587_u9898_u76EE_uFF1AScalable_Modified_Kneser-_AD_u2010Ney_Language_Model_Estimation_by_Heafield_et-_u5EFA_u7ACB_u4E86_u4E00_u4E2A_u57FA_u4E8E126_billion_tokens_u7684_u6A21_u578B_uFF0C_u5728140GB_u7684_u673A_u5668_u4E0A_u8BAD_u7EC3_u4E862-8_u5929_u3002" class="headerlink" title="论文题目：Scalable Modified Kneser-­‐Ney Language Model Estimation by Heafield et.建立了一个基于126 billion tokens的模型，在140GB的机器上训练了2.8天。"></a>论文题目：Scalable Modified Kneser-­‐Ney Language Model Estimation by Heafield et.建立了一个基于126 billion tokens的模型，在140GB的机器上训练了2.8天。</h4><h1 id="3-Recurrent_Neural_Networks_uFF01"><a href="#3-Recurrent_Neural_Networks_uFF01" class="headerlink" title="3.Recurrent Neural Networks！"></a>3.Recurrent Neural Networks！</h1><h3 id="RNN_u6A21_u578B_u5728_u6BCF_u4E00_u4E2A_uFF08_u65F6_u95F4_u8282_u70B9_uFF09time_step_u90FD_u6709_u4E00_u4E2A_u76F8_u5E94_u7684_u6743_u91CD_uFF08weights_uFF09"><a href="#RNN_u6A21_u578B_u5728_u6BCF_u4E00_u4E2A_uFF08_u65F6_u95F4_u8282_u70B9_uFF09time_step_u90FD_u6709_u4E00_u4E2A_u76F8_u5E94_u7684_u6743_u91CD_uFF08weights_uFF09" class="headerlink" title="RNN模型在每一个（时间节点）time step都有一个相应的权重（weights）"></a>RNN模型在每一个（时间节点）time step都有一个相应的权重（weights）</h3><h3 id="RNN_u6A21_u578B_u8003_u8651_u5230_u4E86_u524D_u9762_u51FA_u73B0_u7684_u6240_u6709_u8BCD"><a href="#RNN_u6A21_u578B_u8003_u8651_u5230_u4E86_u524D_u9762_u51FA_u73B0_u7684_u6240_u6709_u8BCD" class="headerlink" title="RNN模型考虑到了前面出现的所有词"></a>RNN模型考虑到了前面出现的所有词</h3><h3 id="u5BF9RAM_u7684_u9700_u6C42_u4EC5_u4EC5_u662F_u7279_u5B9A_u6570_u76EE_u7684_u8BCD"><a href="#u5BF9RAM_u7684_u9700_u6C42_u4EC5_u4EC5_u662F_u7279_u5B9A_u6570_u76EE_u7684_u8BCD" class="headerlink" title="对RAM的需求仅仅是特定数目的词"></a>对RAM的需求仅仅是特定数目的词</h3><p><img src="http://img.blog.csdn.net/20150726115849335" alt="这里写图片描述"></p>
+<h1 id="4-Recurrent_Neural_Network_Language_Model"><a href="#4-Recurrent_Neural_Network_Language_Model" class="headerlink" title="4.Recurrent Neural Network Language Model"></a>4.Recurrent Neural Network Language Model</h1><h3 id="u8BCD_u5411_u91CF_uFF1Ax1_u2026xt-1_2Cxt_2Cxt+1_u2026xT"><a href="#u8BCD_u5411_u91CF_uFF1Ax1_u2026xt-1_2Cxt_2Cxt+1_u2026xT" class="headerlink" title="词向量：x<sub>1</sub>…x<sub>t-1</sub>,x<sub>t</sub>,x<sub>t+1</sub>…x<sub>T</sub>"></a>词向量：x<sub>1</sub>…x<sub>t-1</sub>,x<sub>t</sub>,x<sub>t+1</sub>…x<sub>T</sub></h3><h3 id="u5BF9_u4E8E_u5355_u4E2A_u65F6_u95F4_u8282_u70B9_uFF08time_step_uFF09_uFF1A"><a href="#u5BF9_u4E8E_u5355_u4E2A_u65F6_u95F4_u8282_u70B9_uFF08time_step_uFF09_uFF1A" class="headerlink" title="对于单个时间节点（time step）："></a>对于单个时间节点（time step）：</h3><p><img src="http://img.blog.csdn.net/20150726182122892" alt="这里写图片描述"></p>
+<h3 id="RNN_Language_Model_u7684_u4E2D_u5FC3_u601D_u60F3_uFF1A_u5728_u6240_u6709_u7684time_step_u4E0A_u4F7F_u7528_u540C_u4E00_u7EC4weights_u3002_u800C_u5BF9_u4E8E_u6BCF_u4E2Atime_step_uFF0C_u5176_u8BA1_u7B97_u516C_u5F0F_u4E0D_u53D8_uFF1A"><a href="#RNN_Language_Model_u7684_u4E2D_u5FC3_u601D_u60F3_uFF1A_u5728_u6240_u6709_u7684time_step_u4E0A_u4F7F_u7528_u540C_u4E00_u7EC4weights_u3002_u800C_u5BF9_u4E8E_u6BCF_u4E2Atime_step_uFF0C_u5176_u8BA1_u7B97_u516C_u5F0F_u4E0D_u53D8_uFF1A" class="headerlink" title="RNN Language Model的中心思想：在所有的time step上使用同一组weights。而对于每个time step，其计算公式不变："></a>RNN Language Model的中心思想：在所有的time step上使用同一组weights。而对于每个time step，其计算公式不变：</h3><p><img src="http://img.blog.csdn.net/20150726182855616" alt="这里写图片描述"></p>
+<h3 id="u90A3_u4E48_u603B_u7684y_u5C31_u662F_u57FA_u4E8E_u6574_u4E2A_u8BCD_u6C47_u8868V_u7684_u6982_u7387_u5206_u5E03"><a href="#u90A3_u4E48_u603B_u7684y_u5C31_u662F_u57FA_u4E8E_u6574_u4E2A_u8BCD_u6C47_u8868V_u7684_u6982_u7387_u5206_u5E03" class="headerlink" title="那么总的y就是基于整个词汇表V的概率分布"></a>那么总的y就是基于整个词汇表V的概率分布</h3><h3 id="u4EA4_u53C9_u71B5_u516C_u5F0F_u662F_u76F8_u540C_u7684_uFF1A"><a href="#u4EA4_u53C9_u71B5_u516C_u5F0F_u662F_u76F8_u540C_u7684_uFF1A" class="headerlink" title="交叉熵公式是相同的："></a>交叉熵公式是相同的：</h3><p><img src="http://img.blog.csdn.net/20150731113738899" alt="这里写图片描述"></p>
+<h1 id="5-Training_RNNs_is_hard"><a href="#5-Training_RNNs_is_hard" class="headerlink" title="5.Training RNNs is hard"></a>5.Training RNNs is hard</h1><h3 id="RNN_u8BAD_u7EC3_u56F0_u96BE_uFF0C_u53EF_u4EE5_u4F53_u73B0_u5728_u4EE5_u4E0B_u51E0_u70B9_uFF1A"><a href="#RNN_u8BAD_u7EC3_u56F0_u96BE_uFF0C_u53EF_u4EE5_u4F53_u73B0_u5728_u4EE5_u4E0B_u51E0_u70B9_uFF1A" class="headerlink" title="RNN训练困难，可以体现在以下几点："></a>RNN训练困难，可以体现在以下几点：</h3><h4 id="1_uFF09_u5728_u6BCF_u6B21_u7684_u524D_u5411_u4F20_u64AD_u4E2D_uFF0C_u90FD_u9700_u8981_u4E58_u4EE5_u4E00_u4E2A_u77E9_u9635W"><a href="#1_uFF09_u5728_u6BCF_u6B21_u7684_u524D_u5411_u4F20_u64AD_u4E2D_uFF0C_u90FD_u9700_u8981_u4E58_u4EE5_u4E00_u4E2A_u77E9_u9635W" class="headerlink" title="1）在每次的前向传播中，都需要乘以一个矩阵W"></a>1）在每次的前向传播中，都需要乘以一个矩阵W</h4><h4 id="2_uFF09_u7406_u8BBA_u4E0A_uFF0C_u5728RNN_u6A21_u578B_u4E2D_uFF0C_u5F88_u4E45_u4EE5_u524D_u7684time_step_u4E0A_u7684_u8F93_u5165_u4E5F_u4F1A_u5F71_u54CDRNN_u7684_u8F93_u51FAy"><a href="#2_uFF09_u7406_u8BBA_u4E0A_uFF0C_u5728RNN_u6A21_u578B_u4E2D_uFF0C_u5F88_u4E45_u4EE5_u524D_u7684time_step_u4E0A_u7684_u8F93_u5165_u4E5F_u4F1A_u5F71_u54CDRNN_u7684_u8F93_u51FAy" class="headerlink" title="2）理论上，在RNN模型中，很久以前的time step上的输入也会影响RNN的输出y"></a>2）理论上，在RNN模型中，很久以前的time step上的输入也会影响RNN的输出y</h4><h4 id="3_uFF09_u8BD5_u8BD5_u6C42_u4E00_u4E0BRNN_u6A21_u578B_u4E2D_uFF0C_u8FDE_u7EED_u4E24_u4E2Atime_step_u5BF9_u7684_u5BFC_u6570"><a href="#3_uFF09_u8BD5_u8BD5_u6C42_u4E00_u4E0BRNN_u6A21_u578B_u4E2D_uFF0C_u8FDE_u7EED_u4E24_u4E2Atime_step_u5BF9_u7684_u5BFC_u6570" class="headerlink" title="3）试试求一下RNN模型中，连续两个time step对的导数"></a>3）试试求一下RNN模型中，连续两个time step对的导数</h4><p><img src="http://img.blog.csdn.net/20150731114908732" alt="这里写图片描述"></p>
+<h1 id="6-The_vanishing_gradient_problem"><a href="#6-The_vanishing_gradient_problem" class="headerlink" title="6.The vanishing gradient problem"></a>6.The vanishing gradient problem</h1><h3 id="u5728_u53CD_u5411_u4F20_u64AD_u8FC7_u7A0B_u4E2D_uFF0C_u5BF9_u4E8E_u6BCF_u4E00_u4E2Atime_step_u90FD_u8981_u4E58_u4EE5_u540C_u4E00_u4E2A_u77E9_u9635W"><a href="#u5728_u53CD_u5411_u4F20_u64AD_u8FC7_u7A0B_u4E2D_uFF0C_u5BF9_u4E8E_u6BCF_u4E00_u4E2Atime_step_u90FD_u8981_u4E58_u4EE5_u540C_u4E00_u4E2A_u77E9_u9635W" class="headerlink" title="在反向传播过程中，对于每一个time step都要乘以同一个矩阵W"></a>在反向传播过程中，对于每一个time step都要乘以同一个矩阵W</h3><h3 id="u5256_u6790_u9020_u6210RNN_vanishing_gradient_problem_u7684_u539F_u56E0_uFF1A"><a href="#u5256_u6790_u9020_u6210RNN_vanishing_gradient_problem_u7684_u539F_u56E0_uFF1A" class="headerlink" title="剖析造成RNN vanishing gradient problem的原因："></a>剖析造成RNN vanishing gradient problem的原因：</h3><p><img src="http://img.blog.csdn.net/20150731115701090" alt="这里写图片描述"></p>
+<h4 id="1_uFF09_u6BCF_u4E2Atime_step_u4E0A_u7684_u8BA1_u7B97_u516C_u5F0F_uFF1A"><a href="#1_uFF09_u6BCF_u4E2Atime_step_u4E0A_u7684_u8BA1_u7B97_u516C_u5F0F_uFF1A" class="headerlink" title="1）每个time step上的计算公式："></a>1）每个time step上的计算公式：</h4><p><img src="http://img.blog.csdn.net/20150731115633052" alt="这里写图片描述"></p>
+<h4 id="2_uFF09_u5168_u5C40_u7684_u8BEF_u5DEE_u7B49_u4E8E_u6BCF_u4E2Atime_step_u4E0A_u7684_u8BEF_u5DEE_u4E4B_u548C_uFF1A"><a href="#2_uFF09_u5168_u5C40_u7684_u8BEF_u5DEE_u7B49_u4E8E_u6BCF_u4E2Atime_step_u4E0A_u7684_u8BEF_u5DEE_u4E4B_u548C_uFF1A" class="headerlink" title="2）全局的误差等于每个time step上的误差之和："></a>2）全局的误差等于每个time step上的误差之和：</h4><p><img src="http://img.blog.csdn.net/20150731115736747" alt="这里写图片描述"></p>
+<h4 id="3_uFF09_u53C8_u56E0_u4E3A_u94FE_u5F0F_u6CD5_u5219_uFF1A"><a href="#3_uFF09_u53C8_u56E0_u4E3A_u94FE_u5F0F_u6CD5_u5219_uFF1A" class="headerlink" title="3）又因为链式法则："></a>3）又因为链式法则：</h4><p><img src="http://img.blog.csdn.net/20150731120038320" alt="这里写图片描述"></p>
+<h4 id="4_uFF09_u89C2_u5BDF_u4E0B_u9762_u7EA2_u8272_u6846_u4E2D_u7684_u516C_u5F0F_uFF1A"><a href="#4_uFF09_u89C2_u5BDF_u4E0B_u9762_u7EA2_u8272_u6846_u4E2D_u7684_u516C_u5F0F_uFF1A" class="headerlink" title="4）观察下面红色框中的公式："></a>4）观察下面红色框中的公式：</h4><p><img src="http://img.blog.csdn.net/20150731120456980" alt="这里写图片描述"></p>
+<h4 id="5_uFF09_u53C8_u56E0_u4E3A_uFF1A"><a href="#5_uFF09_u53C8_u56E0_u4E3A_uFF1A" class="headerlink" title="5）又因为："></a>5）又因为：</h4><p><img src="http://img.blog.csdn.net/20150731120711379" alt="这里写图片描述"><br><img src="http://img.blog.csdn.net/20150731121414030" alt="这里写图片描述"><br>原因是之前time step的h会对后面的time step的h产生影响</p>
+<h4 id="6_uFF09_u800C_u524D_u9762_u7D2F_u4E58_u53F7_u91CC_u9762_u7684_u5F0F_u5B50_u5373_u5BFC_u6570_uFF0C_u6709_u4E8B_u4E00_u4E2A_u96C5_u514B_u6BD4_uFF08jacobian_uFF09_u77E9_u9635_uFF1A"><a href="#6_uFF09_u800C_u524D_u9762_u7D2F_u4E58_u53F7_u91CC_u9762_u7684_u5F0F_u5B50_u5373_u5BFC_u6570_uFF0C_u6709_u4E8B_u4E00_u4E2A_u96C5_u514B_u6BD4_uFF08jacobian_uFF09_u77E9_u9635_uFF1A" class="headerlink" title="6）而前面累乘号里面的式子即导数，有事一个雅克比（jacobian）矩阵："></a>6）而前面累乘号里面的式子即导数，有事一个雅克比（jacobian）矩阵：</h4><p><img src="http://img.blog.csdn.net/20150731141012079" alt="这里写图片描述"></p>
+<h4 id="7_uFF09_u8981_u8BA1_u7B97_u96C5_u514B_u6BD4_u884C_u5217_u5F0F_uFF0C_u9700_u8981_u5BF9_u5176_u4E2D_u7684_u6BCF_u4E2A_u5143_u7D20_u8FDB_u884C_u6C42_u5BFC_uFF1A"><a href="#7_uFF09_u8981_u8BA1_u7B97_u96C5_u514B_u6BD4_u884C_u5217_u5F0F_uFF0C_u9700_u8981_u5BF9_u5176_u4E2D_u7684_u6BCF_u4E2A_u5143_u7D20_u8FDB_u884C_u6C42_u5BFC_uFF1A" class="headerlink" title="7）要计算雅克比行列式，需要对其中的每个元素进行求导："></a>7）要计算雅克比行列式，需要对其中的每个元素进行求导：</h4><p><img src="http://img.blog.csdn.net/20150731143046208" alt="这里写图片描述"></p>
+<h4 id="8_uFF09_u800C_u68AF_u5EA6_u5219_u662F_u96C5_u514B_u6BD4_u77E9_u9635_u7684_u4E58_u79EF_uFF0C_u8FD9_u6837_u7684_u8BDD_u5230_u6700_u540E_uFF0C_u68AF_u5EA6_u4F1A_u53D8_u5F97_u7279_u522B_u5927_u6216_u8005_u7279_u522B_u5C0F_uFF0C_u9020_u6210vanishing_gradient_problem_uFF1A"><a href="#8_uFF09_u800C_u68AF_u5EA6_u5219_u662F_u96C5_u514B_u6BD4_u77E9_u9635_u7684_u4E58_u79EF_uFF0C_u8FD9_u6837_u7684_u8BDD_u5230_u6700_u540E_uFF0C_u68AF_u5EA6_u4F1A_u53D8_u5F97_u7279_u522B_u5927_u6216_u8005_u7279_u522B_u5C0F_uFF0C_u9020_u6210vanishing_gradient_problem_uFF1A" class="headerlink" title="8）而梯度则是雅克比矩阵的乘积，这样的话到最后，梯度会变得特别大或者特别小，造成vanishing gradient problem："></a>8）而梯度则是雅克比矩阵的乘积，这样的话到最后，梯度会变得特别大或者特别小，造成vanishing gradient problem：</h4><p><img src="http://img.blog.csdn.net/20150731143603190" alt="这里写图片描述"></p>
+<h3 id="u7406_u8BBA_u4E0A_uFF0C_u5355_u4E2Atime_step_u4E0A_u7684_u8BEF_u5DEEerror_u5728_u53CD_u5411_u4F20_u64AD_u65F6_uFF0C_u4F1A_u5F71_u54CD_u4E4B_u524D_u5F88_u591Atime_step_u7684_u6539_u53D8_uFF0C_u6240_u4EE5vanishing_gradient__u662F_u4E00_u4E2Aproblem_uFF1A"><a href="#u7406_u8BBA_u4E0A_uFF0C_u5355_u4E2Atime_step_u4E0A_u7684_u8BEF_u5DEEerror_u5728_u53CD_u5411_u4F20_u64AD_u65F6_uFF0C_u4F1A_u5F71_u54CD_u4E4B_u524D_u5F88_u591Atime_step_u7684_u6539_u53D8_uFF0C_u6240_u4EE5vanishing_gradient__u662F_u4E00_u4E2Aproblem_uFF1A" class="headerlink" title="理论上，单个time step上的误差error在反向传播时，会影响之前很多time step的改变，所以vanishing gradient 是一个problem："></a>理论上，单个time step上的误差error在反向传播时，会影响之前很多time step的改变，所以vanishing gradient 是一个problem：</h3><p><img src="http://img.blog.csdn.net/20150731144210337" alt="这里写图片描述"></p>
+<h3 id="vanishing_gradient_problem_u5BF9_u95EE_u7B54_u7CFB_u7EDF_u7B49_u7684_u5F71_u54CD_uFF1A_u5BF9_u4E8E_u5F53_u524D_u8BED_u53E5_u6D89_u53CA_u5230_u7684_u5355_u8BCD_uFF0C_u6A21_u578B_u4E0D_u4F1A_u8003_u8651_u79BB_u8FD9_u4E9B_u5355_u8BCD_u7684_u5F88_u8FDC_u7684time_step_u4E0A_u7684_u5355_u8BCD_u3002_u4F8B_u5982_uFF1A"><a href="#vanishing_gradient_problem_u5BF9_u95EE_u7B54_u7CFB_u7EDF_u7B49_u7684_u5F71_u54CD_uFF1A_u5BF9_u4E8E_u5F53_u524D_u8BED_u53E5_u6D89_u53CA_u5230_u7684_u5355_u8BCD_uFF0C_u6A21_u578B_u4E0D_u4F1A_u8003_u8651_u79BB_u8FD9_u4E9B_u5355_u8BCD_u7684_u5F88_u8FDC_u7684time_step_u4E0A_u7684_u5355_u8BCD_u3002_u4F8B_u5982_uFF1A" class="headerlink" title="vanishing gradient problem对问答系统等的影响：对于当前语句涉及到的单词，模型不会考虑离这些单词的很远的time step上的单词。例如："></a>vanishing gradient problem对问答系统等的影响：对于当前语句涉及到的单词，模型不会考虑离这些单词的很远的time step上的单词。例如：</h3><p><img src="http://img.blog.csdn.net/20150731144934636" alt="这里写图片描述"></p>
+<h1 id="8-IPython_Notebook_with_vanishing_gradient_example"><a href="#8-IPython_Notebook_with_vanishing_gradient_example" class="headerlink" title="8.IPython Notebook with vanishing gradient example"></a>8.IPython Notebook with vanishing gradient example</h1><p><img src="http://img.blog.csdn.net/20150731145422816" alt="这里写图片描述"></p>
+<h1 id="9-Trick_for_exploding_gradient_3A_clipping_trick"><a href="#9-Trick_for_exploding_gradient_3A_clipping_trick" class="headerlink" title="9.Trick for exploding gradient: clipping trick"></a>9.Trick for exploding gradient: clipping trick</h1><h3 id="u4F2A_u4EE3_u7801_uFF1A"><a href="#u4F2A_u4EE3_u7801_uFF1A" class="headerlink" title="伪代码："></a>伪代码：</h3><p><img src="http://img.blog.csdn.net/20150731145734498" alt="这里写图片描述"><br>这样修改直接改变了梯度公式本身<br><img src="http://img.blog.csdn.net/20150731171607690" alt="这里写图片描述"></p>
+<h1 id="10-For_vanishing_gradients_3A_Initialization_+_ReLus_21"><a href="#10-For_vanishing_gradients_3A_Initialization_+_ReLus_21" class="headerlink" title="10.For vanishing gradients: Initialization + ReLus!"></a>10.For vanishing gradients: Initialization + ReLus!</h1><h3 id="u5C06W_u521D_u59CB_u5316_u4E3A_u5355_u4F4D_u77E9_u9635_uFF0C_u5E76_u4E14_u4F7F_u7528max_uFF08x_uFF0C0_uFF09_u4F5C_u4E3A_u975E_u7EBF_u6027_u51FD_u6570_uFF1A"><a href="#u5C06W_u521D_u59CB_u5316_u4E3A_u5355_u4F4D_u77E9_u9635_uFF0C_u5E76_u4E14_u4F7F_u7528max_uFF08x_uFF0C0_uFF09_u4F5C_u4E3A_u975E_u7EBF_u6027_u51FD_u6570_uFF1A" class="headerlink" title="将W初始化为单位矩阵，并且使用max（x，0）作为非线性函数："></a>将W初始化为单位矩阵，并且使用max（x，0）作为非线性函数：</h3><p><img src="http://img.blog.csdn.net/20150731151125803" alt="这里写图片描述"></p>
+<h3 id="u8FD9_u662F_u53EA_u6709_u4E00_u4E2A_u8282_u70B9_u7684RNN_u7684_u68AF_u5EA6_u4E0B_u964D_u56FE_u3002_u84DD_u8272_u5B9E_u7EBF_u662F_u6CA1_u505Atrick_u7684_u68AF_u5EA6_u8F68_u8FF9_uFF0C_u649E_u5230_u90A3_u5835_u5899_u540E_u5C31_u88AB_u5F39_u98DE_u4E86_uFF1B_u505A_u4E86trick_u540E_u7684_u8F68_u8FF9_u662F_u865A_u7EBF_uFF0C_u540C_u6837_u9047_u5230_u90A3_u5835_u5899_u540E_uFF0C_u65B0_u7684_u68AF_u5EA6_u4E0D_u4F1A_u88AB_u4E71_u5F39_u3002_u6BCF_u4E00_u6B65_u7684W_u4F1A_u7528_u68AF_u5EA6_u66F4_u65B0_uFF0C_u68AF_u5EA6_u7206_u4E86_u7684_u8BDD_uFF0C_u65B0W_u5C31_u79BB_u8001W_u8FDC_u5F88_u591A_u4E86_uFF0C_u5C40_u90E8_u6027_u5C31_u88AB_u6253_u7834_u4E86"><a href="#u8FD9_u662F_u53EA_u6709_u4E00_u4E2A_u8282_u70B9_u7684RNN_u7684_u68AF_u5EA6_u4E0B_u964D_u56FE_u3002_u84DD_u8272_u5B9E_u7EBF_u662F_u6CA1_u505Atrick_u7684_u68AF_u5EA6_u8F68_u8FF9_uFF0C_u649E_u5230_u90A3_u5835_u5899_u540E_u5C31_u88AB_u5F39_u98DE_u4E86_uFF1B_u505A_u4E86trick_u540E_u7684_u8F68_u8FF9_u662F_u865A_u7EBF_uFF0C_u540C_u6837_u9047_u5230_u90A3_u5835_u5899_u540E_uFF0C_u65B0_u7684_u68AF_u5EA6_u4E0D_u4F1A_u88AB_u4E71_u5F39_u3002_u6BCF_u4E00_u6B65_u7684W_u4F1A_u7528_u68AF_u5EA6_u66F4_u65B0_uFF0C_u68AF_u5EA6_u7206_u4E86_u7684_u8BDD_uFF0C_u65B0W_u5C31_u79BB_u8001W_u8FDC_u5F88_u591A_u4E86_uFF0C_u5C40_u90E8_u6027_u5C31_u88AB_u6253_u7834_u4E86" class="headerlink" title="这是只有一个节点的RNN的梯度下降图。蓝色实线是没做trick的梯度轨迹，撞到那堵墙后就被弹飞了；做了trick后的轨迹是虚线，同样遇到那堵墙后，新的梯度不会被乱弹。每一步的W会用梯度更新，梯度爆了的话，新W就离老W远很多了，局部性就被打破了"></a>这是只有一个节点的RNN的梯度下降图。蓝色实线是没做trick的梯度轨迹，撞到那堵墙后就被弹飞了；做了trick后的轨迹是虚线，同样遇到那堵墙后，新的梯度不会被乱弹。每一步的W会用梯度更新，梯度爆了的话，新W就离老W远很多了，局部性就被打破了</h3><h1 id="11-Problem_3A_Softmax_is_huge_and_slow"><a href="#11-Problem_3A_Softmax_is_huge_and_slow" class="headerlink" title="11.Problem: Softmax is huge and slow"></a>11.Problem: Softmax is huge and slow</h1><h3 id="u7B56_u7565_uFF1A_u57FA_u4E8E_u7C7B_u7684_u5355_u8BCD_u9884_u6D4B"><a href="#u7B56_u7565_uFF1A_u57FA_u4E8E_u7C7B_u7684_u5355_u8BCD_u9884_u6D4B" class="headerlink" title="策略：基于类的单词预测"></a>策略：基于类的单词预测</h3><h3 id="u5373_uFF1A"><a href="#u5373_uFF1A" class="headerlink" title="即："></a>即：</h3><p><img src="http://img.blog.csdn.net/20150731151757020" alt="这里写图片描述"></p>
+<h3 id="u7C7B_u7684_u6570_u91CF_u8D8A_u591A_uFF0C_u5219_u590D_u6742_u6027_u66F4_u5927_uFF0C_u901F_u5EA6_u4E5F_u8D8A_u4F4E_u3002"><a href="#u7C7B_u7684_u6570_u91CF_u8D8A_u591A_uFF0C_u5219_u590D_u6742_u6027_u66F4_u5927_uFF0C_u901F_u5EA6_u4E5F_u8D8A_u4F4E_u3002" class="headerlink" title="类的数量越多，则复杂性更大，速度也越低。"></a>类的数量越多，则复杂性更大，速度也越低。</h3><h1 id="12-Sequence_modeling_for_other_tasks"><a href="#12-Sequence_modeling_for_other_tasks" class="headerlink" title="12.Sequence modeling for other tasks"></a>12.Sequence modeling for other tasks</h1><h3 id="u5206_u7C7B_uFF1A"><a href="#u5206_u7C7B_uFF1A" class="headerlink" title="分类："></a>分类：</h3><h4 id="1_uFF09NER_uFF08_u547D_u540D_u5B9E_u4F53_u8BC6_u522B_uFF0C_u5982_u8F66_u8F86_uFF0C_u5730_u70B9_u7B49_u7B49_uFF09"><a href="#1_uFF09NER_uFF08_u547D_u540D_u5B9E_u4F53_u8BC6_u522B_uFF0C_u5982_u8F66_u8F86_uFF0C_u5730_u70B9_u7B49_u7B49_uFF09" class="headerlink" title="1）NER（命名实体识别，如车辆，地点等等）"></a>1）NER（命名实体识别，如车辆，地点等等）</h4><h4 id="2_uFF09_u60C5_u611F_u5206_u6790"><a href="#2_uFF09_u60C5_u611F_u5206_u6790" class="headerlink" title="2）情感分析"></a>2）情感分析</h4><h4 id="3_uFF09_u89C2_u70B9_u8868_u8FBE"><a href="#3_uFF09_u89C2_u70B9_u8868_u8FBE" class="headerlink" title="3）观点表达"></a>3）观点表达</h4><h3 id="u53EF_u4EE5_u53C2_u8003_u4E0B_u9762_u8FD9_u7BC7_u8BBA_u6587_uFF1A"><a href="#u53EF_u4EE5_u53C2_u8003_u4E0B_u9762_u8FD9_u7BC7_u8BBA_u6587_uFF1A" class="headerlink" title="可以参考下面这篇论文："></a>可以参考下面这篇论文：</h3><p><img src="http://img.blog.csdn.net/20150731153119179" alt="这里写图片描述"></p>
+<h1 id="13-Opinion_Mining_with_Deep_Recurrent_Nets"><a href="#13-Opinion_Mining_with_Deep_Recurrent_Nets" class="headerlink" title="13.Opinion Mining with Deep Recurrent Nets"></a>13.Opinion Mining with Deep Recurrent Nets</h1><h3 id="u76EE_u6807_uFF1A_u901A_u8FC7_u4EE5_u4E0B_u4E24_u79CD_u65B9_u6CD5_u7ED9_u6BCF_u4E2A_u5355_u8BCD_u8FDB_u884C_u5206_u7C7B"><a href="#u76EE_u6807_uFF1A_u901A_u8FC7_u4EE5_u4E0B_u4E24_u79CD_u65B9_u6CD5_u7ED9_u6BCF_u4E2A_u5355_u8BCD_u8FDB_u884C_u5206_u7C7B" class="headerlink" title="目标：通过以下两种方法给每个单词进行分类"></a>目标：通过以下两种方法给每个单词进行分类</h3><p><img src="http://img.blog.csdn.net/20150731162718343" alt="这里写图片描述"><br><img src="http://img.blog.csdn.net/20150731162847081" alt="这里写图片描述"><br>这两张slides我没有理解，欢迎留言指导讨论</p>
+<h1 id="14-Approach_3A_Recurrent_Neural_Network"><a href="#14-Approach_3A_Recurrent_Neural_Network" class="headerlink" title="14.Approach: Recurrent Neural Network"></a>14.Approach: Recurrent Neural Network</h1><h3 id="u6807_u8BB0_uFF1A"><a href="#u6807_u8BB0_uFF1A" class="headerlink" title="标记："></a>标记：</h3><p><img src="http://img.blog.csdn.net/20150731154817798" alt="这里写图片描述"></p>
+<h3 id="u5176_u4E2D_uFF1A"><a href="#u5176_u4E2D_uFF1A" class="headerlink" title="其中："></a>其中：</h3><h4 id="1_uFF09x_u4EE3_u8868_u4E00_u4E2A_u5355_u8BCD_uFF08token_uFF09_u6240_u8868_u793A_u7684_u8BCD_u5411_u91CF"><a href="#1_uFF09x_u4EE3_u8868_u4E00_u4E2A_u5355_u8BCD_uFF08token_uFF09_u6240_u8868_u793A_u7684_u8BCD_u5411_u91CF" class="headerlink" title="1）x代表一个单词（token）所表示的词向量"></a>1）x代表一个单词（token）所表示的词向量</h4><h4 id="2_uFF09y_u4EE3_u8868_u6A21_u578B_u8F93_u51FA_u7684label_uFF08B_uFF0CI_u6216_u8005O_uFF09_uFF0C_u4E0A_u56FE_u4E2D_u7684g_3Dsoftmax"><a href="#2_uFF09y_u4EE3_u8868_u6A21_u578B_u8F93_u51FA_u7684label_uFF08B_uFF0CI_u6216_u8005O_uFF09_uFF0C_u4E0A_u56FE_u4E2D_u7684g_3Dsoftmax" class="headerlink" title="2）y代表模型输出的label（B，I或者O），上图中的g=softmax"></a>2）y代表模型输出的label（B，I或者O），上图中的g=softmax</h4><h4 id="3_uFF09h_u662F_u8BB0_u5FC6_u5355_u5143_uFF08_u53EF_u4EE5_u7406_u89E3_u4E3A_u9690_u542B_u5C42_uFF09_uFF0C_u662F_u7531_u4E4B_u524D_u7684_u8BB0_u5FC6_u5355_u5143_u548C_u5F53_u524D_u7684_u8BCD_u5411_u91CF_u8BA1_u7B97_u5F97_u5230_uFF0C_u53EF_u4EE5_u8BF4_u6982_u62EC_u4E86_u76F4_u5230_u8FD9_u4E2Atime_step_u7684_u4E00_u6BB5_u8BDD"><a href="#3_uFF09h_u662F_u8BB0_u5FC6_u5355_u5143_uFF08_u53EF_u4EE5_u7406_u89E3_u4E3A_u9690_u542B_u5C42_uFF09_uFF0C_u662F_u7531_u4E4B_u524D_u7684_u8BB0_u5FC6_u5355_u5143_u548C_u5F53_u524D_u7684_u8BCD_u5411_u91CF_u8BA1_u7B97_u5F97_u5230_uFF0C_u53EF_u4EE5_u8BF4_u6982_u62EC_u4E86_u76F4_u5230_u8FD9_u4E2Atime_step_u7684_u4E00_u6BB5_u8BDD" class="headerlink" title="3）h是记忆单元（可以理解为隐含层），是由之前的记忆单元和当前的词向量计算得到，可以说概括了直到这个time step的一段话"></a>3）h是记忆单元（可以理解为隐含层），是由之前的记忆单元和当前的词向量计算得到，可以说概括了直到这个time step的一段话</h4><h1 id="15-Bidirectional_RNNs"><a href="#15-Bidirectional_RNNs" class="headerlink" title="15.Bidirectional RNNs"></a>15.Bidirectional RNNs</h1><h3 id="u5BF9_u4E8E_u5206_u7C7B_u95EE_u9898_uFF0C_u5982_u679C_u60F3_u8981_u5F53_u524D_u7684time_step_u5305_u542B_u4E4B_u524D_u548C_u4E4B_u540E_u7684_u8BCD_u7684_u4FE1_u606F_uFF0C_u5219_u53EF_u4EE5_u8003_u8651_u4F7F_u7528_u53CC_u5411RNN_uFF1A"><a href="#u5BF9_u4E8E_u5206_u7C7B_u95EE_u9898_uFF0C_u5982_u679C_u60F3_u8981_u5F53_u524D_u7684time_step_u5305_u542B_u4E4B_u524D_u548C_u4E4B_u540E_u7684_u8BCD_u7684_u4FE1_u606F_uFF0C_u5219_u53EF_u4EE5_u8003_u8651_u4F7F_u7528_u53CC_u5411RNN_uFF1A" class="headerlink" title="对于分类问题，如果想要当前的time step包含之前和之后的词的信息，则可以考虑使用双向RNN："></a>对于分类问题，如果想要当前的time step包含之前和之后的词的信息，则可以考虑使用双向RNN：</h3><p><img src="http://img.blog.csdn.net/20150731161946239" alt="这里写图片描述"><br><img src="http://img.blog.csdn.net/20150731162159000" alt="这里写图片描述"></p>
+<h1 id="Data"><a href="#Data" class="headerlink" title="Data"></a>Data</h1><p><img src="http://img.blog.csdn.net/20150731162307589" alt="这里写图片描述"><br><img src="http://img.blog.csdn.net/20150731162334452" alt="这里写图片描述"></p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/10/04/NLP/deep-learning-for-nature-language-processing-e7-ac-ac-e5-85-ad-e8-ae-b2/" rel="next" title="Deep Learning for Nature Language Processing --- 第六讲">
+                <i class="fa fa-chevron-left"></i> Deep Learning for Nature Language Processing --- 第六讲
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/10/04/NLP/deep-learning-for-nature-language-processing-e7-ac-ac-e5-85-ab-e8-ae-b2/" rel="prev" title="Deep Learning for Nature Language Processing --- 第八讲">
+                Deep Learning for Nature Language Processing --- 第八讲 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+        </div>
+
+        
+
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="John Doe" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">John Doe</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-Language_Models"><span class="nav-number">1.</span> <span class="nav-text">1.Language Models</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u8BED_u8A00_u6A21_u578B_u8BA1_u7B97_u7684_u662F_u4E00_u8FDE_u4E32_u8BCD_u7684_u6982_u7387_uFF1AP_28w1_2Cw2_u2026wT_29_uFF1B_u5176_u4E2D_u7684w1_2Cw2_u2026wT_u90FD_u662F_u8BCD_u5411_u91CF_u3002"><span class="nav-number">1.0.1.</span> <span class="nav-text">语言模型计算的是一连串词的概率：P(w1,w2…wT)；其中的w1,w2…wT都是词向量。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u8FD9_u79CD_u8BED_u8A00_u6A21_u578B_u6709_u5229_u4E8E_u673A_u5668_u7FFB_u8BD1_uFF0C_u4F8B_u5982_uFF1A"><span class="nav-number">1.0.2.</span> <span class="nav-text">这种语言模型有利于机器翻译，例如：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-_u8BCD_u5E8F_uFF1Ap_28the_cat_is_small_29__26gt_3B_p_28small_the_is_cat_29"><span class="nav-number">1.0.2.1.</span> <span class="nav-text">1.词序：p(the cat is small) > p(small the is cat)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-_u8BCD_u7684_u9009_u53D6_uFF1Ap_28walking_home_after_school_29__26gt_3B_p_28walking_house_after_school_29"><span class="nav-number">1.0.2.2.</span> <span class="nav-text">2.词的选取：p(walking home after school) > p(walking house after school)</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-Traditional_Language_Models"><span class="nav-number">2.</span> <span class="nav-text">2.Traditional Language Models</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u5728_u4F20_u7EDF_u7684_u8BED_u8A00_u6A21_u578B_u4E2D_uFF0C_u8BA1_u7B97_u7684_u6982_u7387P_u901A_u5E38_u53D6_u51B3_u4E8E_u4E4B_u524D_u7684_u4E00_u4E2A_u5305_u542Bn_u4E2A_u8BCD_u7684_u7A97_uFF08window_uFF09_u4E2D_u7684_u8BCD_u3002"><span class="nav-number">2.0.1.</span> <span class="nav-text">在传统的语言模型中，计算的概率P通常取决于之前的一个包含n个词的窗（window）中的词。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u4F20_u7EDF_u8BED_u8A00_u6A21_u578B_u53EF_u4EE5_u7406_u89E3_u4E3A_u4E00_u4E2A_u4E0D_u51C6_u786E_u4F46_u662F_u5FC5_u8981_u7684_u9A6C_u5C14_u79D1_u592B_u5047_u8BBE_uFF1A"><span class="nav-number">2.0.2.</span> <span class="nav-text">传统语言模型可以理解为一个不准确但是必要的马尔科夫假设：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u4EE5_u57FA_u4E8E_u5355_u4E2A_u8BCD_u548C_u4E24_u4E2A_u8BCD_u4E3A_u4F8B_uFF08_u4E00_u5143_u548C_u4E8C_u5143_uFF09_uFF0C_u4F30_u8BA1_u63A5_u4E0B_u6765_u51FA_u73B0_u7684_u8BCD_u7684_u6982_u7387_uFF1A"><span class="nav-number">2.0.3.</span> <span class="nav-text">以基于单个词和两个词为例（一元和二元），估计接下来出现的词的概率：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u66F4_u9AD8_u7684_u5143_uFF08grams_uFF09_u80FD_u83B7_u5F97_u66F4_u597D_u7ED3_u679C"><span class="nav-number">2.0.4.</span> <span class="nav-text">更高的元（grams）能获得更好结果</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u5355_u4E2A_u8FD9_u6837_u7684_u4F20_u7EDF_u7684_u8BED_u8A00_u6A21_u578B_u5B58_u5728_u975E_u5E38_u591A_u7684n-grams_uFF08n_u5143_uFF09_uFF0C_u6240_u4EE5_u8981_u6C42_u5DE8_u5927_u7684RAM_u3002"><span class="nav-number">2.0.5.</span> <span class="nav-text">单个这样的传统的语言模型存在非常多的n-grams（n元），所以要求巨大的RAM。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u76EE_u524D_u5904_u4E8E_u9886_u5148_u5730_u4F4D_u7684_u7814_u7A76_uFF1A"><span class="nav-number">2.0.6.</span> <span class="nav-text">目前处于领先地位的研究：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#u8BBA_u6587_u9898_u76EE_uFF1AScalable_Modified_Kneser-_AD_u2010Ney_Language_Model_Estimation_by_Heafield_et-_u5EFA_u7ACB_u4E86_u4E00_u4E2A_u57FA_u4E8E126_billion_tokens_u7684_u6A21_u578B_uFF0C_u5728140GB_u7684_u673A_u5668_u4E0A_u8BAD_u7EC3_u4E862-8_u5929_u3002"><span class="nav-number">2.0.6.1.</span> <span class="nav-text">论文题目：Scalable Modified Kneser-­‐Ney Language Model Estimation by Heafield et.建立了一个基于126 billion tokens的模型，在140GB的机器上训练了2.8天。</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-Recurrent_Neural_Networks_uFF01"><span class="nav-number">3.</span> <span class="nav-text">3.Recurrent Neural Networks！</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#RNN_u6A21_u578B_u5728_u6BCF_u4E00_u4E2A_uFF08_u65F6_u95F4_u8282_u70B9_uFF09time_step_u90FD_u6709_u4E00_u4E2A_u76F8_u5E94_u7684_u6743_u91CD_uFF08weights_uFF09"><span class="nav-number">3.0.1.</span> <span class="nav-text">RNN模型在每一个（时间节点）time step都有一个相应的权重（weights）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RNN_u6A21_u578B_u8003_u8651_u5230_u4E86_u524D_u9762_u51FA_u73B0_u7684_u6240_u6709_u8BCD"><span class="nav-number">3.0.2.</span> <span class="nav-text">RNN模型考虑到了前面出现的所有词</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u5BF9RAM_u7684_u9700_u6C42_u4EC5_u4EC5_u662F_u7279_u5B9A_u6570_u76EE_u7684_u8BCD"><span class="nav-number">3.0.3.</span> <span class="nav-text">对RAM的需求仅仅是特定数目的词</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-Recurrent_Neural_Network_Language_Model"><span class="nav-number">4.</span> <span class="nav-text">4.Recurrent Neural Network Language Model</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u8BCD_u5411_u91CF_uFF1Ax1_u2026xt-1_2Cxt_2Cxt+1_u2026xT"><span class="nav-number">4.0.1.</span> <span class="nav-text">词向量：x1…xt-1,xt,xt+1…xT</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u5BF9_u4E8E_u5355_u4E2A_u65F6_u95F4_u8282_u70B9_uFF08time_step_uFF09_uFF1A"><span class="nav-number">4.0.2.</span> <span class="nav-text">对于单个时间节点（time step）：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RNN_Language_Model_u7684_u4E2D_u5FC3_u601D_u60F3_uFF1A_u5728_u6240_u6709_u7684time_step_u4E0A_u4F7F_u7528_u540C_u4E00_u7EC4weights_u3002_u800C_u5BF9_u4E8E_u6BCF_u4E2Atime_step_uFF0C_u5176_u8BA1_u7B97_u516C_u5F0F_u4E0D_u53D8_uFF1A"><span class="nav-number">4.0.3.</span> <span class="nav-text">RNN Language Model的中心思想：在所有的time step上使用同一组weights。而对于每个time step，其计算公式不变：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u90A3_u4E48_u603B_u7684y_u5C31_u662F_u57FA_u4E8E_u6574_u4E2A_u8BCD_u6C47_u8868V_u7684_u6982_u7387_u5206_u5E03"><span class="nav-number">4.0.4.</span> <span class="nav-text">那么总的y就是基于整个词汇表V的概率分布</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u4EA4_u53C9_u71B5_u516C_u5F0F_u662F_u76F8_u540C_u7684_uFF1A"><span class="nav-number">4.0.5.</span> <span class="nav-text">交叉熵公式是相同的：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-Training_RNNs_is_hard"><span class="nav-number">5.</span> <span class="nav-text">5.Training RNNs is hard</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#RNN_u8BAD_u7EC3_u56F0_u96BE_uFF0C_u53EF_u4EE5_u4F53_u73B0_u5728_u4EE5_u4E0B_u51E0_u70B9_uFF1A"><span class="nav-number">5.0.1.</span> <span class="nav-text">RNN训练困难，可以体现在以下几点：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1_uFF09_u5728_u6BCF_u6B21_u7684_u524D_u5411_u4F20_u64AD_u4E2D_uFF0C_u90FD_u9700_u8981_u4E58_u4EE5_u4E00_u4E2A_u77E9_u9635W"><span class="nav-number">5.0.1.1.</span> <span class="nav-text">1）在每次的前向传播中，都需要乘以一个矩阵W</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2_uFF09_u7406_u8BBA_u4E0A_uFF0C_u5728RNN_u6A21_u578B_u4E2D_uFF0C_u5F88_u4E45_u4EE5_u524D_u7684time_step_u4E0A_u7684_u8F93_u5165_u4E5F_u4F1A_u5F71_u54CDRNN_u7684_u8F93_u51FAy"><span class="nav-number">5.0.1.2.</span> <span class="nav-text">2）理论上，在RNN模型中，很久以前的time step上的输入也会影响RNN的输出y</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3_uFF09_u8BD5_u8BD5_u6C42_u4E00_u4E0BRNN_u6A21_u578B_u4E2D_uFF0C_u8FDE_u7EED_u4E24_u4E2Atime_step_u5BF9_u7684_u5BFC_u6570"><span class="nav-number">5.0.1.3.</span> <span class="nav-text">3）试试求一下RNN模型中，连续两个time step对的导数</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-The_vanishing_gradient_problem"><span class="nav-number">6.</span> <span class="nav-text">6.The vanishing gradient problem</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u5728_u53CD_u5411_u4F20_u64AD_u8FC7_u7A0B_u4E2D_uFF0C_u5BF9_u4E8E_u6BCF_u4E00_u4E2Atime_step_u90FD_u8981_u4E58_u4EE5_u540C_u4E00_u4E2A_u77E9_u9635W"><span class="nav-number">6.0.1.</span> <span class="nav-text">在反向传播过程中，对于每一个time step都要乘以同一个矩阵W</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u5256_u6790_u9020_u6210RNN_vanishing_gradient_problem_u7684_u539F_u56E0_uFF1A"><span class="nav-number">6.0.2.</span> <span class="nav-text">剖析造成RNN vanishing gradient problem的原因：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1_uFF09_u6BCF_u4E2Atime_step_u4E0A_u7684_u8BA1_u7B97_u516C_u5F0F_uFF1A"><span class="nav-number">6.0.2.1.</span> <span class="nav-text">1）每个time step上的计算公式：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2_uFF09_u5168_u5C40_u7684_u8BEF_u5DEE_u7B49_u4E8E_u6BCF_u4E2Atime_step_u4E0A_u7684_u8BEF_u5DEE_u4E4B_u548C_uFF1A"><span class="nav-number">6.0.2.2.</span> <span class="nav-text">2）全局的误差等于每个time step上的误差之和：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3_uFF09_u53C8_u56E0_u4E3A_u94FE_u5F0F_u6CD5_u5219_uFF1A"><span class="nav-number">6.0.2.3.</span> <span class="nav-text">3）又因为链式法则：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4_uFF09_u89C2_u5BDF_u4E0B_u9762_u7EA2_u8272_u6846_u4E2D_u7684_u516C_u5F0F_uFF1A"><span class="nav-number">6.0.2.4.</span> <span class="nav-text">4）观察下面红色框中的公式：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5_uFF09_u53C8_u56E0_u4E3A_uFF1A"><span class="nav-number">6.0.2.5.</span> <span class="nav-text">5）又因为：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6_uFF09_u800C_u524D_u9762_u7D2F_u4E58_u53F7_u91CC_u9762_u7684_u5F0F_u5B50_u5373_u5BFC_u6570_uFF0C_u6709_u4E8B_u4E00_u4E2A_u96C5_u514B_u6BD4_uFF08jacobian_uFF09_u77E9_u9635_uFF1A"><span class="nav-number">6.0.2.6.</span> <span class="nav-text">6）而前面累乘号里面的式子即导数，有事一个雅克比（jacobian）矩阵：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7_uFF09_u8981_u8BA1_u7B97_u96C5_u514B_u6BD4_u884C_u5217_u5F0F_uFF0C_u9700_u8981_u5BF9_u5176_u4E2D_u7684_u6BCF_u4E2A_u5143_u7D20_u8FDB_u884C_u6C42_u5BFC_uFF1A"><span class="nav-number">6.0.2.7.</span> <span class="nav-text">7）要计算雅克比行列式，需要对其中的每个元素进行求导：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8_uFF09_u800C_u68AF_u5EA6_u5219_u662F_u96C5_u514B_u6BD4_u77E9_u9635_u7684_u4E58_u79EF_uFF0C_u8FD9_u6837_u7684_u8BDD_u5230_u6700_u540E_uFF0C_u68AF_u5EA6_u4F1A_u53D8_u5F97_u7279_u522B_u5927_u6216_u8005_u7279_u522B_u5C0F_uFF0C_u9020_u6210vanishing_gradient_problem_uFF1A"><span class="nav-number">6.0.2.8.</span> <span class="nav-text">8）而梯度则是雅克比矩阵的乘积，这样的话到最后，梯度会变得特别大或者特别小，造成vanishing gradient problem：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u7406_u8BBA_u4E0A_uFF0C_u5355_u4E2Atime_step_u4E0A_u7684_u8BEF_u5DEEerror_u5728_u53CD_u5411_u4F20_u64AD_u65F6_uFF0C_u4F1A_u5F71_u54CD_u4E4B_u524D_u5F88_u591Atime_step_u7684_u6539_u53D8_uFF0C_u6240_u4EE5vanishing_gradient__u662F_u4E00_u4E2Aproblem_uFF1A"><span class="nav-number">6.0.3.</span> <span class="nav-text">理论上，单个time step上的误差error在反向传播时，会影响之前很多time step的改变，所以vanishing gradient 是一个problem：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#vanishing_gradient_problem_u5BF9_u95EE_u7B54_u7CFB_u7EDF_u7B49_u7684_u5F71_u54CD_uFF1A_u5BF9_u4E8E_u5F53_u524D_u8BED_u53E5_u6D89_u53CA_u5230_u7684_u5355_u8BCD_uFF0C_u6A21_u578B_u4E0D_u4F1A_u8003_u8651_u79BB_u8FD9_u4E9B_u5355_u8BCD_u7684_u5F88_u8FDC_u7684time_step_u4E0A_u7684_u5355_u8BCD_u3002_u4F8B_u5982_uFF1A"><span class="nav-number">6.0.4.</span> <span class="nav-text">vanishing gradient problem对问答系统等的影响：对于当前语句涉及到的单词，模型不会考虑离这些单词的很远的time step上的单词。例如：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8-IPython_Notebook_with_vanishing_gradient_example"><span class="nav-number">7.</span> <span class="nav-text">8.IPython Notebook with vanishing gradient example</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#9-Trick_for_exploding_gradient_3A_clipping_trick"><span class="nav-number">8.</span> <span class="nav-text">9.Trick for exploding gradient: clipping trick</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u4F2A_u4EE3_u7801_uFF1A"><span class="nav-number">8.0.1.</span> <span class="nav-text">伪代码：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#10-For_vanishing_gradients_3A_Initialization_+_ReLus_21"><span class="nav-number">9.</span> <span class="nav-text">10.For vanishing gradients: Initialization + ReLus!</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u5C06W_u521D_u59CB_u5316_u4E3A_u5355_u4F4D_u77E9_u9635_uFF0C_u5E76_u4E14_u4F7F_u7528max_uFF08x_uFF0C0_uFF09_u4F5C_u4E3A_u975E_u7EBF_u6027_u51FD_u6570_uFF1A"><span class="nav-number">9.0.1.</span> <span class="nav-text">将W初始化为单位矩阵，并且使用max（x，0）作为非线性函数：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u8FD9_u662F_u53EA_u6709_u4E00_u4E2A_u8282_u70B9_u7684RNN_u7684_u68AF_u5EA6_u4E0B_u964D_u56FE_u3002_u84DD_u8272_u5B9E_u7EBF_u662F_u6CA1_u505Atrick_u7684_u68AF_u5EA6_u8F68_u8FF9_uFF0C_u649E_u5230_u90A3_u5835_u5899_u540E_u5C31_u88AB_u5F39_u98DE_u4E86_uFF1B_u505A_u4E86trick_u540E_u7684_u8F68_u8FF9_u662F_u865A_u7EBF_uFF0C_u540C_u6837_u9047_u5230_u90A3_u5835_u5899_u540E_uFF0C_u65B0_u7684_u68AF_u5EA6_u4E0D_u4F1A_u88AB_u4E71_u5F39_u3002_u6BCF_u4E00_u6B65_u7684W_u4F1A_u7528_u68AF_u5EA6_u66F4_u65B0_uFF0C_u68AF_u5EA6_u7206_u4E86_u7684_u8BDD_uFF0C_u65B0W_u5C31_u79BB_u8001W_u8FDC_u5F88_u591A_u4E86_uFF0C_u5C40_u90E8_u6027_u5C31_u88AB_u6253_u7834_u4E86"><span class="nav-number">9.0.2.</span> <span class="nav-text">这是只有一个节点的RNN的梯度下降图。蓝色实线是没做trick的梯度轨迹，撞到那堵墙后就被弹飞了；做了trick后的轨迹是虚线，同样遇到那堵墙后，新的梯度不会被乱弹。每一步的W会用梯度更新，梯度爆了的话，新W就离老W远很多了，局部性就被打破了</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#11-Problem_3A_Softmax_is_huge_and_slow"><span class="nav-number">10.</span> <span class="nav-text">11.Problem: Softmax is huge and slow</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u7B56_u7565_uFF1A_u57FA_u4E8E_u7C7B_u7684_u5355_u8BCD_u9884_u6D4B"><span class="nav-number">10.0.1.</span> <span class="nav-text">策略：基于类的单词预测</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u5373_uFF1A"><span class="nav-number">10.0.2.</span> <span class="nav-text">即：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u7C7B_u7684_u6570_u91CF_u8D8A_u591A_uFF0C_u5219_u590D_u6742_u6027_u66F4_u5927_uFF0C_u901F_u5EA6_u4E5F_u8D8A_u4F4E_u3002"><span class="nav-number">10.0.3.</span> <span class="nav-text">类的数量越多，则复杂性更大，速度也越低。</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#12-Sequence_modeling_for_other_tasks"><span class="nav-number">11.</span> <span class="nav-text">12.Sequence modeling for other tasks</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u5206_u7C7B_uFF1A"><span class="nav-number">11.0.1.</span> <span class="nav-text">分类：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1_uFF09NER_uFF08_u547D_u540D_u5B9E_u4F53_u8BC6_u522B_uFF0C_u5982_u8F66_u8F86_uFF0C_u5730_u70B9_u7B49_u7B49_uFF09"><span class="nav-number">11.0.1.1.</span> <span class="nav-text">1）NER（命名实体识别，如车辆，地点等等）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2_uFF09_u60C5_u611F_u5206_u6790"><span class="nav-number">11.0.1.2.</span> <span class="nav-text">2）情感分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3_uFF09_u89C2_u70B9_u8868_u8FBE"><span class="nav-number">11.0.1.3.</span> <span class="nav-text">3）观点表达</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u53EF_u4EE5_u53C2_u8003_u4E0B_u9762_u8FD9_u7BC7_u8BBA_u6587_uFF1A"><span class="nav-number">11.0.2.</span> <span class="nav-text">可以参考下面这篇论文：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#13-Opinion_Mining_with_Deep_Recurrent_Nets"><span class="nav-number">12.</span> <span class="nav-text">13.Opinion Mining with Deep Recurrent Nets</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u76EE_u6807_uFF1A_u901A_u8FC7_u4EE5_u4E0B_u4E24_u79CD_u65B9_u6CD5_u7ED9_u6BCF_u4E2A_u5355_u8BCD_u8FDB_u884C_u5206_u7C7B"><span class="nav-number">12.0.1.</span> <span class="nav-text">目标：通过以下两种方法给每个单词进行分类</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#14-Approach_3A_Recurrent_Neural_Network"><span class="nav-number">13.</span> <span class="nav-text">14.Approach: Recurrent Neural Network</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u6807_u8BB0_uFF1A"><span class="nav-number">13.0.1.</span> <span class="nav-text">标记：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u5176_u4E2D_uFF1A"><span class="nav-number">13.0.2.</span> <span class="nav-text">其中：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1_uFF09x_u4EE3_u8868_u4E00_u4E2A_u5355_u8BCD_uFF08token_uFF09_u6240_u8868_u793A_u7684_u8BCD_u5411_u91CF"><span class="nav-number">13.0.2.1.</span> <span class="nav-text">1）x代表一个单词（token）所表示的词向量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2_uFF09y_u4EE3_u8868_u6A21_u578B_u8F93_u51FA_u7684label_uFF08B_uFF0CI_u6216_u8005O_uFF09_uFF0C_u4E0A_u56FE_u4E2D_u7684g_3Dsoftmax"><span class="nav-number">13.0.2.2.</span> <span class="nav-text">2）y代表模型输出的label（B，I或者O），上图中的g=softmax</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3_uFF09h_u662F_u8BB0_u5FC6_u5355_u5143_uFF08_u53EF_u4EE5_u7406_u89E3_u4E3A_u9690_u542B_u5C42_uFF09_uFF0C_u662F_u7531_u4E4B_u524D_u7684_u8BB0_u5FC6_u5355_u5143_u548C_u5F53_u524D_u7684_u8BCD_u5411_u91CF_u8BA1_u7B97_u5F97_u5230_uFF0C_u53EF_u4EE5_u8BF4_u6982_u62EC_u4E86_u76F4_u5230_u8FD9_u4E2Atime_step_u7684_u4E00_u6BB5_u8BDD"><span class="nav-number">13.0.2.3.</span> <span class="nav-text">3）h是记忆单元（可以理解为隐含层），是由之前的记忆单元和当前的词向量计算得到，可以说概括了直到这个time step的一段话</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#15-Bidirectional_RNNs"><span class="nav-number">14.</span> <span class="nav-text">15.Bidirectional RNNs</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u5BF9_u4E8E_u5206_u7C7B_u95EE_u9898_uFF0C_u5982_u679C_u60F3_u8981_u5F53_u524D_u7684time_step_u5305_u542B_u4E4B_u524D_u548C_u4E4B_u540E_u7684_u8BCD_u7684_u4FE1_u606F_uFF0C_u5219_u53EF_u4EE5_u8003_u8651_u4F7F_u7528_u53CC_u5411RNN_uFF1A"><span class="nav-number">14.0.1.</span> <span class="nav-text">对于分类问题，如果想要当前的time step包含之前和之后的词的信息，则可以考虑使用双向RNN：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Data"><span class="nav-number">15.</span> <span class="nav-text">Data</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+    
+    
+
+  
+
+
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
+
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    motionMiddleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+  
+  
+
+  
+  
+
+</body>
+</html>

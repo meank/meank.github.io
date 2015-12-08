@@ -1,0 +1,643 @@
+<!doctype html>
+<html class="theme-next   use-motion ">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+
+
+
+
+<meta name="description" content="When should we use fine-tuning?It is typically used only if you have a large labeled training set; in this setting, fine-tuning can significantly improve the performance of your classifier. However, i">
+<meta property="og:type" content="article">
+<meta property="og:title" content="UFLDL-Stacked Autoencoder">
+<meta property="og:url" content="http://yoursite.com/2015/12/08/UFLDL/DeepLearningbyAndrewNg---stackedautoencoder/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="When should we use fine-tuning?It is typically used only if you have a large labeled training set; in this setting, fine-tuning can significantly improve the performance of your classifier. However, i">
+<meta property="og:image" content="http://img.blog.csdn.net/20150408200903300">
+<meta property="og:image" content="http://img.blog.csdn.net/20150408200833788">
+<meta property="og:image" content="http://img.blog.csdn.net/20150408200935390">
+<meta property="og:image" content="http://img.blog.csdn.net/20150408200557414">
+<meta property="og:updated_time" content="2015-10-05T14:55:31.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="UFLDL-Stacked Autoencoder">
+<meta name="twitter:description" content="When should we use fine-tuning?It is typically used only if you have a large labeled training set; in this setting, fine-tuning can significantly improve the performance of your classifier. However, i">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post',
+    motion: true
+  };
+</script>
+
+  <title> UFLDL-Stacked Autoencoder | Hexo </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Hexo</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                UFLDL-Stacked Autoencoder
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2015-12-08T13:08:02+08:00" content="2015-12-08">
+              2015-12-08
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分類於
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/UFLDL/" itemprop="url" rel="index">
+                    <span itemprop="name">UFLDL</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h2 id="When_should_we_use_fine-tuning_3F"><a href="#When_should_we_use_fine-tuning_3F" class="headerlink" title="When should we use fine-tuning?"></a>When should we use fine-tuning?</h2><p>It is typically used only if you have a large labeled training set; in this setting, fine-tuning can significantly improve the performance of your classifier. However, if you have a large unlabeled dataset (for unsupervised feature learning/pre-training) and only a relatively small labeled training set, then fine-tuning is significantly less likely to help.</p>
+<h2 id="Stacked_Autoencoders_28Training_29_3A"><a href="#Stacked_Autoencoders_28Training_29_3A" class="headerlink" title="Stacked Autoencoders(Training):"></a>Stacked Autoencoders(Training):</h2><p>相当于用多个autoencoder去捕获输入集的特征。第一个autoencoder捕获了数据集的特征后，得到特征matrix1（hidden layer的权重）.然后将特征matrix1与输入集feedForward处理后的activation作为输入去捕获更高等级的特征matrix2（hidden layer的权重）.然后不断重复，再讲最后得到的特征activation作为输入集输入到softmax classifier（或者其他分类器）中训练。（<strong>注意并非将训练完后得到的特征matrix直接传给下一个autoencoder，而是将输入集与此输入集同级的特征matrix用feedForward方法得到的activation传入下一个autoencoder,即将输出传给下一个autoencode</strong>）。<br><img src="http://img.blog.csdn.net/20150408200903300" alt="获取第一层特征"><br><img src="http://img.blog.csdn.net/20150408200833788" alt="获取第二层特征"><br><img src="http://img.blog.csdn.net/20150408200935390" alt="训练分类器"><br>然后整个网络训练完之后，将各个步骤得到的特征matrix与分类器的参数合成新的网络。<br><img src="http://img.blog.csdn.net/20150408200557414" alt="训练完后组成的网络"></p>
+<h2 id="fine-tuning_3A"><a href="#fine-tuning_3A" class="headerlink" title="fine-tuning:"></a>fine-tuning:</h2><p>其实就是将前面分步训练得到的hidden layer的Weight和softmax refression的softmaxTheta作为合成的神经网络的初始参数，然后运用神经网络的前馈和反向算法对初始参数进行微调（<strong>注意合成的网络是必须加上分类器的，不然也无法对神经网络的参数进行反向传播和微调（finetuning），此以softmax regression 为例</strong>）。具体可参考softmaxCost.m，sparseAutoencoderCost.m。</p>
+<h2 id="u7EC3_u4E60_u9898_u7B54_u6848_uFF08_u63A8_u8350_u81EA_u5DF1_u5148_u8BD5_u7740_u5B8C_u6210_u540E_u53C2_u8003_uFF09_3A"><a href="#u7EC3_u4E60_u9898_u7B54_u6848_uFF08_u63A8_u8350_u81EA_u5DF1_u5148_u8BD5_u7740_u5B8C_u6210_u540E_u53C2_u8003_uFF09_3A" class="headerlink" title="练习题答案（推荐自己先试着完成后参考）:"></a>练习题答案（推荐自己先试着完成后参考）:</h2><p> -stackedAEExercise.m</p>
+<figure class="highlight prolog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">%% CS294A/CS294W Stacked Autoencoder Exercise</span></span><br><span class="line"></span><br><span class="line"><span class="comment">%  Instructions</span></span><br><span class="line"><span class="comment">%  ------------</span></span><br><span class="line"><span class="comment">% </span></span><br><span class="line"><span class="comment">%  This file contains code that helps you get started on the</span></span><br><span class="line"><span class="comment">%  sstacked autoencoder exercise. You will need to complete code in</span></span><br><span class="line"><span class="comment">%  stackedAECost.m</span></span><br><span class="line"><span class="comment">%  You will also need to have implemented sparseAutoencoderCost.m and </span></span><br><span class="line"><span class="comment">%  softmaxCost.m from previous exercises. You will need the initializeParameters.m</span></span><br><span class="line"><span class="comment">%  loadMNISTImages.m, and loadMNISTLabels.m files from previous exercises.</span></span><br><span class="line"><span class="comment">%  </span></span><br><span class="line"><span class="comment">%  For the purpose of completing the assignment, you do not need to</span></span><br><span class="line"><span class="comment">%  change the code in this file. </span></span><br><span class="line"><span class="comment">%</span></span><br><span class="line"><span class="comment">%%======================================================================</span></span><br><span class="line"><span class="comment">%% STEP 0: Here we provide the relevant parameters values that will</span></span><br><span class="line"><span class="comment">%  allow your sparse autoencoder to get good filters; you do not need to </span></span><br><span class="line"><span class="comment">%  change the parameters below.</span></span><br><span class="line"></span><br><span class="line"><span class="atom">inputSize</span> = <span class="number">28</span> * <span class="number">28</span>;</span><br><span class="line"><span class="atom">numClasses</span> = <span class="number">10</span>;</span><br><span class="line"><span class="atom">hiddenSizeL1</span> = <span class="number">200</span>;    <span class="comment">% Layer 1 Hidden Size</span></span><br><span class="line"><span class="atom">hiddenSizeL2</span> = <span class="number">200</span>;    <span class="comment">% Layer 2 Hidden Size</span></span><br><span class="line"><span class="atom">sparsityParam</span> = <span class="number">0.1</span>;   <span class="comment">% desired average activation of the hidden units.</span></span><br><span class="line">                       <span class="comment">% (This was denoted by the Greek alphabet rho, which looks like a lower-case "p",</span></span><br><span class="line">		               <span class="comment">%  in the lecture notes). </span></span><br><span class="line"><span class="atom">lambda</span> = <span class="number">3e-3</span>;         <span class="comment">% weight decay parameter       </span></span><br><span class="line"><span class="atom">beta</span> = <span class="number">3</span>;              <span class="comment">% weight of sparsity penalty term       </span></span><br><span class="line"></span><br><span class="line"><span class="comment">%%======================================================================</span></span><br><span class="line"><span class="comment">%% STEP 1: Load data from the MNIST database</span></span><br><span class="line"><span class="comment">%</span></span><br><span class="line"><span class="comment">%  This loads our training data from the MNIST database files.</span></span><br><span class="line"></span><br><span class="line"><span class="comment">% Load MNIST database files</span></span><br><span class="line"><span class="atom">trainData</span> = <span class="atom">loadMNISTImages</span>(<span class="string">'mnist/train-images-idx3-ubyte'</span>);</span><br><span class="line"><span class="atom">trainLabels</span> = <span class="atom">loadMNISTLabels</span>(<span class="string">'mnist/train-labels-idx1-ubyte'</span>);</span><br><span class="line"></span><br><span class="line"><span class="atom">trainLabels</span>(<span class="atom">trainLabels</span> == <span class="number">0</span>) = <span class="number">10</span>; <span class="comment">% Remap 0 to 10 since our labels need to start from 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">%%======================================================================</span></span><br><span class="line"><span class="comment">%% STEP 2: Train the first sparse autoencoder</span></span><br><span class="line"><span class="comment">%  This trains the first sparse autoencoder on the unlabelled STL training</span></span><br><span class="line"><span class="comment">%  images.</span></span><br><span class="line"><span class="comment">%  If you've correctly implemented sparseAutoencoderCost.m, you don't need</span></span><br><span class="line"><span class="comment">%  to change anything here.</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">%  Randomly initialize the parameters</span></span><br><span class="line"><span class="atom">sae1Theta</span> = <span class="atom">initializeParameters</span>(<span class="atom">hiddenSizeL1</span>, <span class="atom">inputSize</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">%% ---------------------- YOUR CODE HERE  ---------------------------------</span></span><br><span class="line"><span class="comment">%  Instructions: Train the first layer sparse autoencoder, this layer has</span></span><br><span class="line"><span class="comment">%                an hidden size of "hiddenSizeL1"</span></span><br><span class="line"><span class="comment">%                You should store the optimal parameters in sae1OptTheta</span></span><br><span class="line"><span class="atom">addpath</span> <span class="atom">minFunc</span>/</span><br><span class="line"><span class="atom">options</span>.<span class="name">Method</span> = <span class="string">'lbfgs'</span>; <span class="comment">% Here, we use L-BFGS to optimize our cost</span></span><br><span class="line">                          <span class="comment">% function. Generally, for minFunc to work, you</span></span><br><span class="line">                          <span class="comment">% need a function pointer with two outputs: the</span></span><br><span class="line">                          <span class="comment">% function value and the gradient. In our problem,</span></span><br><span class="line">                          <span class="comment">% sparseAutoencoderCost.m satisfies this.</span></span><br><span class="line"><span class="atom">options</span>.<span class="atom">maxIter</span> = <span class="number">40</span>;	  <span class="comment">% Maximum number of iterations of L-BFGS to run </span></span><br><span class="line"><span class="atom">options</span>.<span class="atom">display</span> = <span class="string">'on'</span>;</span><br><span class="line">[<span class="atom">sae1OptTheta</span>, <span class="atom">cost</span>] = <span class="atom">minFunc</span>( @(<span class="atom">p</span>) <span class="atom">sparseAutoencoderCost</span>(<span class="atom">p</span>, ...</span><br><span class="line">                                   <span class="atom">inputSize</span>, <span class="atom">hiddenSizeL1</span>, ...</span><br><span class="line">                                   <span class="atom">lambda</span>, <span class="atom">sparsityParam</span>, ...</span><br><span class="line">                                   <span class="atom">beta</span>, <span class="atom">trainData</span>), ...</span><br><span class="line">                              <span class="atom">sae1Theta</span> , <span class="atom">options</span>);</span><br><span class="line"><span class="comment">% -------------------------------------------------------------------------</span></span><br><span class="line"></span><br><span class="line"><span class="comment">%%======================================================================</span></span><br><span class="line"><span class="comment">%% STEP 2: Train the second sparse autoencoder</span></span><br><span class="line"><span class="comment">%  This trains the second sparse autoencoder on the first autoencoder</span></span><br><span class="line"><span class="comment">%  featurse.</span></span><br><span class="line"><span class="comment">%  If you've correctly implemented sparseAutoencoderCost.m, you don't need</span></span><br><span class="line"><span class="comment">%  to change anything here.</span></span><br><span class="line"></span><br><span class="line">[<span class="atom">sae1Features</span>] = <span class="atom">feedForwardAutoencoder</span>(<span class="atom">sae1OptTheta</span>, <span class="atom">hiddenSizeL1</span>, ...</span><br><span class="line">                                        <span class="atom">inputSize</span>, <span class="atom">trainData</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">%  Randomly initialize the parameters</span></span><br><span class="line"><span class="atom">sae2Theta</span> = <span class="atom">initializeParameters</span>(<span class="atom">hiddenSizeL2</span>, <span class="atom">hiddenSizeL1</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">%% ---------------------- YOUR CODE HERE  ---------------------------------</span></span><br><span class="line"><span class="comment">%  Instructions: Train the second layer sparse autoencoder, this layer has</span></span><br><span class="line"><span class="comment">%                an hidden size of "hiddenSizeL2" and an inputsize of</span></span><br><span class="line"><span class="comment">%                "hiddenSizeL1"</span></span><br><span class="line"><span class="comment">%</span></span><br><span class="line"><span class="comment">%                You should store the optimal parameters in sae2OptTheta</span></span><br><span class="line"><span class="atom">addpath</span> <span class="atom">minFunc</span>/</span><br><span class="line"><span class="atom">options</span>.<span class="name">Method</span> = <span class="string">'lbfgs'</span>; <span class="comment">% Here, we use L-BFGS to optimize our cost</span></span><br><span class="line">                          <span class="comment">% function. Generally, for minFunc to work, you</span></span><br><span class="line">                          <span class="comment">% need a function pointer with two outputs: the</span></span><br><span class="line">                          <span class="comment">% function value and the gradient. In our problem,</span></span><br><span class="line">                          <span class="comment">% sparseAutoencoderCost.m satisfies this.</span></span><br><span class="line"><span class="atom">options</span>.<span class="atom">maxIter</span> = <span class="number">40</span>;	  <span class="comment">% Maximum number of iterations of L-BFGS to run </span></span><br><span class="line"><span class="atom">options</span>.<span class="atom">display</span> = <span class="string">'on'</span>;</span><br><span class="line">[<span class="atom">sae2OptTheta</span>, <span class="atom">cost</span>] = <span class="atom">minFunc</span>( @(<span class="atom">p</span>) <span class="atom">sparseAutoencoderCost</span>(<span class="atom">p</span>, ...</span><br><span class="line">                                   <span class="atom">hiddenSizeL1</span>, <span class="atom">hiddenSizeL2</span>, ...</span><br><span class="line">                                   <span class="atom">lambda</span>, <span class="atom">sparsityParam</span>, ...</span><br><span class="line">                                   <span class="atom">beta</span>, <span class="atom">sae1Features</span>), ...</span><br><span class="line">                              <span class="atom">sae2Theta</span> , <span class="atom">options</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">% -------------------------------------------------------------------------</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">%%======================================================================</span></span><br><span class="line"><span class="comment">%% STEP 3: Train the softmax classifier</span></span><br><span class="line"><span class="comment">%  This trains the sparse autoencoder on the second autoencoder features.</span></span><br><span class="line"><span class="comment">%  If you've correctly implemented softmaxCost.m, you don't need</span></span><br><span class="line"><span class="comment">%  to change anything here.</span></span><br><span class="line"></span><br><span class="line">[<span class="atom">sae2Features</span>] = <span class="atom">feedForwardAutoencoder</span>(<span class="atom">sae2OptTheta</span>, <span class="atom">hiddenSizeL2</span>, ...</span><br><span class="line">                                        <span class="atom">hiddenSizeL1</span>, <span class="atom">sae1Features</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">%  Randomly initialize the parameters</span></span><br><span class="line"><span class="atom">saeSoftmaxTheta</span> = <span class="number">0.005</span> * <span class="atom">randn</span>(<span class="atom">hiddenSizeL2</span> * <span class="atom">numClasses</span>, <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">%% ---------------------- YOUR CODE HERE  ---------------------------------</span></span><br><span class="line"><span class="comment">%  Instructions: Train the softmax classifier, the classifier takes in</span></span><br><span class="line"><span class="comment">%                input of dimension "hiddenSizeL2" corresponding to the</span></span><br><span class="line"><span class="comment">%                hidden layer size of the 2nd layer.</span></span><br><span class="line"><span class="comment">%</span></span><br><span class="line"><span class="comment">%                You should store the optimal parameters in saeSoftmaxOptTheta </span></span><br><span class="line"><span class="comment">%</span></span><br><span class="line"><span class="comment">%  NOTE: If you used softmaxTrain to complete this part of the exercise,</span></span><br><span class="line"><span class="comment">%        set saeSoftmaxOptTheta = softmaxModel.optTheta(:);</span></span><br><span class="line"><span class="atom">options</span>.<span class="atom">maxIter</span> = <span class="number">100</span>;</span><br><span class="line"><span class="atom">softmaxModel</span> = <span class="atom">softmaxTrain</span>(<span class="atom">hiddenSizeL2</span>, <span class="number">10</span>, <span class="atom">lambda</span>, ...</span><br><span class="line">                           <span class="atom">sae2Features</span>, <span class="atom">trainLabels</span> , <span class="atom">options</span>);</span><br><span class="line"><span class="atom">saeSoftmaxOptTheta</span> = <span class="atom">softmaxModel</span>.<span class="atom">optTheta</span>(:);</span><br><span class="line"></span><br><span class="line"><span class="comment">% -------------------------------------------------------------------------</span></span><br><span class="line"></span><br><span class="line"><span class="comment">%%======================================================================</span></span><br><span class="line"><span class="comment">%% STEP 5: Finetune softmax model</span></span><br><span class="line"></span><br><span class="line"><span class="comment">% Implement the stackedAECost to give the combined cost of the whole model</span></span><br><span class="line"><span class="comment">% then run this cell.</span></span><br><span class="line"></span><br><span class="line"><span class="comment">% Initialize the stack using the parameters learned</span></span><br><span class="line"><span class="atom">stack</span> = <span class="atom">cell</span>(<span class="number">2</span>,<span class="number">1</span>);</span><br><span class="line"><span class="atom">stack</span>&#123;<span class="number">1</span>&#125;.<span class="atom">w</span> = <span class="atom">reshape</span>(<span class="atom">sae1OptTheta</span>(<span class="number">1</span>:<span class="atom">hiddenSizeL1</span>*<span class="atom">inputSize</span>), ...</span><br><span class="line">                     <span class="atom">hiddenSizeL1</span>, <span class="atom">inputSize</span>);</span><br><span class="line"><span class="atom">stack</span>&#123;<span class="number">1</span>&#125;.<span class="atom">b</span> = <span class="atom">sae1OptTheta</span>(<span class="number">2</span>*<span class="atom">hiddenSizeL1</span>*<span class="atom">inputSize</span>+<span class="number">1</span>:<span class="number">2</span>*<span class="atom">hiddenSizeL1</span>*<span class="atom">inputSize</span>+<span class="atom">hiddenSizeL1</span>);</span><br><span class="line"><span class="atom">stack</span>&#123;<span class="number">2</span>&#125;.<span class="atom">w</span> = <span class="atom">reshape</span>(<span class="atom">sae2OptTheta</span>(<span class="number">1</span>:<span class="atom">hiddenSizeL2</span>*<span class="atom">hiddenSizeL1</span>), ...</span><br><span class="line">                     <span class="atom">hiddenSizeL2</span>, <span class="atom">hiddenSizeL1</span>);</span><br><span class="line"><span class="atom">stack</span>&#123;<span class="number">2</span>&#125;.<span class="atom">b</span> = <span class="atom">sae2OptTheta</span>(<span class="number">2</span>*<span class="atom">hiddenSizeL2</span>*<span class="atom">hiddenSizeL1</span>+<span class="number">1</span>:<span class="number">2</span>*<span class="atom">hiddenSizeL2</span>*<span class="atom">hiddenSizeL1</span>+<span class="atom">hiddenSizeL2</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">% Initialize the parameters for the deep model</span></span><br><span class="line">[<span class="atom">stackparams</span>, <span class="atom">netconfig</span>] = <span class="atom">stack2params</span>(<span class="atom">stack</span>);</span><br><span class="line"><span class="atom">stackedAETheta</span> = [ <span class="atom">saeSoftmaxOptTheta</span> ; <span class="atom">stackparams</span> ];</span><br><span class="line"></span><br><span class="line"><span class="comment">%% ---------------------- YOUR CODE HERE  ---------------------------------</span></span><br><span class="line"><span class="comment">%  Instructions: Train the deep network, hidden size here refers to the '</span></span><br><span class="line"><span class="comment">%                dimension of the input to the classifier, which corresponds </span></span><br><span class="line"><span class="comment">%                to "hiddenSizeL2".</span></span><br><span class="line"><span class="comment">%</span></span><br><span class="line"><span class="comment">%</span></span><br><span class="line"></span><br><span class="line"><span class="comment">% -------------------------------------------------------------------------</span></span><br><span class="line">[<span class="atom">stackedAEOptTheta</span>, <span class="atom">cost</span>] =  <span class="atom">minFunc</span>(@(<span class="atom">p</span>)<span class="atom">stackedAECost</span>(<span class="atom">p</span>,<span class="atom">inputSize</span>,<span class="atom">hiddenSizeL2</span>,...</span><br><span class="line">                         <span class="atom">numClasses</span>, <span class="atom">netconfig</span>,<span class="atom">lambda</span>, <span class="atom">trainData</span>, <span class="atom">trainLabels</span>),...</span><br><span class="line">                        <span class="atom">stackedAETheta</span>,<span class="atom">options</span>);</span><br><span class="line"><span class="comment">%%======================================================================</span></span><br><span class="line"><span class="comment">%% STEP 6: Test </span></span><br><span class="line"><span class="comment">%  Instructions: You will need to complete the code in stackedAEPredict.m</span></span><br><span class="line"><span class="comment">%                before running this part of the code</span></span><br><span class="line"><span class="comment">%</span></span><br><span class="line"></span><br><span class="line"><span class="comment">% Get labelled test images</span></span><br><span class="line"><span class="comment">% Note that we apply the same kind of preprocessing as the training set</span></span><br><span class="line"><span class="atom">testData</span> = <span class="atom">loadMNISTImages</span>(<span class="string">'mnist/t10k-images-idx3-ubyte'</span>);</span><br><span class="line"><span class="atom">testLabels</span> = <span class="atom">loadMNISTLabels</span>(<span class="string">'mnist/t10k-labels-idx1-ubyte'</span>);</span><br><span class="line"></span><br><span class="line"><span class="atom">testLabels</span>(<span class="atom">testLabels</span> == <span class="number">0</span>) = <span class="number">10</span>; <span class="comment">% Remap 0 to 10</span></span><br><span class="line"></span><br><span class="line">[<span class="atom">pred</span>] = <span class="atom">stackedAEPredict</span>(<span class="atom">stackedAETheta</span>, <span class="atom">inputSize</span>, <span class="atom">hiddenSizeL2</span>, ...</span><br><span class="line">                          <span class="atom">numClasses</span>, <span class="atom">netconfig</span>, <span class="atom">testData</span>);</span><br><span class="line"></span><br><span class="line"><span class="atom">acc</span> = <span class="atom">mean</span>(<span class="atom">testLabels</span>(:) == <span class="atom">pred</span>(:));</span><br><span class="line"><span class="atom">fprintf</span>(<span class="string">'Before Finetuning Test Accuracy: %0.3f%%\n'</span>, <span class="atom">acc</span> * <span class="number">100</span>);</span><br><span class="line"></span><br><span class="line">[<span class="atom">pred</span>] = <span class="atom">stackedAEPredict</span>(<span class="atom">stackedAEOptTheta</span>, <span class="atom">inputSize</span>, <span class="atom">hiddenSizeL2</span>, ...</span><br><span class="line">                          <span class="atom">numClasses</span>, <span class="atom">netconfig</span>, <span class="atom">testData</span>);</span><br><span class="line"></span><br><span class="line"><span class="atom">acc</span> = <span class="atom">mean</span>(<span class="atom">testLabels</span>(:) == <span class="atom">pred</span>(:));</span><br><span class="line"><span class="atom">fprintf</span>(<span class="string">'After Finetuning Test Accuracy: %0.3f%%\n'</span>, <span class="atom">acc</span> * <span class="number">100</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">% Accuracy is the proportion of correctly classified images</span></span><br><span class="line"><span class="comment">% The results for our implementation were:</span></span><br><span class="line"><span class="comment">%</span></span><br><span class="line"><span class="comment">% Before Finetuning Test Accuracy: 87.7%</span></span><br><span class="line"><span class="comment">% After Finetuning Test Accuracy:  97.6%</span></span><br><span class="line"><span class="comment">%</span></span><br><span class="line"><span class="comment">% If your values are too low (accuracy less than 95%), you should check </span></span><br><span class="line"><span class="comment">% your code for errors, and make sure you are training on the </span></span><br><span class="line"><span class="comment">% entire data set of 60000 28x28 training images </span></span><br><span class="line"><span class="comment">% (unless you modified the loading code, this should be the case)</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>stackedAECost.m</li>
+</ul>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="params">[ cost, grad ]</span> = <span class="title">stackedAECost</span><span class="params">(theta, inputSize, hiddenSize, ...</span><br><span class="line">                                              numClasses, netconfig, ...</span><br><span class="line">                                              lambda, data, labels)</span></span></span><br><span class="line">                                         </span><br><span class="line"><span class="comment">% stackedAECost: Takes a trained softmaxTheta and a training data set with labels,</span></span><br><span class="line"><span class="comment">% and returns cost and gradient using a stacked autoencoder model. Used for</span></span><br><span class="line"><span class="comment">% finetuning.</span></span><br><span class="line">                                         </span><br><span class="line"><span class="comment">% theta: trained weights from the autoencoder</span></span><br><span class="line"><span class="comment">% visibleSize: the number of input units</span></span><br><span class="line"><span class="comment">% hiddenSize:  the number of hidden units *at the 2nd layer*</span></span><br><span class="line"><span class="comment">% numClasses:  the number of categories</span></span><br><span class="line"><span class="comment">% netconfig:   the network configuration of the stack</span></span><br><span class="line"><span class="comment">% lambda:      the weight regularization penalty</span></span><br><span class="line"><span class="comment">% data: Our matrix containing the training data as columns.  So, data(:,i) is the i-th training example. </span></span><br><span class="line"><span class="comment">% labels: A vector containing labels, where labels(i) is the label for the</span></span><br><span class="line"><span class="comment">% i-th training example</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">%% Unroll softmaxTheta parameter</span></span><br><span class="line"></span><br><span class="line"><span class="comment">% We first extract the part which compute the softmax gradient</span></span><br><span class="line">softmaxTheta = <span class="built_in">reshape</span>(theta(<span class="number">1</span>:hiddenSize*numClasses), numClasses, hiddenSize);</span><br><span class="line"></span><br><span class="line"><span class="comment">% Extract out the "stack"</span></span><br><span class="line">stack = params2stack(theta(hiddenSize*numClasses+<span class="number">1</span>:<span class="keyword">end</span>), netconfig);</span><br><span class="line"></span><br><span class="line"><span class="comment">% You will need to compute the following gradients</span></span><br><span class="line">softmaxThetaGrad = <span class="built_in">zeros</span>(<span class="built_in">size</span>(softmaxTheta));</span><br><span class="line">stackgrad = cell(<span class="built_in">size</span>(stack));</span><br><span class="line"><span class="keyword">for</span> delta = <span class="number">1</span>:<span class="built_in">numel</span>(stack)</span><br><span class="line">    stackgrad<span class="cell">&#123;delta&#125;</span>.w = <span class="built_in">zeros</span>(<span class="built_in">size</span>(stack<span class="cell">&#123;delta&#125;</span>.w));</span><br><span class="line">    stackgrad<span class="cell">&#123;delta&#125;</span>.b = <span class="built_in">zeros</span>(<span class="built_in">size</span>(stack<span class="cell">&#123;delta&#125;</span>.b));</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">cost = <span class="number">0</span>; <span class="comment">% You need to compute this</span></span><br><span class="line"></span><br><span class="line"><span class="comment">% You might find these variables useful</span></span><br><span class="line">M = <span class="built_in">size</span>(data, <span class="number">2</span>);</span><br><span class="line">groundTruth = full(sparse(labels, <span class="number">1</span>:M, <span class="number">1</span>));<span class="comment">%input labels</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">%% --------------------------- YOUR CODE HERE -----------------------------</span></span><br><span class="line"><span class="comment">%  Instructions: Compute the cost function and gradient vector for </span></span><br><span class="line"><span class="comment">%                the stacked autoencoder.</span></span><br><span class="line"><span class="comment">%</span></span><br><span class="line"><span class="comment">%                You are given a stack variable which is a cell-array of</span></span><br><span class="line"><span class="comment">%                the weights and biases for every layer. In particular, you</span></span><br><span class="line"><span class="comment">%                can refer to the weights of Layer d, using stack&#123;d&#125;.w and</span></span><br><span class="line"><span class="comment">%                the biases using stack&#123;d&#125;.b . To get the total number of</span></span><br><span class="line"><span class="comment">%                layers, you can use numel(stack).</span></span><br><span class="line"><span class="comment">%</span></span><br><span class="line"><span class="comment">%                The last layer of the network is connected to the softmax</span></span><br><span class="line"><span class="comment">%                classification layer, softmaxTheta.</span></span><br><span class="line"><span class="comment">%</span></span><br><span class="line"><span class="comment">%                You should compute the gradients for the softmaxTheta,</span></span><br><span class="line"><span class="comment">%                storing that in softmaxThetaGrad. Similarly, you should</span></span><br><span class="line"><span class="comment">%                compute the gradients for each layer in the stack, storing</span></span><br><span class="line"><span class="comment">%                the gradients in stackgrad&#123;d&#125;.w and stackgrad&#123;d&#125;.b</span></span><br><span class="line"><span class="comment">%                Note that the size of the matrices in stackgrad should</span></span><br><span class="line"><span class="comment">%                match exactly that of the size of the matrices in stack.</span></span><br><span class="line"><span class="comment">%</span></span><br><span class="line"></span><br><span class="line"><span class="comment">% -------------------------------------------------------------------------</span></span><br><span class="line">depth = <span class="built_in">numel</span>(stack)<span class="comment">% 神经网络的层数(不包括softmax层)</span></span><br><span class="line"></span><br><span class="line">z = cell(depth+<span class="number">1</span>,<span class="number">1</span>);</span><br><span class="line">a = cell(depth+<span class="number">1</span>,<span class="number">1</span>);<span class="comment">%进行前馈神经网络计算所需要的参数</span></span><br><span class="line"></span><br><span class="line">a<span class="cell">&#123;<span class="number">1</span>&#125;</span> =data;<span class="comment">%输入层</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> index = <span class="number">1</span>:depth<span class="comment">%前馈神经网络计算(为什么要加1)</span></span><br><span class="line">    z<span class="cell">&#123;index+<span class="number">1</span>&#125;</span> =  stack<span class="cell">&#123;index&#125;</span>.w*a<span class="cell">&#123;index&#125;</span>+<span class="built_in">repmat</span>(stack<span class="cell">&#123;index&#125;</span>.b, <span class="number">1</span>, <span class="built_in">size</span>(a<span class="cell">&#123;index&#125;</span>,<span class="number">2</span>));</span><br><span class="line">    a<span class="cell">&#123;index+<span class="number">1</span>&#125;</span> = sigmoid(z<span class="cell">&#123;index+<span class="number">1</span>&#125;</span>);</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">model = softmaxTheta*a<span class="cell">&#123;depth+<span class="number">1</span>&#125;</span>; <span class="comment">%神经网络最后一层的activation传入softmax regression。</span></span><br><span class="line">model = <span class="built_in">bsxfun</span>(@minus, model , max(model , <span class="matrix">[]</span>, <span class="number">1</span>));  </span><br><span class="line">h = <span class="built_in">exp</span>(model );</span><br><span class="line">h =  <span class="built_in">bsxfun</span>(@rdivide, h, sum(h));  </span><br><span class="line"><span class="built_in">size</span>(groundTruth);</span><br><span class="line">cost = -<span class="number">1</span>/numClasses*sum(sum(groundTruth.*<span class="built_in">log</span>(h)))+lambda/<span class="number">2</span>*sum(sum(softmaxTheta.^<span class="number">2</span>));</span><br><span class="line">softmaxThetaGrad = -<span class="number">1</span>/numClasses*((groundTruth-h)*a<span class="cell">&#123;depth+<span class="number">1</span>&#125;</span><span class="operator">'</span>)+lambda*softmaxTheta;</span><br><span class="line"></span><br><span class="line"><span class="comment">%反向传播算法</span></span><br><span class="line">delta = cell(depth+<span class="number">1</span>);</span><br><span class="line"><span class="comment">%I is the input labels and P is the vector of conditional probabilities.</span></span><br><span class="line">delta<span class="cell">&#123;depth+<span class="number">1</span>&#125;</span> = -(softmaxTheta<span class="operator">'</span> * (groundTruth - h)) .* a<span class="cell">&#123;depth+<span class="number">1</span>&#125;</span> .* (<span class="number">1</span>-a<span class="cell">&#123;depth+<span class="number">1</span>&#125;</span>);</span><br><span class="line"><span class="keyword">for</span> layer = (depth:-<span class="number">1</span>:<span class="number">2</span>)</span><br><span class="line">  delta<span class="cell">&#123;layer&#125;</span> = (stack<span class="cell">&#123;layer&#125;</span>.w<span class="operator">'</span> * delta<span class="cell">&#123;layer+<span class="number">1</span>&#125;</span>) .* a<span class="cell">&#123;layer&#125;</span> .* (<span class="number">1</span>-a<span class="cell">&#123;layer&#125;</span>);</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"><span class="keyword">for</span> layer = (depth:-<span class="number">1</span>:<span class="number">1</span>)</span><br><span class="line">  stackgrad<span class="cell">&#123;layer&#125;</span>.w = (<span class="number">1</span>/numClasses) * delta<span class="cell">&#123;layer+<span class="number">1</span>&#125;</span> * a<span class="cell">&#123;layer&#125;</span><span class="operator">'</span>;</span><br><span class="line">  stackgrad<span class="cell">&#123;layer&#125;</span>.b = (<span class="number">1</span>/numClasses) * sum(delta<span class="cell">&#123;layer+<span class="number">1</span>&#125;</span>, <span class="number">2</span>);</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"><span class="comment">%% Roll gradient vector</span></span><br><span class="line">grad = <span class="matrix">[softmaxThetaGrad(:) ; stack2params(stackgrad)]</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"><span class="comment">% You might find this useful</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">sigm</span> = <span class="title">sigmoid</span><span class="params">(x)</span></span></span><br><span class="line">    sigm = <span class="number">1</span> ./ (<span class="number">1</span> + <span class="built_in">exp</span>(-x));</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>stackedAEPredict.m</li>
+</ul>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="params">[pred]</span> = <span class="title">stackedAEPredict</span><span class="params">(theta, inputSize, hiddenSize, numClasses, netconfig, data)</span></span></span><br><span class="line">                                         </span><br><span class="line"><span class="comment">% stackedAEPredict: Takes a trained theta and a test data set,</span></span><br><span class="line"><span class="comment">% and returns the predicted labels for each example.</span></span><br><span class="line">                                         </span><br><span class="line"><span class="comment">% theta: trained weights from the autoencoder</span></span><br><span class="line"><span class="comment">% visibleSize: the number of input units</span></span><br><span class="line"><span class="comment">% hiddenSize:  the number of hidden units *at the 2nd layer*</span></span><br><span class="line"><span class="comment">% numClasses:  the number of categories</span></span><br><span class="line"><span class="comment">% data: Our matrix containing the training data as columns.  So, data(:,i) is the i-th training example. </span></span><br><span class="line"></span><br><span class="line"><span class="comment">% Your code should produce the prediction matrix </span></span><br><span class="line"><span class="comment">% pred, where pred(i) is argmax_c P(y(c) | x(i)).</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">%% Unroll theta parameter</span></span><br><span class="line"></span><br><span class="line"><span class="comment">% We first extract the part which compute the softmax gradient</span></span><br><span class="line">softmaxTheta = <span class="built_in">reshape</span>(theta(<span class="number">1</span>:hiddenSize*numClasses), numClasses, hiddenSize);</span><br><span class="line"></span><br><span class="line"><span class="comment">% Extract out the "stack"</span></span><br><span class="line">stack = params2stack(theta(hiddenSize*numClasses+<span class="number">1</span>:<span class="keyword">end</span>), netconfig);</span><br><span class="line"></span><br><span class="line"><span class="comment">%% ---------- YOUR CODE HERE --------------------------------------</span></span><br><span class="line"><span class="comment">%  Instructions: Compute pred using theta assuming that the labels start </span></span><br><span class="line"><span class="comment">%                from 1.</span></span><br><span class="line"><span class="comment">%前馈神经网络算法</span></span><br><span class="line">depth = <span class="built_in">numel</span>(stack);</span><br><span class="line">z = cell(depth+<span class="number">1</span>,<span class="number">1</span>);</span><br><span class="line">a = cell(depth+<span class="number">1</span>, <span class="number">1</span>);</span><br><span class="line">a<span class="cell">&#123;<span class="number">1</span>&#125;</span> = data;</span><br><span class="line"><span class="keyword">for</span> layer = (<span class="number">1</span>:depth)</span><br><span class="line">  z<span class="cell">&#123;layer+<span class="number">1</span>&#125;</span> = stack<span class="cell">&#123;layer&#125;</span>.w * a<span class="cell">&#123;layer&#125;</span> + <span class="built_in">repmat</span>(stack<span class="cell">&#123;layer&#125;</span>.b, <span class="matrix">[<span class="number">1</span>, size(a&#123;layer&#125;,<span class="number">2</span>)]</span>);</span><br><span class="line">  a<span class="cell">&#123;layer+<span class="number">1</span>&#125;</span> = sigmoid(z<span class="cell">&#123;layer+<span class="number">1</span>&#125;</span>);</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="matrix">[index, pred]</span> = max(softmaxTheta * a<span class="cell">&#123;depth+<span class="number">1</span>&#125;</span>);<span class="comment">%预测</span></span><br><span class="line"><span class="comment">% -----------------------------------------------------------</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">% You might find this useful</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">sigm</span> = <span class="title">sigmoid</span><span class="params">(x)</span></span></span><br><span class="line">    sigm = <span class="number">1</span> ./ (<span class="number">1</span> + <span class="built_in">exp</span>(-x));</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/12/08/UFLDL/DeepLearningbyAndrewNg---Sparsecoding/" rel="next" title="UFLDL-Sparse coding">
+                <i class="fa fa-chevron-left"></i> UFLDL-Sparse coding
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/12/08/‎Summarize/kaggle-浮游生物分类--译文（三）/" rel="prev" title="kaggle-浮游生物分类比赛一等奖---译文（第三部分）">
+                kaggle-浮游生物分类比赛一等奖---译文（第三部分） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+        </div>
+
+        
+
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="John Doe" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">John Doe</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#When_should_we_use_fine-tuning_3F"><span class="nav-number">1.</span> <span class="nav-text">When should we use fine-tuning?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Stacked_Autoencoders_28Training_29_3A"><span class="nav-number">2.</span> <span class="nav-text">Stacked Autoencoders(Training):</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fine-tuning_3A"><span class="nav-number">3.</span> <span class="nav-text">fine-tuning:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u7EC3_u4E60_u9898_u7B54_u6848_uFF08_u63A8_u8350_u81EA_u5DF1_u5148_u8BD5_u7740_u5B8C_u6210_u540E_u53C2_u8003_uFF09_3A"><span class="nav-number">4.</span> <span class="nav-text">练习题答案（推荐自己先试着完成后参考）:</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+    
+    
+
+  
+
+
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
+
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    motionMiddleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+  
+  
+
+  
+  
+
+</body>
+</html>

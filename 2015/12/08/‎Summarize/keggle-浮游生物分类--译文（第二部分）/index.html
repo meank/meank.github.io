@@ -1,0 +1,666 @@
+<!doctype html>
+<html class="theme-next   use-motion ">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+
+
+
+
+<meta name="description" content="接着上一篇的内容
+Training1）validation我们使用分层抽样（stratified sampling）的方法，将已标注的数据集分出10%作为验证集（validation）。由于数据集过小，我们在验证集上的评估受到噪声的影响比较大，因此，我们也在排行榜上的其他模型上测试了我们的验证集。
+2）training algorithm所有的模型都是在加了Nesterov momentum的SG">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kaggle-浮游生物分类比赛一等奖---译文（第二部分）">
+<meta property="og:url" content="http://yoursite.com/2015/12/08/‎Summarize/keggle-浮游生物分类--译文（第二部分）/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="接着上一篇的内容
+Training1）validation我们使用分层抽样（stratified sampling）的方法，将已标注的数据集分出10%作为验证集（validation）。由于数据集过小，我们在验证集上的评估受到噪声的影响比较大，因此，我们也在排行榜上的其他模型上测试了我们的验证集。
+2）training algorithm所有的模型都是在加了Nesterov momentum的SG">
+<meta property="og:updated_time" content="2015-11-22T05:18:45.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="kaggle-浮游生物分类比赛一等奖---译文（第二部分）">
+<meta name="twitter:description" content="接着上一篇的内容
+Training1）validation我们使用分层抽样（stratified sampling）的方法，将已标注的数据集分出10%作为验证集（validation）。由于数据集过小，我们在验证集上的评估受到噪声的影响比较大，因此，我们也在排行榜上的其他模型上测试了我们的验证集。
+2）training algorithm所有的模型都是在加了Nesterov momentum的SG">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post',
+    motion: true
+  };
+</script>
+
+  <title> kaggle-浮游生物分类比赛一等奖---译文（第二部分） | Hexo </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Hexo</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                kaggle-浮游生物分类比赛一等奖---译文（第二部分）
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2015-12-08T13:08:03+08:00" content="2015-12-08">
+              2015-12-08
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分類於
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Summarize/" itemprop="url" rel="index">
+                    <span itemprop="name">Summarize</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>接着<a href="http://meank.github.io/2015/10/07/%E2%80%8ESummarize/keggle-%E6%B5%AE%E6%B8%B8%E7%94%9F%E7%89%A9%E5%88%86%E7%B1%BB%E6%AF%94%E8%B5%9B%E4%B8%80%E7%AD%89%E5%A5%96---%E8%AF%91%E6%96%87/" target="_blank" rel="external">上一篇</a>的内容</p>
+<h2 id="Training"><a href="#Training" class="headerlink" title="Training"></a>Training</h2><h3 id="1_uFF09validation"><a href="#1_uFF09validation" class="headerlink" title="1）validation"></a>1）validation</h3><p>我们使用分层抽样（stratified sampling）的方法，将已标注的数据集分出10%作为验证集（validation）。由于数据集过小，我们在验证集上的评估受到噪声的影响比较大，因此，我们也在排行榜上的其他模型上测试了我们的验证集。</p>
+<h3 id="2_uFF09training_algorithm"><a href="#2_uFF09training_algorithm" class="headerlink" title="2）training algorithm"></a>2）training algorithm</h3><p>所有的模型都是在加了Nesterov momentum的SGD优化算法上进行的。我们将momentum的系数设置为0.9。大多数模型需要24-48小时收敛。</p>
+<p>对于大多数模型，我们通过215000步梯度下降可以学习。最终的学习率采用类似于<a href="http://www.cs.toronto.edu/~fritz/absps/imagenet.pdf" target="_blank" rel="external"> Krizhevsky et al</a>的策略通过两次1/10的缩小进行调节，调节的步骤分别在第180000 和 205000步。我们一般使用0.003作为学习率的初始值。</p>
+<p>同时我们也测试了<a href="http://arxiv.org/abs/1412.6980" target="_blank" rel="external">Adam</a>（使用的是第一个版本）作为Nesterov momentum的替代。结果：Adam能够加速两倍的收敛，但是最后的performance（相较于Nesterov momentum）会降低。所以我们放弃了Adam。</p>
+<h3 id="3_uFF09initialization"><a href="#3_uFF09initialization" class="headerlink" title="3）initialization"></a>3）initialization</h3><p>我们使用了<a href="http://arxiv.org/abs/1312.6120" target="_blank" rel="external">Exact solutions to the nonlinear dynamics of learning in deep linear neural networks</a>中提出的正交初始化策略（orthogonal initialization strategy）的一个变种。这使得我们可以根据我们的需要去增加网络的深度，而不会在收敛时遇到问题。</p>
+<h3 id="4_uFF09regularization"><a href="#4_uFF09regularization" class="headerlink" title="4）regularization"></a>4）regularization</h3><p>对于大多数模型，我们在全连接层使用dropout，dropout的概率设置为0.5。我们也在一些模型中在Convolution layers进行了dropout操作。</p>
+<p>我们也尝试过Gaussian dropout（用multiplicative高斯噪声代替multiplicative伯努利噪声），但是发现performance和传统的dropout差不多。</p>
+<p>在比赛快结束的时候，我们发现进行少量的weight decay对稳定大网络的训练过程有很大的帮忙（不仅仅是有regularizing作用）。对于包含大的全连接层的网络，如果不加weight decay的话，模型在训量的时候很容易发散。虽然可以通过适当的减小学习率来克服这一问题，但这无疑会降低训练速度。</p>
+<h2 id="Unsupervised_and_semi-supervised_approaches"><a href="#Unsupervised_and_semi-supervised_approaches" class="headerlink" title="Unsupervised and semi-supervised approaches"></a>Unsupervised and semi-supervised approaches</h2><h3 id="1_uFF09Unsupervised_pre-training"><a href="#1_uFF09Unsupervised_pre-training" class="headerlink" title="1）Unsupervised pre-training"></a>1）Unsupervised pre-training</h3><p>由于test数据集很大，所以我们利用test数据集作为无监督学习的训练集来预训练网络。我们用<a href="http://link.springer.com/chapter/10.1007/978-3-642-21735-7_7" target="_blank" rel="external">CAE</a>来预训练网络的Convolution layers。</p>
+<p>与文献的表述一致，我们发现预训练网络可以作为一个很好地regularizer（增大train loss，但是提高validation score）。但是测试时将validation集进行augmentation时，得到得结果却不尽人意，下面会更进一步的讨论。</p>
+<p>预训练使得我们可以进一步的扩充我们的模型，但是由于预训练网络耗费的时间不止一点半点，所以在最终使用的模型中，我们没有使用预训练。</p>
+<p>在实验预训练的过程中，为了学习到好的特征表示，我们更倾向于max-pooling以及unpooling layers来获取特征的稀疏化表示。我们没有尝试denoising autoencoder的原因主要有两个：首先，根据Masci的实验结果，max-pooling 和 unpooling方法提供了很好的filters，获得了比denoising autoencoder更好的performance，并且以后将这两个layers进行组合是很容易的；其次，参考denoising autoencoder网络的结构，速度会减慢很多。</p>
+<p>以下是几种不同的开始预训练网络时的策略：</p>
+<ul>
+<li><strong>逐层贪心训练（greedy layerwise training） vs. 将deConvolutions连起来一起训练（training the full deconvolutional stack jointly，类似于end-to-end）：</strong>我们发现jointly的方式能够获得更好的performance，但有时候需要先进行逐层贪心训练来初始化网络后，jointly方式才会起作用。</li>
+<li><strong>使用tied weights(using tied weights) vs. 不使用tied weights(using untied weights):</strong>将Convolution和deConvolution中的weights设置为互为转置矩阵能够使得Autoencoder训练的更快。因此，我们只试验了tied weights。</li>
+</ul>
+<p>我们在进行微调时也试验了一些不同的策略，我们发现如果保持相同的监督学习设置，随机初始化权重以及经过预训练初始化的网络在监督学习的performance上没有多大的差别。可能的原因是：在初始化dense layer的时候，可能dense layer的weights已经在一个合理的范围，使得在预训练阶段，Convolution layer会遗漏很多信息（feature）。</p>
+<p>我们发现了两种方法来克服这个问题：</p>
+<ul>
+<li>暂时保持预训练层一段时间不变，仅仅训练dense layer（随机初始化）。如果只训练顶上几层网络，在反向传播的时候会非常快。</li>
+<li>在Convolution layer部分将学习率减半。使随机初始化的dense layer更快的适应预训练后的Convolution layer。在dense layer获得比较好的weights range之前，Convolution layer进行监督学习的时候weights不会有大的变化。</li>
+</ul>
+<p>这两种方法得到的performance相差不大。</p>
+<h3 id="3_29Pseudo-labeling"><a href="#3_29Pseudo-labeling" class="headerlink" title="3)Pseudo-labeling"></a>3)Pseudo-labeling</h3><p>另一种从测试集获取数据信息的方式就是将pseudo-labeling 和 knowledge distillation进行组合(<a href="http://arxiv.org/abs/1503.02531" target="_blank" rel="external">Distilling the Knowledge in a Neural Network</a>)。模型在采用Pseudo-labeling方法训练时得到的performance超出了我们的预期，所以我们详细的研究了一下这个方法。</p>
+<p>Pseudo-labeling的做法是将test数据集加入到train数据集以得到一个更大的数据集。而原来test数据集对应的标签（即Pseudo-labeling），就是基于之前训练集训练好的模型进行预测得到的。这样做可以让我们去训练一个更大的网络，因为Pseudo-labeling有regularizing的作用。</p>
+<p>我们试验了硬指标 (one-hot coded)和软指标(predicted probabilities)两种方式。但很快就决定采用软指标，因为它得到的performance要更好。</p>
+<p>另一个重要的细节就是权衡原始train数据集和test数据集（也就是Pseudo-labeled data）在最终数据集中的比重。我们大多是时候采用的方法是：在一个mini-batch中Pseudo-labeled data占33%，原始的train数据集占67%。</p>
+<p>也可以让Pseudo-labeled data占67%，这样模型的regularizing的程度会更大，我们甚至必须削弱dropout或者剔除，不然会造成underfitting。</p>
+<p>我们的方法和knowledge distillation不同的地方是，我们使用test set而非train set来迁移特征信息。另一个不同的地方则是knowledge distillation可以让更小的，更快的模型获得和大模型一样的performance，而Pseudo-labeling则可以让我们建造更大的网络来获取更好的performance。</p>
+<p>我们认为pseudo-labeling能提高performance的原因是获得的更大的数据集（train+test set）以及data augmentation和test-time augmentation（接下来会讨论）。将pseudo-labeling data加入到train data中时，可以说其包含了所有数据的特性（test+train），所以在训练的时候能够更好获取数据信息，得到更好的performance。</p>
+<p>Pseudo-labeling获得最大的performance的提升是在最开始的时候（提升了0.015）。在后面，我们试验的bags模型才得到0.003-0.009的提升。</p>
+<p><strong>本篇译文系作者原创，转载请先联系作者: 18254275587@163.com</strong></p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/12/08/‎Summarize/DeepLearning资料汇总/" rel="next" title="深度学习资料汇总">
+                <i class="fa fa-chevron-left"></i> 深度学习资料汇总
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/12/08/UFLDL/DeepLearningbyAndrewNg---self-taught/" rel="prev" title="UFLDL-self-taught">
+                UFLDL-self-taught <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+        </div>
+
+        
+
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="John Doe" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">John Doe</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Training"><span class="nav-number">1.</span> <span class="nav-text">Training</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1_uFF09validation"><span class="nav-number">1.1.</span> <span class="nav-text">1）validation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2_uFF09training_algorithm"><span class="nav-number">1.2.</span> <span class="nav-text">2）training algorithm</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3_uFF09initialization"><span class="nav-number">1.3.</span> <span class="nav-text">3）initialization</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4_uFF09regularization"><span class="nav-number">1.4.</span> <span class="nav-text">4）regularization</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Unsupervised_and_semi-supervised_approaches"><span class="nav-number">2.</span> <span class="nav-text">Unsupervised and semi-supervised approaches</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1_uFF09Unsupervised_pre-training"><span class="nav-number">2.1.</span> <span class="nav-text">1）Unsupervised pre-training</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3_29Pseudo-labeling"><span class="nav-number">2.2.</span> <span class="nav-text">3)Pseudo-labeling</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+    
+    
+
+  
+
+
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
+
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    motionMiddleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+  
+  
+
+  
+  
+
+</body>
+</html>

@@ -1,0 +1,682 @@
+<!doctype html>
+<html class="theme-next   use-motion ">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+
+
+
+
+<meta name="description" content="复习：简单的word2vec模型&quot;&amp;gt;复习：简单的word2vec模型cost fuction（ 求导结果参照视频教程）： 
+梯度下降&quot;&amp;gt;梯度下降将所有参数转换成一个列向量$\Theta$（V为词汇数，v是中心词的word vector，v’是external word vector）：
+使用full batch最小化cost将要求计算cost对所有window的导数更新$\Theta$的每个元素：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Deep Learning for Nature Language Processing --- 第三讲">
+<meta property="og:url" content="http://yoursite.com/2015/10/04/NLP/deep-learning-for-nature-language-processing-e7-ac-ac-e4-b8-89-e8-ae-b2/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="复习：简单的word2vec模型&quot;&amp;gt;复习：简单的word2vec模型cost fuction（ 求导结果参照视频教程）： 
+梯度下降&quot;&amp;gt;梯度下降将所有参数转换成一个列向量$\Theta$（V为词汇数，v是中心词的word vector，v’是external word vector）：
+使用full batch最小化cost将要求计算cost对所有window的导数更新$\Theta$的每个元素：">
+<meta property="og:image" content="http://img.blog.csdn.net/20150702194845730">
+<meta property="og:image" content="http://img.blog.csdn.net/20150702195040758">
+<meta property="og:image" content="http://img.blog.csdn.net/20150702200344048">
+<meta property="og:image" content="http://img.blog.csdn.net/20150702200943519">
+<meta property="og:image" content="http://img.blog.csdn.net/20150702201117460">
+<meta property="og:image" content="http://img.blog.csdn.net/20150702201345199">
+<meta property="og:image" content="http://img.blog.csdn.net/20150702201957120">
+<meta property="og:image" content="http://img.blog.csdn.net/20150702203923235">
+<meta property="og:image" content="http://img.blog.csdn.net/20150702205159073">
+<meta property="og:image" content="http://img.blog.csdn.net/20150702205643947">
+<meta property="og:image" content="http://img.blog.csdn.net/20150702210538737">
+<meta property="og:image" content="http://img.blog.csdn.net/20150702210800811">
+<meta property="og:image" content="http://img.blog.csdn.net/20150702211321857">
+<meta property="og:image" content="http://img.blog.csdn.net/20150703130237307">
+<meta property="og:image" content="http://img.blog.csdn.net/20150703131502545">
+<meta property="og:image" content="http://img.blog.csdn.net/20150703132558808">
+<meta property="og:image" content="http://img.blog.csdn.net/20150703132728700">
+<meta property="og:image" content="http://img.blog.csdn.net/20150703134702552">
+<meta property="og:image" content="http://img.blog.csdn.net/20150703134745343">
+<meta property="og:image" content="http://img.blog.csdn.net/20150703142635158">
+<meta property="og:image" content="http://img.blog.csdn.net/20150703143833135">
+<meta property="og:image" content="http://img.blog.csdn.net/20150703144348435">
+<meta property="og:image" content="http://img.blog.csdn.net/20150703151327383">
+<meta property="og:image" content="http://img.blog.csdn.net/20150703162955748">
+<meta property="og:image" content="http://img.blog.csdn.net/20150703163057570">
+<meta property="og:image" content="http://img.blog.csdn.net/20150703164036144">
+<meta property="og:image" content="http://img.blog.csdn.net/20150703165337050">
+<meta property="og:updated_time" content="2015-10-05T12:12:52.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Deep Learning for Nature Language Processing --- 第三讲">
+<meta name="twitter:description" content="复习：简单的word2vec模型&quot;&amp;gt;复习：简单的word2vec模型cost fuction（ 求导结果参照视频教程）： 
+梯度下降&quot;&amp;gt;梯度下降将所有参数转换成一个列向量$\Theta$（V为词汇数，v是中心词的word vector，v’是external word vector）：
+使用full batch最小化cost将要求计算cost对所有window的导数更新$\Theta$的每个元素：">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post',
+    motion: true
+  };
+</script>
+
+  <title> Deep Learning for Nature Language Processing --- 第三讲 | Hexo </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Hexo</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Deep Learning for Nature Language Processing --- 第三讲
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2015-10-04T19:42:03+08:00" content="2015-10-04">
+              2015-10-04
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分類於
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/NLP/" itemprop="url" rel="index">
+                    <span itemprop="name">NLP</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h3 id="u590D_u4E60_uFF1A_u7B80_u5355_u7684word2vec_u6A21_u578B"><a href="#u590D_u4E60_uFF1A_u7B80_u5355_u7684word2vec_u6A21_u578B" class="headerlink" title="<strong>复习：简单的word2vec模型</strong>"></a><strong>复习：简单的word2vec模型</strong></h3><h4 id="cost_fuction_uFF08__u6C42_u5BFC_u7ED3_u679C_u53C2_u7167_u89C6_u9891_u6559_u7A0B_uFF09_uFF1A"><a href="#cost_fuction_uFF08__u6C42_u5BFC_u7ED3_u679C_u53C2_u7167_u89C6_u9891_u6559_u7A0B_uFF09_uFF1A" class="headerlink" title="cost fuction（ 求导结果参照视频教程）："></a>cost fuction（ 求导结果参照视频教程）：</h4><p><img src="http://img.blog.csdn.net/20150702194845730" alt=""><br> <img src="http://img.blog.csdn.net/20150702195040758" alt="这里写图片描述"></p>
+<h3 id="u68AF_u5EA6_u4E0B_u964D"><a href="#u68AF_u5EA6_u4E0B_u964D" class="headerlink" title="<strong>梯度下降</strong>"></a><strong>梯度下降</strong></h3><h4 id="u5C06_u6240_u6709_u53C2_u6570_u8F6C_u6362_u6210_u4E00_u4E2A_u5217_u5411_u91CF_24_5CTheta_24_uFF08V_u4E3A_u8BCD_u6C47_u6570_uFF0Cv_u662F_u4E2D_u5FC3_u8BCD_u7684word_vector_uFF0Cv_u2019_u662Fexternal_word_vector_uFF09_uFF1A"><a href="#u5C06_u6240_u6709_u53C2_u6570_u8F6C_u6362_u6210_u4E00_u4E2A_u5217_u5411_u91CF_24_5CTheta_24_uFF08V_u4E3A_u8BCD_u6C47_u6570_uFF0Cv_u662F_u4E2D_u5FC3_u8BCD_u7684word_vector_uFF0Cv_u2019_u662Fexternal_word_vector_uFF09_uFF1A" class="headerlink" title="将所有参数转换成一个列向量$\Theta$（V为词汇数，v是中心词的word vector，v’是external word vector）："></a>将所有参数转换成一个列向量$\Theta$（V为词汇数，v是中心词的word vector，v’是external word vector）：</h4><p><img src="http://img.blog.csdn.net/20150702200344048" alt="这里写图片描述"></p>
+<h4 id="u4F7F_u7528full_batch_u6700_u5C0F_u5316cost_u5C06_u8981_u6C42_u8BA1_u7B97cost_u5BF9_u6240_u6709window_u7684_u5BFC_u6570"><a href="#u4F7F_u7528full_batch_u6700_u5C0F_u5316cost_u5C06_u8981_u6C42_u8BA1_u7B97cost_u5BF9_u6240_u6709window_u7684_u5BFC_u6570" class="headerlink" title="使用full batch最小化cost将要求计算cost对所有window的导数"></a>使用full batch最小化cost将要求计算cost对所有window的导数</h4><h4 id="u66F4_u65B0_24_5CTheta_24_u7684_u6BCF_u4E2A_u5143_u7D20_uFF1A"><a href="#u66F4_u65B0_24_5CTheta_24_u7684_u6BCF_u4E2A_u5143_u7D20_uFF1A" class="headerlink" title="更新$\Theta$的每个元素："></a>更新$\Theta$的每个元素：</h4><p><img src="http://img.blog.csdn.net/20150702200943519" alt="这里写图片描述"></p>
+<h4 id="u5411_u91CF_u5316_u8868_u793A_uFF08_u5BF9_24_5CTheta_24_u4E2D_u7684_u6240_u6709_u5143_u7D20_uFF09_uFF1A"><a href="#u5411_u91CF_u5316_u8868_u793A_uFF08_u5BF9_24_5CTheta_24_u4E2D_u7684_u6240_u6709_u5143_u7D20_uFF09_uFF1A" class="headerlink" title="向量化表示（对$\Theta$中的所有元素）："></a>向量化表示（对$\Theta$中的所有元素）：</h4><p><img src="http://img.blog.csdn.net/20150702201117460" alt="这里写图片描述"></p>
+<h4 id="u4EE3_u7801_u793A_u4F8B_uFF1A"><a href="#u4EE3_u7801_u793A_u4F8B_uFF1A" class="headerlink" title="代码示例："></a>代码示例：</h4><p><img src="http://img.blog.csdn.net/20150702201345199" alt="这里写图片描述"></p>
+<h3 id="SGD"><a href="#SGD" class="headerlink" title="<strong>SGD</strong>"></a><strong>SGD</strong></h3><h4 id="u6570_u636E_u96C6_u53EF_u80FD_u542B_u670940B_u7684_u6570_u636E_uFF0C_u8FD9_u6837_u7684_u8BDD_uFF0C_u7528full_batch_u7684_u65B9_u6CD5_u5C31_u7B97_u8FED_u4EE3_u4E00_u6B21_u4E5F_u4F1A_u82B1_u8D39_u5F88_u957F_u65F6_u95F4_uFF0C_u6240_u4EE5_u91C7_u7528SGD_u7684_u65B9_u6CD5_uFF1A"><a href="#u6570_u636E_u96C6_u53EF_u80FD_u542B_u670940B_u7684_u6570_u636E_uFF0C_u8FD9_u6837_u7684_u8BDD_uFF0C_u7528full_batch_u7684_u65B9_u6CD5_u5C31_u7B97_u8FED_u4EE3_u4E00_u6B21_u4E5F_u4F1A_u82B1_u8D39_u5F88_u957F_u65F6_u95F4_uFF0C_u6240_u4EE5_u91C7_u7528SGD_u7684_u65B9_u6CD5_uFF1A" class="headerlink" title="数据集可能含有40B的数据，这样的话，用full batch的方法就算迭代一次也会花费很长时间，所以采用SGD的方法："></a>数据集可能含有40B的数据，这样的话，用full batch的方法就算迭代一次也会花费很长时间，所以采用SGD的方法：</h4><p><img src="http://img.blog.csdn.net/20150702201957120" alt="这里写图片描述"></p>
+<h4 id="u4F46_u662F_u8FD8_u6709_u4E00_u4E2A_u95EE_u9898_uFF0C_u5728_u6BCF_u4E00_u4E2Awindow_u4E2D_u6700_u591A_u542B_u6709_uFF082c-1_uFF09_u4E2A_u5355_u8BCD_uFF08_u5373vector_uFF0C_u4E00_u4E2A_u5355_u8BCD_u5BF9_u5E94_u4E00_u4E2Avector_uFF09_uFF0C_u6240_u4EE5_u5F97_u5230_u7684cost_u5BF9_u6BCF_u4E2Awindow_u7684_u5BFC_u6570_u662F_u975E_u5E38_u7A00_u758F_u7684__uFF1A"><a href="#u4F46_u662F_u8FD8_u6709_u4E00_u4E2A_u95EE_u9898_uFF0C_u5728_u6BCF_u4E00_u4E2Awindow_u4E2D_u6700_u591A_u542B_u6709_uFF082c-1_uFF09_u4E2A_u5355_u8BCD_uFF08_u5373vector_uFF0C_u4E00_u4E2A_u5355_u8BCD_u5BF9_u5E94_u4E00_u4E2Avector_uFF09_uFF0C_u6240_u4EE5_u5F97_u5230_u7684cost_u5BF9_u6BCF_u4E2Awindow_u7684_u5BFC_u6570_u662F_u975E_u5E38_u7A00_u758F_u7684__uFF1A" class="headerlink" title="但是还有一个问题，在每一个window中最多含有（2c-1）个单词（即vector，一个单词对应一个vector），所以得到的cost对每个window的导数是非常稀疏的 ：<img src=" http:="" img.blog.csdn.net="" 20150702203923235"="" alt="这里写图片描述">"></a>但是还有一个问题，在每一个window中最多含有（2c-1）个单词（即vector，一个单词对应一个vector），所以得到的cost对每个window的导数是非常稀疏的 ：<img src="http://img.blog.csdn.net/20150702203923235" alt="这里写图片描述"></h4><h3 id="u7A00_u758F_u7684_u89E3_u51B3_u65B9_u6848_uFF1A1-_u4FDD_u6301_u5468_u56F4word_vectors_u7684_u6563_u5217_u503C_u30022-_u66F4_u65B0_u6574_u4E2Aword_embedding_matrix_L_u548CL_u2019_u7684_u786E_u5B9A_u7684_u67D0_u4E9B_u5217_u3002"><a href="#u7A00_u758F_u7684_u89E3_u51B3_u65B9_u6848_uFF1A1-_u4FDD_u6301_u5468_u56F4word_vectors_u7684_u6563_u5217_u503C_u30022-_u66F4_u65B0_u6574_u4E2Aword_embedding_matrix_L_u548CL_u2019_u7684_u786E_u5B9A_u7684_u67D0_u4E9B_u5217_u3002" class="headerlink" title="稀疏的解决方案：1.保持周围word vectors的散列值。2.更新整个word embedding matrix L和L’的确定的某些列。"></a>稀疏的解决方案：1.保持周围word vectors的散列值。2.更新整个word embedding matrix L和L’的确定的某些列。</h3><p><img src="http://img.blog.csdn.net/20150702205159073" alt="这里写图片描述"></p>
+<h3 id="PSet1"><a href="#PSet1" class="headerlink" title="<strong>PSet1</strong>"></a><strong>PSet1</strong></h3><p><img src="http://img.blog.csdn.net/20150702205643947" alt="这里写图片描述"></p>
+<h4 id="u4E3B_u8981_u601D_u60F3_uFF1A_u7528_u4E8C_u5206_u7C7B_u7684_u903B_u8F91_u56DE_u5F52_uFF0C_u8BAD_u7EC3_u4E00_u7EC4true_pairs_uFF08_u4E2D_u5FC3_u8BCD_u548C_u5176context_window_u5185_u7684_u5176_u4ED6_u8BCD_uFF09_u548C_u591A_u7EC4random_pairs_uFF08_u4E2D_u5FC3_u8BCD_u548C_u5176_u4ED6_u968F_u673A_u6311_u9009_u7684_u8BCD_uFF09"><a href="#u4E3B_u8981_u601D_u60F3_uFF1A_u7528_u4E8C_u5206_u7C7B_u7684_u903B_u8F91_u56DE_u5F52_uFF0C_u8BAD_u7EC3_u4E00_u7EC4true_pairs_uFF08_u4E2D_u5FC3_u8BCD_u548C_u5176context_window_u5185_u7684_u5176_u4ED6_u8BCD_uFF09_u548C_u591A_u7EC4random_pairs_uFF08_u4E2D_u5FC3_u8BCD_u548C_u5176_u4ED6_u968F_u673A_u6311_u9009_u7684_u8BCD_uFF09" class="headerlink" title="主要思想：用二分类的逻辑回归，训练一组true pairs（中心词和其context window内的其他词）和多组random pairs（中心词和其他随机挑选的词）"></a>主要思想：用二分类的逻辑回归，训练一组true pairs（中心词和其context window内的其他词）和多组random pairs（中心词和其他随机挑选的词）</h4><h4 id="skip-gram_u6A21_u578B_u548C_u8D1F_u91C7_u6837_uFF08k_u4E3A_u8D1F_u91C7_u6837_u6570_uFF09_uFF1A"><a href="#skip-gram_u6A21_u578B_u548C_u8D1F_u91C7_u6837_uFF08k_u4E3A_u8D1F_u91C7_u6837_u6570_uFF09_uFF1A" class="headerlink" title="skip-gram模型和负采样（k为负采样数）："></a>skip-gram模型和负采样（k为负采样数）：</h4><h4 id="skip-gram_cost_uFF08maximize_u8BE5_u51FD_u6570_uFF09"><a href="#skip-gram_cost_uFF08maximize_u8BE5_u51FD_u6570_uFF09" class="headerlink" title="skip-gram cost（maximize该函数）"></a>skip-gram cost（maximize该函数）</h4><p><img src="http://img.blog.csdn.net/20150702210538737" alt="这里写图片描述"></p>
+<h4 id="u6216_u8005_u5199_u6210_uFF08_unigram_distribution_U_28w_29_uFF09_uFF1A"><a href="#u6216_u8005_u5199_u6210_uFF08_unigram_distribution_U_28w_29_uFF09_uFF1A" class="headerlink" title="或者写成（ unigram   distribution   U(w)）："></a>或者写成（ unigram   distribution   U(w)）：</h4><p><img src="http://img.blog.csdn.net/20150702210800811" alt="这里写图片描述"><br><img src="http://img.blog.csdn.net/20150702211321857" alt="这里写图片描述"></p>
+<h4 id="u4F7F_u5F97_u4E0D_u9891_u7E41_u51FA_u73B0_u7684_u8BCD_u66F4_u591A_u7684_u88AB_u53D6_u6837"><a href="#u4F7F_u5F97_u4E0D_u9891_u7E41_u51FA_u73B0_u7684_u8BCD_u66F4_u591A_u7684_u88AB_u53D6_u6837" class="headerlink" title="使得不频繁出现的词更多的被取样"></a>使得不频繁出现的词更多的被取样</h4><h4 id="u53E6_u4E00_u4E2A_u6A21_u578B_uFF1ACBOW_uFF08continuous_bag_of_word_uFF09_uFF1A"><a href="#u53E6_u4E00_u4E2A_u6A21_u578B_uFF1ACBOW_uFF08continuous_bag_of_word_uFF09_uFF1A" class="headerlink" title="另一个模型：CBOW（continuous bag of word）："></a>另一个模型：CBOW（continuous bag of word）：</h4><h4 id="CBOW_u4E3B_u8981_u601D_u60F3_uFF1A_u901A_u8FC7_u5468_u56F4_u5355_u8BCD_u7684word_vectors_u7684_u548C_u9884_u6D4B_u4E2D_u5FC3_u8BCD_uFF0C_u4E0D_u540C_u4E8Eskip-gram_uFF0Cskip-gram_u662F_u901A_u8FC7_u4E2D_u5FC3_u8BCD_u9884_u6D4B_u5468_u56F4_u7684_u5355_u8BCDword_vectors_u3002"><a href="#CBOW_u4E3B_u8981_u601D_u60F3_uFF1A_u901A_u8FC7_u5468_u56F4_u5355_u8BCD_u7684word_vectors_u7684_u548C_u9884_u6D4B_u4E2D_u5FC3_u8BCD_uFF0C_u4E0D_u540C_u4E8Eskip-gram_uFF0Cskip-gram_u662F_u901A_u8FC7_u4E2D_u5FC3_u8BCD_u9884_u6D4B_u5468_u56F4_u7684_u5355_u8BCDword_vectors_u3002" class="headerlink" title="CBOW主要思想：通过周围单词的word vectors的和预测中心词，不同于skip-gram，skip-gram是通过中心词预测周围的单词word vectors。"></a>CBOW主要思想：通过周围单词的word vectors的和预测中心词，不同于skip-gram，skip-gram是通过中心词预测周围的单词word vectors。</h4><h4 id="u5355_u4E2A_u6A21_u578B_u8BAD_u7EC3_u540E_u4F1A_u83B7_u5F97L_u548CL_u2019_u4E24_u4E2A_u7531word_vectors_u7EC4_u6210_u7684_u77E9_u9635_uFF0C_u4F46_u662F_u8FD9_u4E24_u4E2A_u77E9_u9635_u6355_u83B7_u7684_u4FE1_u606F_u662F_u76F8_u4F3C_u7684_uFF0C_u6240_u4EE5_uFF0C_u6700_u597D_u7684_u4FE1_u606F_u7684_u662F_u5C06_u4ED6_u4EEC_u76F8_u52A0_uFF1A"><a href="#u5355_u4E2A_u6A21_u578B_u8BAD_u7EC3_u540E_u4F1A_u83B7_u5F97L_u548CL_u2019_u4E24_u4E2A_u7531word_vectors_u7EC4_u6210_u7684_u77E9_u9635_uFF0C_u4F46_u662F_u8FD9_u4E24_u4E2A_u77E9_u9635_u6355_u83B7_u7684_u4FE1_u606F_u662F_u76F8_u4F3C_u7684_uFF0C_u6240_u4EE5_uFF0C_u6700_u597D_u7684_u4FE1_u606F_u7684_u662F_u5C06_u4ED6_u4EEC_u76F8_u52A0_uFF1A" class="headerlink" title="单个模型训练后会获得L和L’两个由word vectors组成的矩阵，但是这两个矩阵捕获的信息是相似的，所以，最好的信息的是将他们相加："></a>单个模型训练后会获得L和L’两个由word vectors组成的矩阵，但是这两个矩阵捕获的信息是相似的，所以，最好的信息的是将他们相加：</h4><p><img src="http://img.blog.csdn.net/20150703130237307" alt="这里写图片描述"></p>
+<h3 id="u5982_u4F55_u8BC4_u4F30word_vectors"><a href="#u5982_u4F55_u8BC4_u4F30word_vectors" class="headerlink" title="<strong>如何评估word vectors</strong>"></a><strong>如何评估word vectors</strong></h3><h3 id="word_vector_anology_3A"><a href="#word_vector_anology_3A" class="headerlink" title="word vector anology:"></a>word vector anology:</h3><h4 id="u5927_u591A_u6570_u4EE5_u524D_u8BC4_u4EF7word_vector_u7684_u65B9_u6CD5_u662F_u6BD4_u8F83_u76F8_u8FD1_u5355_u8BCD_u5BF9_u5E94_u7684vector_u95F4_u7684_u8DDD_u79BB_u548C_u89D2_u5EA6_uFF1A"><a href="#u5927_u591A_u6570_u4EE5_u524D_u8BC4_u4EF7word_vector_u7684_u65B9_u6CD5_u662F_u6BD4_u8F83_u76F8_u8FD1_u5355_u8BCD_u5BF9_u5E94_u7684vector_u95F4_u7684_u8DDD_u79BB_u548C_u89D2_u5EA6_uFF1A" class="headerlink" title="大多数以前评价word vector的方法是比较相近单词对应的vector间的距离和角度："></a>大多数以前评价word vector的方法是比较相近单词对应的vector间的距离和角度：</h4><p><img src="http://img.blog.csdn.net/20150703131502545" alt="这里写图片描述"></p>
+<h4 id="milolov_u63D0_u51FA_u4E86_u57FA_u4E8Eword_anology_u7684_u591A_u7EF4_u8BC4_u4EF7_u65B9_u6CD5_uFF0C_u4F8B_u5982_uFF1A"><a href="#milolov_u63D0_u51FA_u4E86_u57FA_u4E8Eword_anology_u7684_u591A_u7EF4_u8BC4_u4EF7_u65B9_u6CD5_uFF0C_u4F8B_u5982_uFF1A" class="headerlink" title="milolov提出了基于word anology的多维评价方法，例如："></a>milolov提出了基于word anology的多维评价方法，例如：</h4><h4 id="u5BF9_u4E8E_u53E5_u5B50_u201Cking_is_to_queen_as_man_is_to_women_u201D_uFF0C_u76F8_u5BF9_u5E94_u7684word_vector_u5E94_u8BE5_u6EE1_u8DB3_uFF1Aking_-_queen__3D_man_-_women_u3002_u53C8_u6BD4_u5982_uFF0C_u5728G_loVe_u7684_u8BEF_u5DEE_u6D4B_u8BD5test_u4E2D_uFF08_u9884_u6D4B_u4E0B_u5212_u7EBF_u4E2D_u7684_u8BCD_uFF09_uFF1A"><a href="#u5BF9_u4E8E_u53E5_u5B50_u201Cking_is_to_queen_as_man_is_to_women_u201D_uFF0C_u76F8_u5BF9_u5E94_u7684word_vector_u5E94_u8BE5_u6EE1_u8DB3_uFF1Aking_-_queen__3D_man_-_women_u3002_u53C8_u6BD4_u5982_uFF0C_u5728G_loVe_u7684_u8BEF_u5DEE_u6D4B_u8BD5test_u4E2D_uFF08_u9884_u6D4B_u4E0B_u5212_u7EBF_u4E2D_u7684_u8BCD_uFF09_uFF1A" class="headerlink" title="对于句子“king is to queen as man is to women”，相对应的word vector应该满足：king - queen = man - women。又比如，在G loVe的误差测试test中（预测下划线中的词）："></a>对于句子“king is to queen as man is to women”，相对应的word vector应该满足：king - queen = man - women。又比如，在G loVe的误差测试test中（预测下划线中的词）：</h4><h4 id="1-_u5BF9_u4E8E_u8BED_u4E49semantic_uFF1AAthens_is_to_Greece_as_Berlin_is_to____3F"><a href="#1-_u5BF9_u4E8E_u8BED_u4E49semantic_uFF1AAthens_is_to_Greece_as_Berlin_is_to____3F" class="headerlink" title="1.对于语义semantic：Athens is to Greece as Berlin is to __?"></a>1.对于语义semantic：Athens is to Greece as Berlin is to __?</h4><h4 id="2-_u5BF9_u4E8E_u8BED_u6CD5syntactic_uFF1Adance_is_to_dancing_as_fly_is_to____3F"><a href="#2-_u5BF9_u4E8E_u8BED_u6CD5syntactic_uFF1Adance_is_to_dancing_as_fly_is_to____3F" class="headerlink" title="2.对于语法syntactic：dance is to dancing as fly is to __?"></a>2.对于语法syntactic：dance is to dancing as fly is to __?</h4><h3 id="Analogy_u8BC4_u4F30_u548C_u6A21_u578B_u53C2_u6570_u9009_u62E9"><a href="#Analogy_u8BC4_u4F30_u548C_u6A21_u578B_u53C2_u6570_u9009_u62E9" class="headerlink" title="<strong>Analogy评估和模型参数选择</strong>"></a><strong>Analogy评估和模型参数选择</strong></h3><h4 id="u5404_u4E2A_u6A21_u578B_u6D4B_u8BD5_u7ED3_u679C_uFF1A"><a href="#u5404_u4E2A_u6A21_u578B_u6D4B_u8BD5_u7ED3_u679C_uFF1A" class="headerlink" title="各个模型测试结果："></a>各个模型测试结果：</h4><p><img src="http://img.blog.csdn.net/20150703132558808" alt="这里写图片描述"></p>
+<h4 id="u6A21_u578B_u53C2_u6570_u7684_u9009_u62E9_uFF1A"><a href="#u6A21_u578B_u53C2_u6570_u7684_u9009_u62E9_uFF1A" class="headerlink" title="模型参数的选择："></a>模型参数的选择：</h4><p><img src="http://img.blog.csdn.net/20150703132728700" alt="这里写图片描述"><br>对于GloVe来说，context window size设置为8，word vector的维数设置为300是个不错的选择。</p>
+<h4 id="u4ECE_u6A21_u578B_u7684_u5176_u4ED6_u6D4B_u8BD5_u7ED3_u679C_u6765_u770B_uFF0C_u8FD8_u53EF_u4EE5_u5F97_u5230_u53E6_u5916_u4E00_u4E9B_u6709_u7528_u7684_u6280_u5DE7_uFF08_u7ED3_u8BBA_uFF09_uFF0C_u9488_u5BF9GloVe_uFF1A"><a href="#u4ECE_u6A21_u578B_u7684_u5176_u4ED6_u6D4B_u8BD5_u7ED3_u679C_u6765_u770B_uFF0C_u8FD8_u53EF_u4EE5_u5F97_u5230_u53E6_u5916_u4E00_u4E9B_u6709_u7528_u7684_u6280_u5DE7_uFF08_u7ED3_u8BBA_uFF09_uFF0C_u9488_u5BF9GloVe_uFF1A" class="headerlink" title="从模型的其他测试结果来看，还可以得到另外一些有用的技巧（结论），针对GloVe："></a>从模型的其他测试结果来看，还可以得到另外一些有用的技巧（结论），针对GloVe：</h4><h5 id="1-_u5BF9_u4E8E_u8BED_u6CD5syntactic_uFF1A_u8F83_u5C0F_u7684_u5355_u8FB9context_window_u4F1A_u7684_u5230_u66F4_u597D_u7684_u7ED3_u679C_uFF08_u539F_u56E0_u662Fsyntactic_u4E3B_u8981_u5728_u4E8E_u8BCD_u5E8F_uFF09"><a href="#1-_u5BF9_u4E8E_u8BED_u6CD5syntactic_uFF1A_u8F83_u5C0F_u7684_u5355_u8FB9context_window_u4F1A_u7684_u5230_u66F4_u597D_u7684_u7ED3_u679C_uFF08_u539F_u56E0_u662Fsyntactic_u4E3B_u8981_u5728_u4E8E_u8BCD_u5E8F_uFF09" class="headerlink" title="1.对于语法syntactic：较小的单边context window会的到更好的结果（原因是syntactic主要在于词序）"></a>1.对于语法syntactic：较小的单边context window会的到更好的结果（原因是syntactic主要在于词序）</h5><h5 id="2-_u5BF9_u4E8E_u8BED_u4E49semantic_uFF1A_u8F83_u5927_u7684_u53CC_u8FB9context_window_u4F1A_u5F97_u5230_u8F83_u597D_u7684_u7ED3_u679C"><a href="#2-_u5BF9_u4E8E_u8BED_u4E49semantic_uFF1A_u8F83_u5927_u7684_u53CC_u8FB9context_window_u4F1A_u5F97_u5230_u8F83_u597D_u7684_u7ED3_u679C" class="headerlink" title="2.对于语义semantic：较大的双边context window会得到较好的结果"></a>2.对于语义semantic：较大的双边context window会得到较好的结果</h5><h5 id="3-_u5BF9_u4E8E_u6570_u636E_u96C6corpus_u7684_u5927_u5C0F_uFF1A_u8D8A_u5927_u7684_u6570_u636E_u53CA_u4F1A_u6709_u66F4_u597D_u7684_u7ED3_u679C_uFF0C_u4F46_u662Fsemantic_u5BF9_u6570_u636E_u96C6_u7684_u5927_u5C0F_u5173_u7CFB_u4E0D_u90A3_u4E48_u660E_u663E_uFF0C_u800C_u662F_u548C_u6570_u636E_u96C6_u7684_u771F_u5B9E_u6027_u548C_u4E30_u5BCC_u5EA6_u6709_u5173_uFF08_u6240_u6709_u5728wikipedia_u4E0A_u8BAD_u7EC3_u5F97_u5230_u7684_u7ED3_u679C_u8981_u6BD4_u5176_u4ED6_u56FA_u5B9A_u4E0D_u53D8_u7684_u6570_u636E_u96C6_u7684_u7ED3_u679C_u8981_u597D_uFF09"><a href="#3-_u5BF9_u4E8E_u6570_u636E_u96C6corpus_u7684_u5927_u5C0F_uFF1A_u8D8A_u5927_u7684_u6570_u636E_u53CA_u4F1A_u6709_u66F4_u597D_u7684_u7ED3_u679C_uFF0C_u4F46_u662Fsemantic_u5BF9_u6570_u636E_u96C6_u7684_u5927_u5C0F_u5173_u7CFB_u4E0D_u90A3_u4E48_u660E_u663E_uFF0C_u800C_u662F_u548C_u6570_u636E_u96C6_u7684_u771F_u5B9E_u6027_u548C_u4E30_u5BCC_u5EA6_u6709_u5173_uFF08_u6240_u6709_u5728wikipedia_u4E0A_u8BAD_u7EC3_u5F97_u5230_u7684_u7ED3_u679C_u8981_u6BD4_u5176_u4ED6_u56FA_u5B9A_u4E0D_u53D8_u7684_u6570_u636E_u96C6_u7684_u7ED3_u679C_u8981_u597D_uFF09" class="headerlink" title="3.对于数据集corpus的大小：越大的数据及会有更好的结果，但是semantic对数据集的大小关系不那么明显，而是和数据集的真实性和丰富度有关（所有在wikipedia上训练得到的结果要比其他固定不变的数据集的结果要好）"></a>3.对于数据集corpus的大小：越大的数据及会有更好的结果，但是semantic对数据集的大小关系不那么明显，而是和数据集的真实性和丰富度有关（所有在wikipedia上训练得到的结果要比其他固定不变的数据集的结果要好）</h5><h4 id="u53EF_u80FD_u4F60_u4F1A_u60F3_u8981_u4E00_u4E2A_u8BCD_u7684word_vector_u6355_u83B7_u6240_u6709_u7C7B_u578B_u7684_u4FE1_u606F_uFF0C_u4F8B_u5982_uFF1Arun_u65E2_u662F_u52A8_u8BCD_u4E5F_u662F_u540D_u8BCD_u3002_u4F46_u662F_u5B9E_u9645_u4E0A_u5BF9_u4E8E_u4E0D_u540C_u7684_u8BCD_u6027_uFF0C_u5BF9_u5E94_u7684word_vector_u88AB_u62C9_u5411_u4E86_u4E0D_u540C_u7684_u65B9_u5411_uFF0C_u53C2_u8003_uFF1A_Improving_Word_Representa4ons_Via_Global_Context_And_Mul4ple_Word_Prototypes__28Huang_et-al-_2012_29_u3002"><a href="#u53EF_u80FD_u4F60_u4F1A_u60F3_u8981_u4E00_u4E2A_u8BCD_u7684word_vector_u6355_u83B7_u6240_u6709_u7C7B_u578B_u7684_u4FE1_u606F_uFF0C_u4F8B_u5982_uFF1Arun_u65E2_u662F_u52A8_u8BCD_u4E5F_u662F_u540D_u8BCD_u3002_u4F46_u662F_u5B9E_u9645_u4E0A_u5BF9_u4E8E_u4E0D_u540C_u7684_u8BCD_u6027_uFF0C_u5BF9_u5E94_u7684word_vector_u88AB_u62C9_u5411_u4E86_u4E0D_u540C_u7684_u65B9_u5411_uFF0C_u53C2_u8003_uFF1A_Improving_Word_Representa4ons_Via_Global_Context_And_Mul4ple_Word_Prototypes__28Huang_et-al-_2012_29_u3002" class="headerlink" title="可能你会想要一个词的word vector捕获所有类型的信息，例如：run既是动词也是名词。但是实际上对于不同的词性，对应的word vector被拉向了不同的方向，参考：  Improving  Word    Representa4ons  Via  Global Context And Mul4ple Word     Prototypes (Huang  et.al.  2012)。"></a>可能你会想要一个词的word vector捕获所有类型的信息，例如：run既是动词也是名词。但是实际上对于不同的词性，对应的word vector被拉向了不同的方向，参考：  Improving  Word    Representa4ons  Via  Global Context And Mul4ple Word     Prototypes (Huang  et.al.  2012)。</h4><p><img src="http://img.blog.csdn.net/20150703134702552" alt="这里写图片描述"><img src="http://img.blog.csdn.net/20150703134745343" alt="这里写图片描述"></p>
+<h4 id="u597D_u7684word_vector_u7684_u4E00_u4E2A_u5B9E_u4F8B_uFF0Cnamed_entity_recognition_uFF08_u547D_u540D_u5B9E_u4F53_u8BC6_u522B_uFF09_uFF1A_u6807_u8BB0_u4E00_u6BB5_u6587_u5B57_u4E2D_u7684_u4E00_u7CFB_u5217_u540D_u8BCD_uFF0C_u5982_u516C_u53F8_u540D_uFF0C_u5730_u5740_u540D_uFF0C_u4EBA_u540D_u7B49_u3002"><a href="#u597D_u7684word_vector_u7684_u4E00_u4E2A_u5B9E_u4F8B_uFF0Cnamed_entity_recognition_uFF08_u547D_u540D_u5B9E_u4F53_u8BC6_u522B_uFF09_uFF1A_u6807_u8BB0_u4E00_u6BB5_u6587_u5B57_u4E2D_u7684_u4E00_u7CFB_u5217_u540D_u8BCD_uFF0C_u5982_u516C_u53F8_u540D_uFF0C_u5730_u5740_u540D_uFF0C_u4EBA_u540D_u7B49_u3002" class="headerlink" title="好的word vector的一个实例，named entity recognition（命名实体识别）：标记一段文字中的一系列名词，如公司名，地址名，人名等。"></a>好的word vector的一个实例，named entity recognition（命名实体识别）：标记一段文字中的一系列名词，如公司名，地址名，人名等。</h4><h3 id="u5728_u795E_u7ECF_u7F51_u7EDC_u4E2D_u4F7F_u7528word_vector_uFF08_u5355_u4E2A_u8BCD_uFF0C_u65E0context_window_uFF09"><a href="#u5728_u795E_u7ECF_u7F51_u7EDC_u4E2D_u4F7F_u7528word_vector_uFF08_u5355_u4E2A_u8BCD_uFF0C_u65E0context_window_uFF09" class="headerlink" title="<strong>在神经网络中使用word vector（单个词，无context window）</strong>"></a><strong>在神经网络中使用word vector（单个词，无context window）</strong></h3><h4 id="deep_learned_word_vector_u7684_u4E3B_u8981_u597D_u5904_uFF1A"><a href="#deep_learned_word_vector_u7684_u4E3B_u8981_u597D_u5904_uFF1A" class="headerlink" title="<strong>deep learned word vector的主要好处：</strong>"></a><strong>deep learned word vector的主要好处：</strong></h4><h5 id="1-_u6B63_u786E_u5BF9_u5355_u8BCD_u5206_u7C7B_u7684_u80FD_u529B_uFF0C_u4F8B_u5982_uFF1Acountries_u7C7B_u7684word_vectors_u805A_u96C6_u5728_u4E00_u8D77_uFF0C_u6709_u5229_u4E8E_u5BF9_u5730_u5740_u8FDB_u884C_u5206_u7C7B_u3002"><a href="#1-_u6B63_u786E_u5BF9_u5355_u8BCD_u5206_u7C7B_u7684_u80FD_u529B_uFF0C_u4F8B_u5982_uFF1Acountries_u7C7B_u7684word_vectors_u805A_u96C6_u5728_u4E00_u8D77_uFF0C_u6709_u5229_u4E8E_u5BF9_u5730_u5740_u8FDB_u884C_u5206_u7C7B_u3002" class="headerlink" title="1.正确对单词分类的能力，例如：countries类的word vectors聚集在一起，有利于对地址进行分类。"></a>1.正确对单词分类的能力，例如：countries类的word vectors聚集在一起，有利于对地址进行分类。</h5><h5 id="2-_u6574_u5408_u5404_u7C7B_u4FE1_u606F_u5230word_vectors_uFF0C_u4F8B_u5982_uFF1A_u5C06_u60C5_u611F_u4FE1_u606F_u6620_u5C04_u5230word_vector_uFF0C_u6709_u5229_u4E8E_u627E_u5230_u6570_u636E_u96C6corpus_u4E2D_u7684_u4E00_u4E9B_u79EF_u6781_u7684_u83B7_u5F97_u6D88_u6781_u7684_u5355_u8BCD_u3002"><a href="#2-_u6574_u5408_u5404_u7C7B_u4FE1_u606F_u5230word_vectors_uFF0C_u4F8B_u5982_uFF1A_u5C06_u60C5_u611F_u4FE1_u606F_u6620_u5C04_u5230word_vector_uFF0C_u6709_u5229_u4E8E_u627E_u5230_u6570_u636E_u96C6corpus_u4E2D_u7684_u4E00_u4E9B_u79EF_u6781_u7684_u83B7_u5F97_u6D88_u6781_u7684_u5355_u8BCD_u3002" class="headerlink" title="2.整合各类信息到word vectors，例如：将情感信息映射到word vector，有利于找到数据集corpus中的一些积极的获得消极的单词。"></a>2.整合各类信息到word vectors，例如：将情感信息映射到word vector，有利于找到数据集corpus中的一些积极的获得消极的单词。</h5><h3 id="softmax_uFF1A"><a href="#softmax_uFF1A" class="headerlink" title="<strong>softmax</strong>："></a><strong>softmax</strong>：</h3><p><img src="http://img.blog.csdn.net/20150703142635158" alt="这里写图片描述"><br>通常用于类别数大于2的分类任务</p>
+<h4 id="u76F8_u5173_u672F_u8BED_uFF1A_Loss_function__3D_cost_function__3D_objective_function"><a href="#u76F8_u5173_u672F_u8BED_uFF1A_Loss_function__3D_cost_function__3D_objective_function" class="headerlink" title="相关术语：  Loss    function    =   cost function   =   objective   function"></a>相关术语：  Loss    function    =   cost function   =   objective   function</h4><h4 id="softmax_u7684loss_u51FD_u6570_uFF1ACross_entropy_uFF08_u4EA4_u53C9_u71B5_uFF09"><a href="#softmax_u7684loss_u51FD_u6570_uFF1ACross_entropy_uFF08_u4EA4_u53C9_u71B5_uFF09" class="headerlink" title="softmax的loss函数：Cross entropy（交叉熵）"></a>softmax的loss函数：Cross entropy（交叉熵）</h4><h4 id="u8BA1_u7B97p_28y_7Cx_29_uFF1A"><a href="#u8BA1_u7B97p_28y_7Cx_29_uFF1A" class="headerlink" title="计算p(y|x)："></a>计算p(y|x)：</h4><h5 id="1-_u9996_u5148_u5C06_u6743_u91CDW_u7684_u7B2Cy_u884C_u4E0EX_uFF08_u8BAD_u7EC3_u96C6word_vector_uFF09_u7684_u6BCF_u4E00_u884C_uFF08_u5217_uFF09_u76F8_u4E58_uFF08_u89C6_u5177_u4F53_u7684_u77E9_u9635_u6709_u533A_u522B_uFF09_uFF1A"><a href="#1-_u9996_u5148_u5C06_u6743_u91CDW_u7684_u7B2Cy_u884C_u4E0EX_uFF08_u8BAD_u7EC3_u96C6word_vector_uFF09_u7684_u6BCF_u4E00_u884C_uFF08_u5217_uFF09_u76F8_u4E58_uFF08_u89C6_u5177_u4F53_u7684_u77E9_u9635_u6709_u533A_u522B_uFF09_uFF1A" class="headerlink" title="1.首先将权重W的第y行与X（训练集word vector）的每一行（列）相乘（视具体的矩阵有区别）："></a>1.首先将权重W的第y行与X（训练集word vector）的每一行（列）相乘（视具体的矩阵有区别）：</h5><p><img src="http://img.blog.csdn.net/20150703143833135" alt="这里写图片描述"></p>
+<h5 id="2-_u9010_u4E00_u76F8_u4E58_uFF0C_u8BA1_u7B97fc_for_c_3D1_2C_u2026_2CC"><a href="#2-_u9010_u4E00_u76F8_u4E58_uFF0C_u8BA1_u7B97fc_for_c_3D1_2C_u2026_2CC" class="headerlink" title="2.逐一相乘，计算fc   for c=1,…,C"></a>2.逐一相乘，计算fc   for c=1,…,C</h5><h5 id="3-_u5F52_u4E00_u5316_uFF08_u5C06_u6570_u503C_u9650_u5236_u57280_uFF5E1_u4E4B_u95F4_uFF09_uFF0C_u901A_u8FC7softmax_u83B7_u5F97_u6982_u7387_u503C_uFF1A"><a href="#3-_u5F52_u4E00_u5316_uFF08_u5C06_u6570_u503C_u9650_u5236_u57280_uFF5E1_u4E4B_u95F4_uFF09_uFF0C_u901A_u8FC7softmax_u83B7_u5F97_u6982_u7387_u503C_uFF1A" class="headerlink" title="3.归一化（将数值限制在0～1之间），通过softmax获得概率值："></a>3.归一化（将数值限制在0～1之间），通过softmax获得概率值：</h5><p><img src="http://img.blog.csdn.net/20150703144348435" alt="这里写图片描述"></p>
+<h4 id="u6700_u5C0F_u5316_u8D1Flog_u4F3C_u7136_u51FD_u6570_uFF08_u5BF9_u4E8E_u591A_u5206_u7C7B_u95EE_u9898_uFF0C_u5C06_u6240_u6709_u7C7B_u522B_u7684_u4EA4_u53C9_u71B5_u52A0_u8D77_u6765_uFF0C_u4F5C_u4E3A_u6700_u540E_u7684loss_u65B9_u7A0B_uFF09_uFF1A"><a href="#u6700_u5C0F_u5316_u8D1Flog_u4F3C_u7136_u51FD_u6570_uFF08_u5BF9_u4E8E_u591A_u5206_u7C7B_u95EE_u9898_uFF0C_u5C06_u6240_u6709_u7C7B_u522B_u7684_u4EA4_u53C9_u71B5_u52A0_u8D77_u6765_uFF0C_u4F5C_u4E3A_u6700_u540E_u7684loss_u65B9_u7A0B_uFF09_uFF1A" class="headerlink" title="最小化负log似然函数（对于多分类问题，将所有类别的交叉熵加起来，作为最后的loss方程）："></a>最小化负log似然函数（对于多分类问题，将所有类别的交叉熵加起来，作为最后的loss方程）：</h4><p><img src="http://img.blog.csdn.net/20150703151327383" alt="这里写图片描述"></p>
+<h4 id="u8BAD_u7EC3_u65F6_uFF0C_u4F7F_u7528ground_truth_uFF1A_u5BF9_u4E8E_u6B63_u786E_u7684_u7C7B_u522B_u7F6E1_uFF0C_u5176_u4F59_u7684_u7F6E0_uFF0C_u5373"><a href="#u8BAD_u7EC3_u65F6_uFF0C_u4F7F_u7528ground_truth_uFF1A_u5BF9_u4E8E_u6B63_u786E_u7684_u7C7B_u522B_u7F6E1_uFF0C_u5176_u4F59_u7684_u7F6E0_uFF0C_u5373" class="headerlink" title="训练时，使用ground truth：对于正确的类别置1，其余的置0，即"></a>训练时，使用ground truth：对于正确的类别置1，其余的置0，即</h4><h4 id="p_3D_5B0_2C_u2026_2C0_2C1_2C0_2C_u20260_5D_uFF0C_u6240_u4EE5_u4EA4_u53C9_u71B5_u53EA_u8BA1_u7B97_u6BCF_u4E2A_u6837_u672C_u7684right_class_u6240_u5BF9_u5E94_u7684_u8BEF_u5DEE_uFF0C_u9519_u8BEF_u7C7B_u522B_u4E5F_u5BF9_u6C42_u68AF_u5EA6_u65E0_u5F71_u54CD_uFF08q_u4E3Asoftmax_uFF09_uFF1A"><a href="#p_3D_5B0_2C_u2026_2C0_2C1_2C0_2C_u20260_5D_uFF0C_u6240_u4EE5_u4EA4_u53C9_u71B5_u53EA_u8BA1_u7B97_u6BCF_u4E2A_u6837_u672C_u7684right_class_u6240_u5BF9_u5E94_u7684_u8BEF_u5DEE_uFF0C_u9519_u8BEF_u7C7B_u522B_u4E5F_u5BF9_u6C42_u68AF_u5EA6_u65E0_u5F71_u54CD_uFF08q_u4E3Asoftmax_uFF09_uFF1A" class="headerlink" title="p=[0,…,0,1,0,…0]，所以交叉熵只计算每个样本的right class所对应的误差，错误类别也对求梯度无影响（q为softmax）："></a>p=[0,…,0,1,0,…0]，所以交叉熵只计算每个样本的right class所对应的误差，错误类别也对求梯度无影响（q为softmax）：</h4><p><img src="http://img.blog.csdn.net/20150703162955748" alt="这里写图片描述"></p>
+<h4 id="u4E5F_u53EF_u4EE5_u5199_u6210_uFF1A"><a href="#u4E5F_u53EF_u4EE5_u5199_u6210_uFF1A" class="headerlink" title="也可以写成："></a>也可以写成：</h4><p><img src="http://img.blog.csdn.net/20150703163057570" alt="这里写图片描述"></p>
+<h4 id="u6240_u4EE5_u6700_u5C0F_u5316_u4EA4_u53C9_u71B5_u53D8_u6210_u4E86_u6700_u5C0F_u5316KL_divergence_uFF08KL__u6563_u5EA6_uFF09_uFF0CKL_u6563_u5EA6_u5E76_u975E_u8868_u793A_u8DDD_u79BB_uFF0C_u800C_u662F_u6D4B_u91CF_u4E24_u4E2A_u6982_u7387_u5206_u5E03_uFF08p_u548Cq_uFF09_u4E4B_u95F4_u7684_u5DEE_u5F02_uFF1A"><a href="#u6240_u4EE5_u6700_u5C0F_u5316_u4EA4_u53C9_u71B5_u53D8_u6210_u4E86_u6700_u5C0F_u5316KL_divergence_uFF08KL__u6563_u5EA6_uFF09_uFF0CKL_u6563_u5EA6_u5E76_u975E_u8868_u793A_u8DDD_u79BB_uFF0C_u800C_u662F_u6D4B_u91CF_u4E24_u4E2A_u6982_u7387_u5206_u5E03_uFF08p_u548Cq_uFF09_u4E4B_u95F4_u7684_u5DEE_u5F02_uFF1A" class="headerlink" title="所以最小化交叉熵变成了最小化KL divergence（KL 散度），KL散度并非表示距离，而是测量两个概率分布（p和q）之间的差异："></a>所以最小化交叉熵变成了最小化KL divergence（KL 散度），KL散度并非表示距离，而是测量两个概率分布（p和q）之间的差异：</h4><p><img src="http://img.blog.csdn.net/20150703164036144" alt="这里写图片描述"></p>
+<h4 id="u5C06_u4EA4_u53C9_u71B5_u5206_u522B_u5BF9X_u548CW_u6C42_u5BFC_uFF08_u89C1_u89C6_u9891_uFF09"><a href="#u5C06_u4EA4_u53C9_u71B5_u5206_u522B_u5BF9X_u548CW_u6C42_u5BFC_uFF08_u89C1_u89C6_u9891_uFF09" class="headerlink" title="将交叉熵分别对X和W求导（见视频）"></a>将交叉熵分别对X和W求导（见视频）</h4><h3 id="u5B9E_u4F8B_uFF1A_u60C5_u611F_u5206_u6790_uFF08_u5355_u4E2A_u8BCD_uFF0C_u65E0context_window_uFF09"><a href="#u5B9E_u4F8B_uFF1A_u60C5_u611F_u5206_u6790_uFF08_u5355_u4E2A_u8BCD_uFF0C_u65E0context_window_uFF09" class="headerlink" title="<strong>实例：情感分析（单个词，无context window）</strong>"></a><strong>实例：情感分析（单个词，无context window）</strong></h3><h4 id="u4E24_u4E2A_u8BAD_u7EC3_u65B9_u6848_uFF1A"><a href="#u4E24_u4E2A_u8BAD_u7EC3_u65B9_u6848_uFF1A" class="headerlink" title="两个训练方案："></a>两个训练方案：</h4><h5 id="1-_u56FA_u5B9Aword_vector_u7684_u503C_uFF0C_u53EA_u8BAD_u7EC3softmax_u7684_u6743_u503CW"><a href="#1-_u56FA_u5B9Aword_vector_u7684_u503C_uFF0C_u53EA_u8BAD_u7EC3softmax_u7684_u6743_u503CW" class="headerlink" title="1.固定word vector的值，只训练softmax的权值W"></a>1.固定word vector的值，只训练softmax的权值W</h5><h5 id="2-_u8BAD_u7EC3word_vector_u7684_u503C_uFF0C_u540C_u65F6_u4E5F_u8BAD_u7EC3softmax_u7684_u6743_u503CW"><a href="#2-_u8BAD_u7EC3word_vector_u7684_u503C_uFF0C_u540C_u65F6_u4E5F_u8BAD_u7EC3softmax_u7684_u6743_u503CW" class="headerlink" title="2.训练word vector的值，同时也训练softmax的权值W"></a>2.训练word vector的值，同时也训练softmax的权值W</h5><h4 id="u8BAD_u7EC3word_vector_u7684_u5229_u5F0A_uFF1A"><a href="#u8BAD_u7EC3word_vector_u7684_u5229_u5F0A_uFF1A" class="headerlink" title="训练word vector的利弊："></a>训练word vector的利弊：</h4><h5 id="1-_u66F4_u597D_u7684_u62DF_u5408_u8BAD_u7EC3_u96C6_uFF08training_set_uFF0C_u975Etest_set_uFF09"><a href="#1-_u66F4_u597D_u7684_u62DF_u5408_u8BAD_u7EC3_u96C6_uFF08training_set_uFF0C_u975Etest_set_uFF09" class="headerlink" title="1.更好的拟合训练集（training set，非test set）"></a>1.更好的拟合训练集（training set，非test set）</h5><h5 id="2-_u66F4_u5DEE_u7684_u6CDB_u5316_u7279_u6027_uFF08because_the_words_move_in_the_vector_space_uFF09"><a href="#2-_u66F4_u5DEE_u7684_u6CDB_u5316_u7279_u6027_uFF08because_the_words_move_in_the_vector_space_uFF09" class="headerlink" title="2.更差的泛化特性（because  the    words   move    in  the vector  space）"></a>2.更差的泛化特性（because  the    words   move    in  the vector  space）</h5><p><img src="http://img.blog.csdn.net/20150703165337050" alt="这里写图片描述"><br>可视化情感分析中，训练得到的word vector</p>
+<h3 id="u4E0B_u4E00_u8282"><a href="#u4E0B_u4E00_u8282" class="headerlink" title="<strong>下一节</strong>"></a><strong>下一节</strong></h3><h4 id="u52A0_u4E0Acontext_window_uFF0C_u7ED9context_window_u6B63_u4E2D_u95F4_u7684_u8BCD_u5206_u7C7B"><a href="#u52A0_u4E0Acontext_window_uFF0C_u7ED9context_window_u6B63_u4E2D_u95F4_u7684_u8BCD_u5206_u7C7B" class="headerlink" title="加上context window，给context window正中间的词分类"></a>加上context window，给context window正中间的词分类</h4><h4 id="u77E5_u8BC6_u70B9_uFF1Asoftmax_uFF0C_u4EA4_u53C9_u71B5_u8BEF_u5DEE_uFF0Cmax-margin_loss"><a href="#u77E5_u8BC6_u70B9_uFF1Asoftmax_uFF0C_u4EA4_u53C9_u71B5_u8BEF_u5DEE_uFF0Cmax-margin_loss" class="headerlink" title="知识点：softmax，交叉熵误差，max-margin loss"></a>知识点：softmax，交叉熵误差，max-margin loss</h4></span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/10/04/‎Summarize/cnn-for-visual-rcognition-stanford-2015-ef-bc-88-e4-ba-8c-ef-bc-89/" rel="next" title="CNN for Visual Rcognition --- Stanford 2015 （二）">
+                <i class="fa fa-chevron-left"></i> CNN for Visual Rcognition --- Stanford 2015 （二）
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/10/04/NLP/deep-learning-for-nature-language-processing-e7-ac-ac-e5-9b-9b-e8-ae-b2-e4-b8-8a/" rel="prev" title="Deep Learning for Nature Language Processing---第四讲(上)">
+                Deep Learning for Nature Language Processing---第四讲(上) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+        </div>
+
+        
+
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="John Doe" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">John Doe</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#u590D_u4E60_uFF1A_u7B80_u5355_u7684word2vec_u6A21_u578B"><span class="nav-number">1.</span> <span class="nav-text">复习：简单的word2vec模型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#cost_fuction_uFF08__u6C42_u5BFC_u7ED3_u679C_u53C2_u7167_u89C6_u9891_u6559_u7A0B_uFF09_uFF1A"><span class="nav-number">1.1.</span> <span class="nav-text">cost fuction（ 求导结果参照视频教程）：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u68AF_u5EA6_u4E0B_u964D"><span class="nav-number">2.</span> <span class="nav-text">梯度下降</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#u5C06_u6240_u6709_u53C2_u6570_u8F6C_u6362_u6210_u4E00_u4E2A_u5217_u5411_u91CF_24_5CTheta_24_uFF08V_u4E3A_u8BCD_u6C47_u6570_uFF0Cv_u662F_u4E2D_u5FC3_u8BCD_u7684word_vector_uFF0Cv_u2019_u662Fexternal_word_vector_uFF09_uFF1A"><span class="nav-number">2.1.</span> <span class="nav-text">将所有参数转换成一个列向量$\Theta$（V为词汇数，v是中心词的word vector，v’是external word vector）：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u4F7F_u7528full_batch_u6700_u5C0F_u5316cost_u5C06_u8981_u6C42_u8BA1_u7B97cost_u5BF9_u6240_u6709window_u7684_u5BFC_u6570"><span class="nav-number">2.2.</span> <span class="nav-text">使用full batch最小化cost将要求计算cost对所有window的导数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u66F4_u65B0_24_5CTheta_24_u7684_u6BCF_u4E2A_u5143_u7D20_uFF1A"><span class="nav-number">2.3.</span> <span class="nav-text">更新$\Theta$的每个元素：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u5411_u91CF_u5316_u8868_u793A_uFF08_u5BF9_24_5CTheta_24_u4E2D_u7684_u6240_u6709_u5143_u7D20_uFF09_uFF1A"><span class="nav-number">2.4.</span> <span class="nav-text">向量化表示（对$\Theta$中的所有元素）：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u4EE3_u7801_u793A_u4F8B_uFF1A"><span class="nav-number">2.5.</span> <span class="nav-text">代码示例：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SGD"><span class="nav-number">3.</span> <span class="nav-text">SGD</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#u6570_u636E_u96C6_u53EF_u80FD_u542B_u670940B_u7684_u6570_u636E_uFF0C_u8FD9_u6837_u7684_u8BDD_uFF0C_u7528full_batch_u7684_u65B9_u6CD5_u5C31_u7B97_u8FED_u4EE3_u4E00_u6B21_u4E5F_u4F1A_u82B1_u8D39_u5F88_u957F_u65F6_u95F4_uFF0C_u6240_u4EE5_u91C7_u7528SGD_u7684_u65B9_u6CD5_uFF1A"><span class="nav-number">3.1.</span> <span class="nav-text">数据集可能含有40B的数据，这样的话，用full batch的方法就算迭代一次也会花费很长时间，所以采用SGD的方法：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u4F46_u662F_u8FD8_u6709_u4E00_u4E2A_u95EE_u9898_uFF0C_u5728_u6BCF_u4E00_u4E2Awindow_u4E2D_u6700_u591A_u542B_u6709_uFF082c-1_uFF09_u4E2A_u5355_u8BCD_uFF08_u5373vector_uFF0C_u4E00_u4E2A_u5355_u8BCD_u5BF9_u5E94_u4E00_u4E2Avector_uFF09_uFF0C_u6240_u4EE5_u5F97_u5230_u7684cost_u5BF9_u6BCF_u4E2Awindow_u7684_u5BFC_u6570_u662F_u975E_u5E38_u7A00_u758F_u7684__uFF1A"><span class="nav-number">3.2.</span> <span class="nav-text">">但是还有一个问题，在每一个window中最多含有（2c-1）个单词（即vector，一个单词对应一个vector），所以得到的cost对每个window的导数是非常稀疏的 ：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u7A00_u758F_u7684_u89E3_u51B3_u65B9_u6848_uFF1A1-_u4FDD_u6301_u5468_u56F4word_vectors_u7684_u6563_u5217_u503C_u30022-_u66F4_u65B0_u6574_u4E2Aword_embedding_matrix_L_u548CL_u2019_u7684_u786E_u5B9A_u7684_u67D0_u4E9B_u5217_u3002"><span class="nav-number">4.</span> <span class="nav-text">稀疏的解决方案：1.保持周围word vectors的散列值。2.更新整个word embedding matrix L和L’的确定的某些列。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PSet1"><span class="nav-number">5.</span> <span class="nav-text">PSet1</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#u4E3B_u8981_u601D_u60F3_uFF1A_u7528_u4E8C_u5206_u7C7B_u7684_u903B_u8F91_u56DE_u5F52_uFF0C_u8BAD_u7EC3_u4E00_u7EC4true_pairs_uFF08_u4E2D_u5FC3_u8BCD_u548C_u5176context_window_u5185_u7684_u5176_u4ED6_u8BCD_uFF09_u548C_u591A_u7EC4random_pairs_uFF08_u4E2D_u5FC3_u8BCD_u548C_u5176_u4ED6_u968F_u673A_u6311_u9009_u7684_u8BCD_uFF09"><span class="nav-number">5.1.</span> <span class="nav-text">主要思想：用二分类的逻辑回归，训练一组true pairs（中心词和其context window内的其他词）和多组random pairs（中心词和其他随机挑选的词）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#skip-gram_u6A21_u578B_u548C_u8D1F_u91C7_u6837_uFF08k_u4E3A_u8D1F_u91C7_u6837_u6570_uFF09_uFF1A"><span class="nav-number">5.2.</span> <span class="nav-text">skip-gram模型和负采样（k为负采样数）：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#skip-gram_cost_uFF08maximize_u8BE5_u51FD_u6570_uFF09"><span class="nav-number">5.3.</span> <span class="nav-text">skip-gram cost（maximize该函数）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u6216_u8005_u5199_u6210_uFF08_unigram_distribution_U_28w_29_uFF09_uFF1A"><span class="nav-number">5.4.</span> <span class="nav-text">或者写成（ unigram   distribution   U(w)）：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u4F7F_u5F97_u4E0D_u9891_u7E41_u51FA_u73B0_u7684_u8BCD_u66F4_u591A_u7684_u88AB_u53D6_u6837"><span class="nav-number">5.5.</span> <span class="nav-text">使得不频繁出现的词更多的被取样</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u53E6_u4E00_u4E2A_u6A21_u578B_uFF1ACBOW_uFF08continuous_bag_of_word_uFF09_uFF1A"><span class="nav-number">5.6.</span> <span class="nav-text">另一个模型：CBOW（continuous bag of word）：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CBOW_u4E3B_u8981_u601D_u60F3_uFF1A_u901A_u8FC7_u5468_u56F4_u5355_u8BCD_u7684word_vectors_u7684_u548C_u9884_u6D4B_u4E2D_u5FC3_u8BCD_uFF0C_u4E0D_u540C_u4E8Eskip-gram_uFF0Cskip-gram_u662F_u901A_u8FC7_u4E2D_u5FC3_u8BCD_u9884_u6D4B_u5468_u56F4_u7684_u5355_u8BCDword_vectors_u3002"><span class="nav-number">5.7.</span> <span class="nav-text">CBOW主要思想：通过周围单词的word vectors的和预测中心词，不同于skip-gram，skip-gram是通过中心词预测周围的单词word vectors。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u5355_u4E2A_u6A21_u578B_u8BAD_u7EC3_u540E_u4F1A_u83B7_u5F97L_u548CL_u2019_u4E24_u4E2A_u7531word_vectors_u7EC4_u6210_u7684_u77E9_u9635_uFF0C_u4F46_u662F_u8FD9_u4E24_u4E2A_u77E9_u9635_u6355_u83B7_u7684_u4FE1_u606F_u662F_u76F8_u4F3C_u7684_uFF0C_u6240_u4EE5_uFF0C_u6700_u597D_u7684_u4FE1_u606F_u7684_u662F_u5C06_u4ED6_u4EEC_u76F8_u52A0_uFF1A"><span class="nav-number">5.8.</span> <span class="nav-text">单个模型训练后会获得L和L’两个由word vectors组成的矩阵，但是这两个矩阵捕获的信息是相似的，所以，最好的信息的是将他们相加：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u5982_u4F55_u8BC4_u4F30word_vectors"><span class="nav-number">6.</span> <span class="nav-text">如何评估word vectors</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#word_vector_anology_3A"><span class="nav-number">7.</span> <span class="nav-text">word vector anology:</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#u5927_u591A_u6570_u4EE5_u524D_u8BC4_u4EF7word_vector_u7684_u65B9_u6CD5_u662F_u6BD4_u8F83_u76F8_u8FD1_u5355_u8BCD_u5BF9_u5E94_u7684vector_u95F4_u7684_u8DDD_u79BB_u548C_u89D2_u5EA6_uFF1A"><span class="nav-number">7.1.</span> <span class="nav-text">大多数以前评价word vector的方法是比较相近单词对应的vector间的距离和角度：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#milolov_u63D0_u51FA_u4E86_u57FA_u4E8Eword_anology_u7684_u591A_u7EF4_u8BC4_u4EF7_u65B9_u6CD5_uFF0C_u4F8B_u5982_uFF1A"><span class="nav-number">7.2.</span> <span class="nav-text">milolov提出了基于word anology的多维评价方法，例如：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u5BF9_u4E8E_u53E5_u5B50_u201Cking_is_to_queen_as_man_is_to_women_u201D_uFF0C_u76F8_u5BF9_u5E94_u7684word_vector_u5E94_u8BE5_u6EE1_u8DB3_uFF1Aking_-_queen__3D_man_-_women_u3002_u53C8_u6BD4_u5982_uFF0C_u5728G_loVe_u7684_u8BEF_u5DEE_u6D4B_u8BD5test_u4E2D_uFF08_u9884_u6D4B_u4E0B_u5212_u7EBF_u4E2D_u7684_u8BCD_uFF09_uFF1A"><span class="nav-number">7.3.</span> <span class="nav-text">对于句子“king is to queen as man is to women”，相对应的word vector应该满足：king - queen = man - women。又比如，在G loVe的误差测试test中（预测下划线中的词）：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-_u5BF9_u4E8E_u8BED_u4E49semantic_uFF1AAthens_is_to_Greece_as_Berlin_is_to____3F"><span class="nav-number">7.4.</span> <span class="nav-text">1.对于语义semantic：Athens is to Greece as Berlin is to __?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-_u5BF9_u4E8E_u8BED_u6CD5syntactic_uFF1Adance_is_to_dancing_as_fly_is_to____3F"><span class="nav-number">7.5.</span> <span class="nav-text">2.对于语法syntactic：dance is to dancing as fly is to __?</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Analogy_u8BC4_u4F30_u548C_u6A21_u578B_u53C2_u6570_u9009_u62E9"><span class="nav-number">8.</span> <span class="nav-text">Analogy评估和模型参数选择</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#u5404_u4E2A_u6A21_u578B_u6D4B_u8BD5_u7ED3_u679C_uFF1A"><span class="nav-number">8.1.</span> <span class="nav-text">各个模型测试结果：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u6A21_u578B_u53C2_u6570_u7684_u9009_u62E9_uFF1A"><span class="nav-number">8.2.</span> <span class="nav-text">模型参数的选择：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u4ECE_u6A21_u578B_u7684_u5176_u4ED6_u6D4B_u8BD5_u7ED3_u679C_u6765_u770B_uFF0C_u8FD8_u53EF_u4EE5_u5F97_u5230_u53E6_u5916_u4E00_u4E9B_u6709_u7528_u7684_u6280_u5DE7_uFF08_u7ED3_u8BBA_uFF09_uFF0C_u9488_u5BF9GloVe_uFF1A"><span class="nav-number">8.3.</span> <span class="nav-text">从模型的其他测试结果来看，还可以得到另外一些有用的技巧（结论），针对GloVe：</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-_u5BF9_u4E8E_u8BED_u6CD5syntactic_uFF1A_u8F83_u5C0F_u7684_u5355_u8FB9context_window_u4F1A_u7684_u5230_u66F4_u597D_u7684_u7ED3_u679C_uFF08_u539F_u56E0_u662Fsyntactic_u4E3B_u8981_u5728_u4E8E_u8BCD_u5E8F_uFF09"><span class="nav-number">8.3.1.</span> <span class="nav-text">1.对于语法syntactic：较小的单边context window会的到更好的结果（原因是syntactic主要在于词序）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-_u5BF9_u4E8E_u8BED_u4E49semantic_uFF1A_u8F83_u5927_u7684_u53CC_u8FB9context_window_u4F1A_u5F97_u5230_u8F83_u597D_u7684_u7ED3_u679C"><span class="nav-number">8.3.2.</span> <span class="nav-text">2.对于语义semantic：较大的双边context window会得到较好的结果</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-_u5BF9_u4E8E_u6570_u636E_u96C6corpus_u7684_u5927_u5C0F_uFF1A_u8D8A_u5927_u7684_u6570_u636E_u53CA_u4F1A_u6709_u66F4_u597D_u7684_u7ED3_u679C_uFF0C_u4F46_u662Fsemantic_u5BF9_u6570_u636E_u96C6_u7684_u5927_u5C0F_u5173_u7CFB_u4E0D_u90A3_u4E48_u660E_u663E_uFF0C_u800C_u662F_u548C_u6570_u636E_u96C6_u7684_u771F_u5B9E_u6027_u548C_u4E30_u5BCC_u5EA6_u6709_u5173_uFF08_u6240_u6709_u5728wikipedia_u4E0A_u8BAD_u7EC3_u5F97_u5230_u7684_u7ED3_u679C_u8981_u6BD4_u5176_u4ED6_u56FA_u5B9A_u4E0D_u53D8_u7684_u6570_u636E_u96C6_u7684_u7ED3_u679C_u8981_u597D_uFF09"><span class="nav-number">8.3.3.</span> <span class="nav-text">3.对于数据集corpus的大小：越大的数据及会有更好的结果，但是semantic对数据集的大小关系不那么明显，而是和数据集的真实性和丰富度有关（所有在wikipedia上训练得到的结果要比其他固定不变的数据集的结果要好）</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u53EF_u80FD_u4F60_u4F1A_u60F3_u8981_u4E00_u4E2A_u8BCD_u7684word_vector_u6355_u83B7_u6240_u6709_u7C7B_u578B_u7684_u4FE1_u606F_uFF0C_u4F8B_u5982_uFF1Arun_u65E2_u662F_u52A8_u8BCD_u4E5F_u662F_u540D_u8BCD_u3002_u4F46_u662F_u5B9E_u9645_u4E0A_u5BF9_u4E8E_u4E0D_u540C_u7684_u8BCD_u6027_uFF0C_u5BF9_u5E94_u7684word_vector_u88AB_u62C9_u5411_u4E86_u4E0D_u540C_u7684_u65B9_u5411_uFF0C_u53C2_u8003_uFF1A_Improving_Word_Representa4ons_Via_Global_Context_And_Mul4ple_Word_Prototypes__28Huang_et-al-_2012_29_u3002"><span class="nav-number">8.4.</span> <span class="nav-text">可能你会想要一个词的word vector捕获所有类型的信息，例如：run既是动词也是名词。但是实际上对于不同的词性，对应的word vector被拉向了不同的方向，参考：  Improving  Word    Representa4ons  Via  Global Context And Mul4ple Word     Prototypes (Huang  et.al.  2012)。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u597D_u7684word_vector_u7684_u4E00_u4E2A_u5B9E_u4F8B_uFF0Cnamed_entity_recognition_uFF08_u547D_u540D_u5B9E_u4F53_u8BC6_u522B_uFF09_uFF1A_u6807_u8BB0_u4E00_u6BB5_u6587_u5B57_u4E2D_u7684_u4E00_u7CFB_u5217_u540D_u8BCD_uFF0C_u5982_u516C_u53F8_u540D_uFF0C_u5730_u5740_u540D_uFF0C_u4EBA_u540D_u7B49_u3002"><span class="nav-number">8.5.</span> <span class="nav-text">好的word vector的一个实例，named entity recognition（命名实体识别）：标记一段文字中的一系列名词，如公司名，地址名，人名等。</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u5728_u795E_u7ECF_u7F51_u7EDC_u4E2D_u4F7F_u7528word_vector_uFF08_u5355_u4E2A_u8BCD_uFF0C_u65E0context_window_uFF09"><span class="nav-number">9.</span> <span class="nav-text">在神经网络中使用word vector（单个词，无context window）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#deep_learned_word_vector_u7684_u4E3B_u8981_u597D_u5904_uFF1A"><span class="nav-number">9.1.</span> <span class="nav-text">deep learned word vector的主要好处：</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-_u6B63_u786E_u5BF9_u5355_u8BCD_u5206_u7C7B_u7684_u80FD_u529B_uFF0C_u4F8B_u5982_uFF1Acountries_u7C7B_u7684word_vectors_u805A_u96C6_u5728_u4E00_u8D77_uFF0C_u6709_u5229_u4E8E_u5BF9_u5730_u5740_u8FDB_u884C_u5206_u7C7B_u3002"><span class="nav-number">9.1.1.</span> <span class="nav-text">1.正确对单词分类的能力，例如：countries类的word vectors聚集在一起，有利于对地址进行分类。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-_u6574_u5408_u5404_u7C7B_u4FE1_u606F_u5230word_vectors_uFF0C_u4F8B_u5982_uFF1A_u5C06_u60C5_u611F_u4FE1_u606F_u6620_u5C04_u5230word_vector_uFF0C_u6709_u5229_u4E8E_u627E_u5230_u6570_u636E_u96C6corpus_u4E2D_u7684_u4E00_u4E9B_u79EF_u6781_u7684_u83B7_u5F97_u6D88_u6781_u7684_u5355_u8BCD_u3002"><span class="nav-number">9.1.2.</span> <span class="nav-text">2.整合各类信息到word vectors，例如：将情感信息映射到word vector，有利于找到数据集corpus中的一些积极的获得消极的单词。</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#softmax_uFF1A"><span class="nav-number">10.</span> <span class="nav-text">softmax：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#u76F8_u5173_u672F_u8BED_uFF1A_Loss_function__3D_cost_function__3D_objective_function"><span class="nav-number">10.1.</span> <span class="nav-text">相关术语：  Loss    function    =   cost function   =   objective   function</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#softmax_u7684loss_u51FD_u6570_uFF1ACross_entropy_uFF08_u4EA4_u53C9_u71B5_uFF09"><span class="nav-number">10.2.</span> <span class="nav-text">softmax的loss函数：Cross entropy（交叉熵）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u8BA1_u7B97p_28y_7Cx_29_uFF1A"><span class="nav-number">10.3.</span> <span class="nav-text">计算p(y|x)：</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-_u9996_u5148_u5C06_u6743_u91CDW_u7684_u7B2Cy_u884C_u4E0EX_uFF08_u8BAD_u7EC3_u96C6word_vector_uFF09_u7684_u6BCF_u4E00_u884C_uFF08_u5217_uFF09_u76F8_u4E58_uFF08_u89C6_u5177_u4F53_u7684_u77E9_u9635_u6709_u533A_u522B_uFF09_uFF1A"><span class="nav-number">10.3.1.</span> <span class="nav-text">1.首先将权重W的第y行与X（训练集word vector）的每一行（列）相乘（视具体的矩阵有区别）：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-_u9010_u4E00_u76F8_u4E58_uFF0C_u8BA1_u7B97fc_for_c_3D1_2C_u2026_2CC"><span class="nav-number">10.3.2.</span> <span class="nav-text">2.逐一相乘，计算fc   for c=1,…,C</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-_u5F52_u4E00_u5316_uFF08_u5C06_u6570_u503C_u9650_u5236_u57280_uFF5E1_u4E4B_u95F4_uFF09_uFF0C_u901A_u8FC7softmax_u83B7_u5F97_u6982_u7387_u503C_uFF1A"><span class="nav-number">10.3.3.</span> <span class="nav-text">3.归一化（将数值限制在0～1之间），通过softmax获得概率值：</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u6700_u5C0F_u5316_u8D1Flog_u4F3C_u7136_u51FD_u6570_uFF08_u5BF9_u4E8E_u591A_u5206_u7C7B_u95EE_u9898_uFF0C_u5C06_u6240_u6709_u7C7B_u522B_u7684_u4EA4_u53C9_u71B5_u52A0_u8D77_u6765_uFF0C_u4F5C_u4E3A_u6700_u540E_u7684loss_u65B9_u7A0B_uFF09_uFF1A"><span class="nav-number">10.4.</span> <span class="nav-text">最小化负log似然函数（对于多分类问题，将所有类别的交叉熵加起来，作为最后的loss方程）：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u8BAD_u7EC3_u65F6_uFF0C_u4F7F_u7528ground_truth_uFF1A_u5BF9_u4E8E_u6B63_u786E_u7684_u7C7B_u522B_u7F6E1_uFF0C_u5176_u4F59_u7684_u7F6E0_uFF0C_u5373"><span class="nav-number">10.5.</span> <span class="nav-text">训练时，使用ground truth：对于正确的类别置1，其余的置0，即</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#p_3D_5B0_2C_u2026_2C0_2C1_2C0_2C_u20260_5D_uFF0C_u6240_u4EE5_u4EA4_u53C9_u71B5_u53EA_u8BA1_u7B97_u6BCF_u4E2A_u6837_u672C_u7684right_class_u6240_u5BF9_u5E94_u7684_u8BEF_u5DEE_uFF0C_u9519_u8BEF_u7C7B_u522B_u4E5F_u5BF9_u6C42_u68AF_u5EA6_u65E0_u5F71_u54CD_uFF08q_u4E3Asoftmax_uFF09_uFF1A"><span class="nav-number">10.6.</span> <span class="nav-text">p=[0,…,0,1,0,…0]，所以交叉熵只计算每个样本的right class所对应的误差，错误类别也对求梯度无影响（q为softmax）：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u4E5F_u53EF_u4EE5_u5199_u6210_uFF1A"><span class="nav-number">10.7.</span> <span class="nav-text">也可以写成：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u6240_u4EE5_u6700_u5C0F_u5316_u4EA4_u53C9_u71B5_u53D8_u6210_u4E86_u6700_u5C0F_u5316KL_divergence_uFF08KL__u6563_u5EA6_uFF09_uFF0CKL_u6563_u5EA6_u5E76_u975E_u8868_u793A_u8DDD_u79BB_uFF0C_u800C_u662F_u6D4B_u91CF_u4E24_u4E2A_u6982_u7387_u5206_u5E03_uFF08p_u548Cq_uFF09_u4E4B_u95F4_u7684_u5DEE_u5F02_uFF1A"><span class="nav-number">10.8.</span> <span class="nav-text">所以最小化交叉熵变成了最小化KL divergence（KL 散度），KL散度并非表示距离，而是测量两个概率分布（p和q）之间的差异：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u5C06_u4EA4_u53C9_u71B5_u5206_u522B_u5BF9X_u548CW_u6C42_u5BFC_uFF08_u89C1_u89C6_u9891_uFF09"><span class="nav-number">10.9.</span> <span class="nav-text">将交叉熵分别对X和W求导（见视频）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u5B9E_u4F8B_uFF1A_u60C5_u611F_u5206_u6790_uFF08_u5355_u4E2A_u8BCD_uFF0C_u65E0context_window_uFF09"><span class="nav-number">11.</span> <span class="nav-text">实例：情感分析（单个词，无context window）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#u4E24_u4E2A_u8BAD_u7EC3_u65B9_u6848_uFF1A"><span class="nav-number">11.1.</span> <span class="nav-text">两个训练方案：</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-_u56FA_u5B9Aword_vector_u7684_u503C_uFF0C_u53EA_u8BAD_u7EC3softmax_u7684_u6743_u503CW"><span class="nav-number">11.1.1.</span> <span class="nav-text">1.固定word vector的值，只训练softmax的权值W</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-_u8BAD_u7EC3word_vector_u7684_u503C_uFF0C_u540C_u65F6_u4E5F_u8BAD_u7EC3softmax_u7684_u6743_u503CW"><span class="nav-number">11.1.2.</span> <span class="nav-text">2.训练word vector的值，同时也训练softmax的权值W</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u8BAD_u7EC3word_vector_u7684_u5229_u5F0A_uFF1A"><span class="nav-number">11.2.</span> <span class="nav-text">训练word vector的利弊：</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-_u66F4_u597D_u7684_u62DF_u5408_u8BAD_u7EC3_u96C6_uFF08training_set_uFF0C_u975Etest_set_uFF09"><span class="nav-number">11.2.1.</span> <span class="nav-text">1.更好的拟合训练集（training set，非test set）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-_u66F4_u5DEE_u7684_u6CDB_u5316_u7279_u6027_uFF08because_the_words_move_in_the_vector_space_uFF09"><span class="nav-number">11.2.2.</span> <span class="nav-text">2.更差的泛化特性（because  the    words   move    in  the vector  space）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u4E0B_u4E00_u8282"><span class="nav-number">12.</span> <span class="nav-text">下一节</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#u52A0_u4E0Acontext_window_uFF0C_u7ED9context_window_u6B63_u4E2D_u95F4_u7684_u8BCD_u5206_u7C7B"><span class="nav-number">12.1.</span> <span class="nav-text">加上context window，给context window正中间的词分类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u77E5_u8BC6_u70B9_uFF1Asoftmax_uFF0C_u4EA4_u53C9_u71B5_u8BEF_u5DEE_uFF0Cmax-margin_loss"><span class="nav-number">12.2.</span> <span class="nav-text">知识点：softmax，交叉熵误差，max-margin loss</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+    
+    
+
+  
+
+
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
+
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    motionMiddleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+  
+  
+
+  
+  
+
+</body>
+</html>

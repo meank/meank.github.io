@@ -1,0 +1,636 @@
+<!doctype html>
+<html class="theme-next   use-motion ">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+
+
+
+
+<meta name="description" content="Sparse Autoencoder Recap:Because we used a sigmoid activation function for f(z(3)), we needed to constrain or scale the inputs to be in the range [0,1], since the sigmoid function outputs numbers in t">
+<meta property="og:type" content="article">
+<meta property="og:title" content="UFLDL-Linear Decoder">
+<meta property="og:url" content="http://yoursite.com/2015/12/08/UFLDL/DeeplearningbyAndrewNg---LinearDecoder/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Sparse Autoencoder Recap:Because we used a sigmoid activation function for f(z(3)), we needed to constrain or scale the inputs to be in the range [0,1], since the sigmoid function outputs numbers in t">
+<meta property="og:updated_time" content="2015-10-05T14:55:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="UFLDL-Linear Decoder">
+<meta name="twitter:description" content="Sparse Autoencoder Recap:Because we used a sigmoid activation function for f(z(3)), we needed to constrain or scale the inputs to be in the range [0,1], since the sigmoid function outputs numbers in t">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post',
+    motion: true
+  };
+</script>
+
+  <title> UFLDL-Linear Decoder | Hexo </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Hexo</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                UFLDL-Linear Decoder
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2015-12-08T13:08:00+08:00" content="2015-12-08">
+              2015-12-08
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分類於
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/UFLDL/" itemprop="url" rel="index">
+                    <span itemprop="name">UFLDL</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h2 id="Sparse_Autoencoder_Recap_3A"><a href="#Sparse_Autoencoder_Recap_3A" class="headerlink" title="Sparse Autoencoder Recap:"></a>Sparse Autoencoder Recap:</h2><p>Because we used a sigmoid activation function for f(z(3)), we needed to constrain or scale the inputs to be in the range [0,1], since the sigmoid function outputs numbers in the range [0,1].(sparse autoencoder输入层mean 0的原因)。</p>
+<h2 id="Linear_Decoder_3A"><a href="#Linear_Decoder_3A" class="headerlink" title="Linear Decoder:"></a>Linear Decoder:</h2><p>only in the output layer that we use the linear activation function.<br>输出不再限制于【0，1】.所以不需要再使输入限制在【0，1】之间。原理就是output层的z不再用simoid方程的偏导进行处理，而是直接将z赋值给a，但是其他hidden layer层不变。</p>
+<h2 id="u4E60_u9898_u7B54_u6848_uFF1A"><a href="#u4E60_u9898_u7B54_u6848_uFF1A" class="headerlink" title="习题答案："></a>习题答案：</h2><ul>
+<li>linearDecoderExercise.m</li>
+</ul>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">%% CS294A/CS294W Linear Decoder Exercise</span></span><br><span class="line"></span><br><span class="line"><span class="comment">%  Instructions</span></span><br><span class="line"><span class="comment">%  ------------</span></span><br><span class="line"><span class="comment">% </span></span><br><span class="line"><span class="comment">%  This file contains code that helps you get started on the</span></span><br><span class="line"><span class="comment">%  linear decoder exericse. For this exercise, you will only need to modify</span></span><br><span class="line"><span class="comment">%  the code in sparseAutoencoderLinearCost.m. You will not need to modify</span></span><br><span class="line"><span class="comment">%  any code in this file.</span></span><br><span class="line"></span><br><span class="line"><span class="comment">%%======================================================================</span></span><br><span class="line"><span class="comment">%% STEP 0: Initialization</span></span><br><span class="line"><span class="comment">%  Here we initialize some parameters used for the exercise.</span></span><br><span class="line"></span><br><span class="line">imageChannels = <span class="number">3</span>;     <span class="comment">% number of channels (rgb, so 3)</span></span><br><span class="line"></span><br><span class="line">patchDim   = <span class="number">8</span>;          <span class="comment">% patch dimension</span></span><br><span class="line">numPatches = <span class="number">100000</span>;   <span class="comment">% number of patches</span></span><br><span class="line"></span><br><span class="line">visibleSize = patchDim * patchDim * imageChannels;  <span class="comment">% number of input units </span></span><br><span class="line">outputSize  = visibleSize;   <span class="comment">% number of output units</span></span><br><span class="line">hiddenSize  = <span class="number">400</span>;           <span class="comment">% number of hidden units </span></span><br><span class="line"></span><br><span class="line">sparsityParam = <span class="number">0.035</span>; <span class="comment">% desired average activation of the hidden units.</span></span><br><span class="line">lambda = <span class="number">3e-3</span>;         <span class="comment">% weight decay parameter       </span></span><br><span class="line"><span class="built_in">beta</span> = <span class="number">5</span>;              <span class="comment">% weight of sparsity penalty term       </span></span><br><span class="line"></span><br><span class="line">epsilon = <span class="number">0.1</span>;	       <span class="comment">% epsilon for ZCA whitening</span></span><br><span class="line"></span><br><span class="line"><span class="comment">%%======================================================================</span></span><br><span class="line"><span class="comment">%% STEP 1: Create and modify sparseAutoencoderLinearCost.m to use a linear decoder,</span></span><br><span class="line"><span class="comment">%          and check gradients</span></span><br><span class="line"><span class="comment">%  You should copy sparseAutoencoderCost.m from your earlier exercise </span></span><br><span class="line"><span class="comment">%  and rename it to sparseAutoencoderLinearCost.m. </span></span><br><span class="line"><span class="comment">%  Then you need to rename the function from sparseAutoencoderCost to</span></span><br><span class="line"><span class="comment">%  sparseAutoencoderLinearCost, and modify it so that the sparse autoencoder</span></span><br><span class="line"><span class="comment">%  uses a linear decoder instead. Once that is done, you should check </span></span><br><span class="line"><span class="comment">% your gradients to verify that they are correct.</span></span><br><span class="line"></span><br><span class="line"><span class="comment">% <span class="doctag">NOTE:</span> Modify sparseAutoencoderCost first!</span></span><br><span class="line"></span><br><span class="line"><span class="comment">% To speed up gradient checking, we will use a reduced network and some</span></span><br><span class="line"><span class="comment">% dummy patches</span></span><br><span class="line"></span><br><span class="line">debugHiddenSize = <span class="number">5</span>;</span><br><span class="line">debugvisibleSize = <span class="number">8</span>;</span><br><span class="line">patches = <span class="built_in">rand</span>(<span class="matrix">[<span class="number">8</span> <span class="number">10</span>]</span>);</span><br><span class="line">theta = initializeParameters(debugHiddenSize, debugvisibleSize); </span><br><span class="line"></span><br><span class="line"><span class="matrix">[cost, grad]</span> = sparseAutoencoderLinearCost(theta, debugvisibleSize, debugHiddenSize, ...</span><br><span class="line">                                           lambda, sparsityParam, <span class="built_in">beta</span>, ...</span><br><span class="line">                                           patches);</span><br><span class="line"></span><br><span class="line"><span class="comment">% Check gradients</span></span><br><span class="line">numGrad = computeNumericalGradient( @(x) sparseAutoencoderLinearCost(x, debugvisibleSize, debugHiddenSize, ...</span><br><span class="line">                                                  lambda, sparsityParam, <span class="built_in">beta</span>, ...</span><br><span class="line">                                                  patches), theta);</span><br><span class="line"></span><br><span class="line"><span class="comment">% Use this to visually compare the gradients side by side</span></span><br><span class="line"><span class="built_in">disp</span>(<span class="matrix">[numGrad grad]</span>); </span><br><span class="line"></span><br><span class="line">diff = norm(numGrad-grad)/norm(numGrad+grad);</span><br><span class="line"><span class="comment">% Should be small. In our implementation, these values are usually less than 1e-9.</span></span><br><span class="line"><span class="built_in">disp</span>(diff); </span><br><span class="line"></span><br><span class="line">assert(diff &lt; <span class="number">1e-9</span>, <span class="string">'Difference too large. Check your gradient computation again'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">% <span class="doctag">NOTE:</span> Once your gradients check out, you should run step 0 again to</span></span><br><span class="line"><span class="comment">%       reinitialize the parameters</span></span><br><span class="line"><span class="comment">%&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">%%======================================================================</span></span><br><span class="line"><span class="comment">%% STEP 2: Learn features on small patches</span></span><br><span class="line"><span class="comment">%  In this step, you will use your sparse autoencoder (which now uses a </span></span><br><span class="line"><span class="comment">%  linear decoder) to learn features on small patches sampled from related</span></span><br><span class="line"><span class="comment">%  images.</span></span><br><span class="line"></span><br><span class="line"><span class="comment">%% STEP 2a: Load patches</span></span><br><span class="line"><span class="comment">%  In this step, we load 100k patches sampled from the STL10 dataset and</span></span><br><span class="line"><span class="comment">%  visualize them. Note that these patches have been scaled to [0,1]</span></span><br><span class="line"></span><br><span class="line">load stlSampledPatches.mat</span><br><span class="line"></span><br><span class="line">displayColorNetwork(patches(:, <span class="number">1</span>:<span class="number">100</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">%% STEP 2b: Apply preprocessing</span></span><br><span class="line"><span class="comment">%  In this sub-step, we preprocess the sampled patches, in particular, </span></span><br><span class="line"><span class="comment">%  ZCA whitening them. </span></span><br><span class="line"><span class="comment">% </span></span><br><span class="line"><span class="comment">%  In a later exercise on convolution and pooling, you will need to replicate </span></span><br><span class="line"><span class="comment">%  exactly the preprocessing steps you apply to these patches before </span></span><br><span class="line"><span class="comment">%  using the autoencoder to learn features on them. Hence, we will save the</span></span><br><span class="line"><span class="comment">%  ZCA whitening and mean image matrices together with the learned features</span></span><br><span class="line"><span class="comment">%  later on.</span></span><br><span class="line"></span><br><span class="line"><span class="comment">% Subtract mean patch (hence zeroing the mean of the patches)</span></span><br><span class="line">meanPatch = mean(patches, <span class="number">2</span>);  </span><br><span class="line">patches = <span class="built_in">bsxfun</span>(@minus, patches, meanPatch);</span><br><span class="line"></span><br><span class="line"><span class="comment">% Apply ZCA whitening</span></span><br><span class="line">sigma = patches * patches<span class="operator">'</span> / numPatches;</span><br><span class="line"><span class="matrix">[u, s, v]</span> = svd(sigma);</span><br><span class="line">ZCAWhite = u * <span class="built_in">diag</span>(<span class="number">1</span> ./ <span class="built_in">sqrt</span>(<span class="built_in">diag</span>(s) + epsilon)) * u<span class="operator">'</span>;</span><br><span class="line">patches = ZCAWhite * patches;</span><br><span class="line"></span><br><span class="line">displayColorNetwork(patches(:, <span class="number">1</span>:<span class="number">100</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">%% STEP 2c: Learn features</span></span><br><span class="line"><span class="comment">%  You will now use your sparse autoencoder (with linear decoder) to learn</span></span><br><span class="line"><span class="comment">%  features on the preprocessed patches. This should take around 45 minutes.</span></span><br><span class="line"></span><br><span class="line">theta = initializeParameters(hiddenSize, visibleSize);</span><br><span class="line"></span><br><span class="line"><span class="comment">% Use minFunc to minimize the function</span></span><br><span class="line">addpath minFunc/</span><br><span class="line"></span><br><span class="line">options = struct;</span><br><span class="line">options.Method = <span class="string">'lbfgs'</span>; </span><br><span class="line">options.maxIter = <span class="number">400</span>;</span><br><span class="line">options.display = <span class="string">'on'</span>;</span><br><span class="line"></span><br><span class="line"><span class="matrix">[optTheta, cost]</span> = minFunc( @(p) sparseAutoencoderLinearCost(p, ...</span><br><span class="line">                                   visibleSize, hiddenSize, ...</span><br><span class="line">                                   lambda, sparsityParam, ...</span><br><span class="line">                                   <span class="built_in">beta</span>, patches), ...</span><br><span class="line">                              theta, options);</span><br><span class="line"></span><br><span class="line"><span class="comment">% Save the learned features and the preprocessing matrices for use in </span></span><br><span class="line"><span class="comment">% the later exercise on convolution and pooling</span></span><br><span class="line">fprintf(<span class="string">'Saving learned features and preprocessing matrices...\n'</span>);                          </span><br><span class="line">save(<span class="string">'STL10Features.mat'</span>, <span class="string">'optTheta'</span>, <span class="string">'ZCAWhite'</span>, <span class="string">'meanPatch'</span>);</span><br><span class="line">fprintf(<span class="string">'Saved\n'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">%% STEP 2d: Visualize learned features</span></span><br><span class="line"></span><br><span class="line">W = <span class="built_in">reshape</span>(optTheta(<span class="number">1</span>:visibleSize * hiddenSize), hiddenSize, visibleSize);</span><br><span class="line">b = optTheta(<span class="number">2</span>*hiddenSize*visibleSize+<span class="number">1</span>:<span class="number">2</span>*hiddenSize*visibleSize+hiddenSize);</span><br><span class="line">displayColorNetwork( (W*ZCAWhite)<span class="operator">'</span>);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>sparseAutoencoderLinearCost.m</li>
+</ul>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">% -------------------- YOUR CODE HERE --------------------</span></span><br><span class="line"><span class="comment">% Instructions:</span></span><br><span class="line"><span class="comment">%   Copy sparseAutoencoderCost in sparseAutoencoderCost.m from your</span></span><br><span class="line"><span class="comment">%   earlier exercise onto this file, renaming the function to</span></span><br><span class="line"><span class="comment">%   sparseAutoencoderLinearCost, and changing the autoencoder to use a</span></span><br><span class="line"><span class="comment">%   linear decoder.</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="params">[cost,grad]</span> = <span class="title">sparseAutoencoderLinearCost</span><span class="params">(theta, visibleSize, hiddenSize, ...</span><br><span class="line">                                             lambda, sparsityParam, beta, data)</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">% visibleSize: the number of input units (probably 64) </span></span><br><span class="line"><span class="comment">% hiddenSize: the number of hidden units (probably 25) </span></span><br><span class="line"><span class="comment">% lambda: weight decay parameter</span></span><br><span class="line"><span class="comment">% sparsityParam: The desired average activation for the hidden units (denoted in the lecture</span></span><br><span class="line"><span class="comment">%                           notes by the greek alphabet rho, which looks like a lower-case "p").</span></span><br><span class="line"><span class="comment">% beta: weight of sparsity penalty term</span></span><br><span class="line"><span class="comment">% data: Our 64x10000 matrix containing the training data.  So, data(:,i) is the i-th training example. </span></span><br><span class="line">  </span><br><span class="line"><span class="comment">% The input theta is a vector (because minFunc expects the parameters to be a vector). </span></span><br><span class="line"><span class="comment">% We first convert theta to the (W1, W2, b1, b2) matrix/vector format, so that this </span></span><br><span class="line"><span class="comment">% follows the notation convention of the lecture notes. </span></span><br><span class="line"></span><br><span class="line">W1 = <span class="built_in">reshape</span>(theta(<span class="number">1</span>:hiddenSize*visibleSize), hiddenSize, visibleSize);</span><br><span class="line">W2 = <span class="built_in">reshape</span>(theta(hiddenSize*visibleSize+<span class="number">1</span>:<span class="number">2</span>*hiddenSize*visibleSize), visibleSize, hiddenSize);</span><br><span class="line">b1 = theta(<span class="number">2</span>*hiddenSize*visibleSize+<span class="number">1</span>:<span class="number">2</span>*hiddenSize*visibleSize+hiddenSize);</span><br><span class="line">b2 = theta(<span class="number">2</span>*hiddenSize*visibleSize+hiddenSize+<span class="number">1</span>:<span class="keyword">end</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">% Cost and gradient variables (your code needs to compute these values). </span></span><br><span class="line"><span class="comment">% Here, we initialize them to zeros. </span></span><br><span class="line">cost = <span class="number">0</span>;</span><br><span class="line">W1grad = <span class="built_in">zeros</span>(<span class="built_in">size</span>(W1)); </span><br><span class="line">W2grad = <span class="built_in">zeros</span>(<span class="built_in">size</span>(W2));</span><br><span class="line">b1grad = <span class="built_in">zeros</span>(<span class="built_in">size</span>(b1)); </span><br><span class="line">b2grad = <span class="built_in">zeros</span>(<span class="built_in">size</span>(b2));</span><br><span class="line"></span><br><span class="line"><span class="comment">%% ---------- YOUR CODE HERE --------------------------------------</span></span><br><span class="line"><span class="comment">%  Instructions: Compute the cost/optimization objective J_sparse(W,b) for the Sparse Autoencoder,</span></span><br><span class="line"><span class="comment">%                and the corresponding gradients W1grad, W2grad, b1grad, b2grad.</span></span><br><span class="line"><span class="comment">%</span></span><br><span class="line"><span class="comment">% W1grad, W2grad, b1grad and b2grad should be computed using backpropagation.</span></span><br><span class="line"><span class="comment">% Note that W1grad has the same dimensions as W1, b1grad has the same dimensions</span></span><br><span class="line"><span class="comment">% as b1, etc.  Your code should set W1grad to be the partial derivative of J_sparse(W,b) with</span></span><br><span class="line"><span class="comment">% respect to W1.  I.e., W1grad(i,j) should be the partial derivative of J_sparse(W,b) </span></span><br><span class="line"><span class="comment">% with respect to the input parameter W1(i,j).  Thus, W1grad should be equal to the term </span></span><br><span class="line"><span class="comment">% [(1/m) \Delta W^&#123;(1)&#125; + \lambda W^&#123;(1)&#125;] in the last block of pseudo-code in Section 2.2 </span></span><br><span class="line"><span class="comment">% of the lecture notes (and similarly for W2grad, b1grad, b2grad).</span></span><br><span class="line"><span class="comment">% </span></span><br><span class="line"><span class="comment">% Stated differently, if we were using batch gradient descent to optimize the parameters,</span></span><br><span class="line"><span class="comment">% the gradient descent update to W1 would be W1 := W1 - alpha * W1grad, and similarly for W2, b1, b2. </span></span><br><span class="line"><span class="comment">% </span></span><br><span class="line"><span class="comment">%H=zeros(size(data));</span></span><br><span class="line"><span class="comment">%m=size(data,2);</span></span><br><span class="line"><span class="comment">%sparsity_vec=zeros(hiddenSize,1);</span></span><br><span class="line"><span class="comment">%for index = 1:(m/1000)   </span></span><br><span class="line">  <span class="comment">% z2=W1*data(:,index)+b1;</span></span><br><span class="line">   <span class="comment">%a2=sigmoid(z2);</span></span><br><span class="line">   </span><br><span class="line">  <span class="comment">% for q = 1:hiddenSize</span></span><br><span class="line">   <span class="comment">%    sparsity_vec(q)=(1/m) *sum(sum( a2(q).*data));</span></span><br><span class="line">   <span class="comment">%end</span></span><br><span class="line"> <span class="comment">%  sparsity_delta=beta* (-(sparsityParam./sparsity_vec) + ( (1-sparsityParam)./(1.-sparsity_vec) ));</span></span><br><span class="line">   </span><br><span class="line">  <span class="comment">% z3=W2*a2+b2;</span></span><br><span class="line">   <span class="comment">%a3=sigmoid(z3);</span></span><br><span class="line">   <span class="comment">%H(:,index)=a3;</span></span><br><span class="line">   <span class="comment">%delta3=-(data(:,index)-a3)   .*   ( a3.*(1-a3) );</span></span><br><span class="line">   <span class="comment">%delta2=(W2'*delta3+sparsity_delta) .* (a2.*(1-a2));</span></span><br><span class="line">   <span class="comment">%if u want to use gradient checking,</span></span><br><span class="line">   <span class="comment">%make sure that</span></span><br><span class="line">   <span class="comment">%delta3*a2'=g(theta)</span></span><br><span class="line">   <span class="comment">%W2grad =W2grad + delta3 * a2';</span></span><br><span class="line">   <span class="comment">%b2grad =b2grad + delta3;</span></span><br><span class="line">   <span class="comment">%W1grad = W1grad + delta2 * data(:,index)';</span></span><br><span class="line">   <span class="comment">%b1grad =b1grad + delta2; </span></span><br><span class="line"><span class="comment">%end</span></span><br><span class="line"><span class="comment">%alpha=10;</span></span><br><span class="line"><span class="comment">%W1=W1 - alpha*  ( ((1/m)*W1grad) +lambda*W1 );</span></span><br><span class="line"><span class="comment">%b1=b1 - alpha*((1/m)*b1grad);</span></span><br><span class="line"><span class="comment">%W2=W2 - alpha*  ( ((1/m)*W2grad) +lambda*W2 );</span></span><br><span class="line"><span class="comment">%b2=b2 - alpha*((1/m)*b2grad);</span></span><br><span class="line"><span class="comment">%J=(1/(2*m)) * sum(sum((H-data).^2)) + (lambda/2) * ( sum(sum(W1.^2)) + sum(sum(W2.^2)) );</span></span><br><span class="line"></span><br><span class="line"><span class="comment">%sparsity1=0;</span></span><br><span class="line"><span class="comment">%for j = 1:hiddenSize</span></span><br><span class="line"> <span class="comment">%   mid=(1/m) *sum(sum( a2(j)*data));</span></span><br><span class="line"> <span class="comment">%   sparsity1=sparsityParam*log(sparsityParam/mid) + (1-sparsityParam) * log((1-sparsityParam)/(1-mid));</span></span><br><span class="line">    <span class="comment">%cost=J + beta* sparsity1;</span></span><br><span class="line"><span class="comment">%end</span></span><br><span class="line">Jcost = <span class="number">0</span>;<span class="comment">%直接误差</span></span><br><span class="line">Jweight = <span class="number">0</span>;<span class="comment">%权值惩罚</span></span><br><span class="line">Jsparse = <span class="number">0</span>;<span class="comment">%稀疏性惩罚</span></span><br><span class="line"><span class="matrix">[n m]</span> = <span class="built_in">size</span>(data);<span class="comment">%m为样本的个数，n为样本的特征数</span></span><br><span class="line"></span><br><span class="line"><span class="comment">%前向算法计算各神经网络节点的线性组合值和active值</span></span><br><span class="line">z2 = W1*data+<span class="built_in">repmat</span>(b1,<span class="number">1</span>,m);<span class="comment">%注意这里一定要将b1向量复制扩展成m列的矩阵</span></span><br><span class="line">a2 = sigmoid(z2);</span><br><span class="line">z3 = W2*a2+<span class="built_in">repmat</span>(b2,<span class="number">1</span>,m);</span><br><span class="line">a3 = z3;</span><br><span class="line"></span><br><span class="line"><span class="comment">% 计算预测产生的误差</span></span><br><span class="line">Jcost = (<span class="number">0.5</span>/m)*sum(sum((a3-data).^<span class="number">2</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">%计算权值惩罚项</span></span><br><span class="line">Jweight = (<span class="number">1</span>/<span class="number">2</span>)*(sum(sum(W1.^<span class="number">2</span>))+sum(sum(W2.^<span class="number">2</span>)));</span><br><span class="line"></span><br><span class="line"><span class="comment">%计算稀释性规则项</span></span><br><span class="line">rho = (<span class="number">1</span>/m).*sum(a2,<span class="number">2</span>);<span class="comment">%求出第一个隐含层的平均值向量</span></span><br><span class="line">Jsparse = sum(sparsityParam.*<span class="built_in">log</span>(sparsityParam./rho)+ ...</span><br><span class="line">        (<span class="number">1</span>-sparsityParam).*<span class="built_in">log</span>((<span class="number">1</span>-sparsityParam)./(<span class="number">1</span>-rho)));</span><br><span class="line"></span><br><span class="line"><span class="comment">%损失函数的总表达式</span></span><br><span class="line">cost = Jcost+lambda*Jweight+<span class="built_in">beta</span>*Jsparse;</span><br><span class="line"></span><br><span class="line"><span class="comment">%反向算法求出每个节点的误差值</span></span><br><span class="line">d3 = -(data-a3);</span><br><span class="line">sterm = <span class="built_in">beta</span>*(-sparsityParam./rho+(<span class="number">1</span>-sparsityParam)./(<span class="number">1</span>-rho));<span class="comment">%因为加入了稀疏规则项，所以</span></span><br><span class="line">                                                             <span class="comment">%计算偏导时需要引入该项</span></span><br><span class="line">d2 = (W2<span class="operator">'</span>*d3+<span class="built_in">repmat</span>(sterm,<span class="number">1</span>,m)).*sigmoidInv(z2); </span><br><span class="line"></span><br><span class="line"><span class="comment">%计算W1grad </span></span><br><span class="line">W1grad = W1grad+d2*data<span class="operator">'</span>;</span><br><span class="line">W1grad = (<span class="number">1</span>/m)*W1grad+lambda*W1;</span><br><span class="line"></span><br><span class="line"><span class="comment">%计算W2grad  </span></span><br><span class="line">W2grad = W2grad+d3*a2<span class="operator">'</span>;</span><br><span class="line">W2grad = (<span class="number">1</span>/m).*W2grad+lambda*W2;</span><br><span class="line"></span><br><span class="line"><span class="comment">%计算b1grad </span></span><br><span class="line">b1grad = b1grad+sum(d2,<span class="number">2</span>);</span><br><span class="line">b1grad = (<span class="number">1</span>/m)*b1grad;<span class="comment">%注意b的偏导是一个向量，所以这里应该把每一行的值累加起来</span></span><br><span class="line"></span><br><span class="line"><span class="comment">%计算b2grad </span></span><br><span class="line">b2grad = b2grad+sum(d3,<span class="number">2</span>);</span><br><span class="line">b2grad = (<span class="number">1</span>/m)*b2grad;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">%-------------------------------------------------------------------</span></span><br><span class="line"><span class="comment">% After computing the cost and gradient, we will convert the gradients back</span></span><br><span class="line"><span class="comment">% to a vector format (suitable for minFunc).  Specifically, we will unroll</span></span><br><span class="line"><span class="comment">% your gradient matrices into a vector.</span></span><br><span class="line"></span><br><span class="line">grad = <span class="matrix">[W1grad(:) ; W2grad(:) ; b1grad(:) ; b2grad(:)]</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">%-------------------------------------------------------------------</span></span><br><span class="line"><span class="comment">% Here's an implementation of the sigmoid function, which you may find useful</span></span><br><span class="line"><span class="comment">% in your computation of the costs and the gradients.  This inputs a (row or</span></span><br><span class="line"><span class="comment">% column) vector (say (z1, z2, z3)) and returns (f(z1), f(z2), f(z3)). </span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">sigm</span> = <span class="title">sigmoid</span><span class="params">(x)</span></span></span><br><span class="line">  </span><br><span class="line">    sigm = <span class="number">1</span> ./ (<span class="number">1</span> + <span class="built_in">exp</span>(-x));</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">sigmInv</span> = <span class="title">sigmoidInv</span><span class="params">(x)</span></span></span><br><span class="line">    sigmInv = sigmoid(x).*(<span class="number">1</span>-sigmoid(x));</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">% -------------------- YOUR CODE HERE --------------------</span></span><br></pre></td></tr></table></figure>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/12/08/UFLDL/DeepLearningbyAndrewNg---PCAandwhitening/" rel="next" title="UFLDL-PCA">
+                <i class="fa fa-chevron-left"></i> UFLDL-PCA
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/12/08/UFLDL/DeepLearningbyAndrewNg---Softmaxregression/" rel="prev" title="UFLDL-Softmax">
+                UFLDL-Softmax <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+        </div>
+
+        
+
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="John Doe" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">John Doe</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Sparse_Autoencoder_Recap_3A"><span class="nav-number">1.</span> <span class="nav-text">Sparse Autoencoder Recap:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Linear_Decoder_3A"><span class="nav-number">2.</span> <span class="nav-text">Linear Decoder:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u4E60_u9898_u7B54_u6848_uFF1A"><span class="nav-number">3.</span> <span class="nav-text">习题答案：</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+    
+    
+
+  
+
+
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
+
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    motionMiddleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+  
+  
+
+  
+  
+
+</body>
+</html>

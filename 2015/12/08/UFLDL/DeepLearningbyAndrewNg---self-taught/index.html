@@ -1,0 +1,650 @@
+<!doctype html>
+<html class="theme-next   use-motion ">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+
+
+
+
+<meta name="description" content="本次UFLDL练习大致流程：
+通过对标记为5-9的数字图像进行self-taught特征提取（笔画特征），获得特征参数opttheta。
+use opttheta to obtain a（2） which represente the labeled input data.
+Training and testing the logistic regression model(with softma">
+<meta property="og:type" content="article">
+<meta property="og:title" content="UFLDL-self-taught">
+<meta property="og:url" content="http://yoursite.com/2015/12/08/UFLDL/DeepLearningbyAndrewNg---self-taught/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="本次UFLDL练习大致流程：
+通过对标记为5-9的数字图像进行self-taught特征提取（笔画特征），获得特征参数opttheta。
+use opttheta to obtain a（2） which represente the labeled input data.
+Training and testing the logistic regression model(with softma">
+<meta property="og:updated_time" content="2015-10-05T14:54:53.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="UFLDL-self-taught">
+<meta name="twitter:description" content="本次UFLDL练习大致流程：
+通过对标记为5-9的数字图像进行self-taught特征提取（笔画特征），获得特征参数opttheta。
+use opttheta to obtain a（2） which represente the labeled input data.
+Training and testing the logistic regression model(with softma">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post',
+    motion: true
+  };
+</script>
+
+  <title> UFLDL-self-taught | Hexo </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Hexo</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                UFLDL-self-taught
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2015-12-08T13:08:04+08:00" content="2015-12-08">
+              2015-12-08
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分類於
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/UFLDL/" itemprop="url" rel="index">
+                    <span itemprop="name">UFLDL</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h2 id="u672C_u6B21UFLDL_u7EC3_u4E60_u5927_u81F4_u6D41_u7A0B_uFF1A"><a href="#u672C_u6B21UFLDL_u7EC3_u4E60_u5927_u81F4_u6D41_u7A0B_uFF1A" class="headerlink" title="本次UFLDL练习大致流程："></a>本次UFLDL练习大致流程：</h2><ul>
+<li>通过对标记为5-9的数字图像进行self-taught特征提取（笔画特征），获得特征参数opttheta。</li>
+<li>use opttheta to obtain a（2） which represente the labeled input data.</li>
+<li>Training and testing the logistic regression model(with softmaxTrain.m which we have done previously).using the training set features (trainFeatures) and labels (trainLabels).</li>
+<li>Classifying on the test set.completing the code to make predictions on the test set (testFeatures)</li>
+</ul>
+<h2 id="self-taught__u548Csemi-supervised_u7684_u533A_u522B_uFF1A"><a href="#self-taught__u548Csemi-supervised_u7684_u533A_u522B_uFF1A" class="headerlink" title="self-taught 和semi-supervised的区别："></a>self-taught 和semi-supervised的区别：</h2><ul>
+<li>两者都是通过对大量未标记的数据进行特征提取（例如使用autoencoder，得到W），然后再将标记的数据输入，得到representation — 与输入相对应的a。然后再将得到的a作为classifier的输入进行分类（如softmax regression）。</li>
+<li>不同：<br><strong>self-taught</strong>———Suppose your goal is a computer vision task where you’d like to distinguish between images of cars and images of motorcycles; so, each labeled example in your training set is either an image of a car or an image of a motorcycle. Where can we get lots of unlabeled data? The easiest way would be to obtain some random collection of images, perhaps downloaded off the internet. We could then train the autoencoder on this large collection of images, and obtain useful features from them. Because here the unlabeled data is drawn from a different distribution than the labeled data (i.e., perhaps some of our unlabeled images may contain cars/motorcycles, but not every image downloaded is either a car or a motorcycle), we call this self-taught learning.<br><strong>semi-supervised</strong>———In contrast, if we happen to have lots of unlabeled images lying around that are all images of either a car or a motorcycle, but where the data is just missing its label (so you don’t know which ones are cars, and which ones are motorcycles), then we could use this form of unlabeled data to learn the features. This setting—where each unlabeled example is drawn from the same distribution as your labeled examples—is sometimes called the semi-supervised setting.<h2 id="u7EC3_u4E60_u9898_u7B54_u6848_uFF08_u63A8_u8350_u81EA_u5DF1_u5B8C_u6210_u540E_u518D_u53C2_u8003_uFF09"><a href="#u7EC3_u4E60_u9898_u7B54_u6848_uFF08_u63A8_u8350_u81EA_u5DF1_u5B8C_u6210_u540E_u518D_u53C2_u8003_uFF09" class="headerlink" title="练习题答案（推荐自己完成后再参考）"></a>练习题答案（推荐自己完成后再参考）</h2></li>
+<li>stlExercise.m</li>
+</ul>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">%% CS294A/CS294W Self-taught Learning Exercise</span></span><br><span class="line"></span><br><span class="line"><span class="comment">%  Instructions</span></span><br><span class="line"><span class="comment">%  ------------</span></span><br><span class="line"><span class="comment">% </span></span><br><span class="line"><span class="comment">%  This file contains code that helps you get started on the</span></span><br><span class="line"><span class="comment">%  self-taught learning. You will need to complete code in feedForwardAutoencoder.m</span></span><br><span class="line"><span class="comment">%  You will also need to have implemented sparseAutoencoderCost.m and </span></span><br><span class="line"><span class="comment">%  softmaxCost.m from previous exercises.</span></span><br><span class="line"><span class="comment">%</span></span><br><span class="line"><span class="comment">%% ======================================================================</span></span><br><span class="line"><span class="comment">%  STEP 0: Here we provide the relevant parameters values that will</span></span><br><span class="line"><span class="comment">%  allow your sparse autoencoder to get good filters; you do not need to </span></span><br><span class="line"><span class="comment">%  change the parameters below.</span></span><br><span class="line"></span><br><span class="line">inputSize  = <span class="number">28</span> * <span class="number">28</span>;</span><br><span class="line">numLabels  = <span class="number">5</span>;</span><br><span class="line">hiddenSize = <span class="number">200</span>;</span><br><span class="line">sparsityParam = <span class="number">0.1</span>; <span class="comment">% desired average activation of the hidden units.</span></span><br><span class="line">                     <span class="comment">% (This was denoted by the Greek alphabet rho, which looks like a lower-case "p",</span></span><br><span class="line">		             <span class="comment">%  in the lecture notes). </span></span><br><span class="line">lambda = <span class="number">3e-3</span>;       <span class="comment">% weight decay parameter       </span></span><br><span class="line"><span class="built_in">beta</span> = <span class="number">3</span>;            <span class="comment">% weight of sparsity penalty term   </span></span><br><span class="line">maxIter = <span class="number">400</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">%% ======================================================================</span></span><br><span class="line"><span class="comment">%  STEP 1: Load data from the MNIST database</span></span><br><span class="line"><span class="comment">%</span></span><br><span class="line"><span class="comment">%  This loads our training and test data from the MNIST database files.</span></span><br><span class="line"><span class="comment">%  We have sorted the data for you in this so that you will not have to</span></span><br><span class="line"><span class="comment">%  change it.</span></span><br><span class="line"></span><br><span class="line"><span class="comment">% Load MNIST database files</span></span><br><span class="line">mnistData   = loadMNISTImages(<span class="string">'train-images-idx3-ubyte'</span>);</span><br><span class="line">mnistLabels = loadMNISTLabels(<span class="string">'train-labels-idx1-ubyte'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">% Set Unlabeled Set (All Images)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">% Simulate a Labeled and Unlabeled set</span></span><br><span class="line">labeledSet   = <span class="built_in">find</span>(mnistLabels &gt;= <span class="number">0</span> &amp; mnistLabels &lt;= <span class="number">4</span>);</span><br><span class="line">unlabeledSet = <span class="built_in">find</span>(mnistLabels &gt;= <span class="number">5</span>);</span><br><span class="line"></span><br><span class="line">numTrain = <span class="built_in">round</span>(<span class="built_in">numel</span>(labeledSet)/<span class="number">2</span>);</span><br><span class="line">trainSet = labeledSet(<span class="number">1</span>:numTrain);</span><br><span class="line">testSet  = labeledSet(numTrain+<span class="number">1</span>:<span class="keyword">end</span>);</span><br><span class="line"></span><br><span class="line">unlabeledData = mnistData(:, unlabeledSet);</span><br><span class="line"></span><br><span class="line">trainData   = mnistData(:, trainSet);</span><br><span class="line">trainLabels = mnistLabels(trainSet)<span class="operator">'</span> + <span class="number">1</span>; <span class="comment">% Shift Labels to the Range 1-5</span></span><br><span class="line"></span><br><span class="line">testData   = mnistData(:, testSet);</span><br><span class="line">testLabels = mnistLabels(testSet)<span class="operator">'</span> + <span class="number">1</span>;   <span class="comment">% Shift Labels to the Range 1-5</span></span><br><span class="line"></span><br><span class="line"><span class="comment">% Output Some Statistics</span></span><br><span class="line">fprintf(<span class="string">'# examples in unlabeled set: %d\n'</span>, <span class="built_in">size</span>(unlabeledData, <span class="number">2</span>));</span><br><span class="line">fprintf(<span class="string">'# examples in supervised training set: %d\n\n'</span>, <span class="built_in">size</span>(trainData, <span class="number">2</span>));</span><br><span class="line">fprintf(<span class="string">'# examples in supervised testing set: %d\n\n'</span>, <span class="built_in">size</span>(testData, <span class="number">2</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">%% ======================================================================</span></span><br><span class="line"><span class="comment">%  STEP 2: Train the sparse autoencoder</span></span><br><span class="line"><span class="comment">%  This trains the sparse autoencoder on the unlabeled training</span></span><br><span class="line"><span class="comment">%  images. </span></span><br><span class="line"></span><br><span class="line"><span class="comment">%  Randomly initialize the parameters</span></span><br><span class="line">theta = initializeParameters(hiddenSize, inputSize);</span><br><span class="line"></span><br><span class="line"><span class="comment">%% ----------------- YOUR CODE HERE ----------------------</span></span><br><span class="line"><span class="comment">%  Find opttheta by running the sparse autoencoder on</span></span><br><span class="line"><span class="comment">%  unlabeledTrainingImages</span></span><br><span class="line"></span><br><span class="line">opttheta = theta; </span><br><span class="line">addpath minFunc/</span><br><span class="line">options.Method = <span class="string">'lbfgs'</span>; <span class="comment">% Here, we use L-BFGS to optimize our cost</span></span><br><span class="line">                          <span class="comment">% function. Generally, for minFunc to work, you</span></span><br><span class="line">                          <span class="comment">% need a function pointer with two outputs: the</span></span><br><span class="line">                          <span class="comment">% function value and the gradient. In our problem,</span></span><br><span class="line">                          <span class="comment">% sparseAutoencoderCost.m satisfies this.</span></span><br><span class="line">options.maxIter = <span class="number">400</span>;	  <span class="comment">% Maximum number of iterations of L-BFGS to run </span></span><br><span class="line">options.display = <span class="string">'on'</span>;</span><br><span class="line"></span><br><span class="line"><span class="matrix">[opttheta, cost]</span> = minFunc( @(p) sparseAutoencoderCost(p, ...</span><br><span class="line">                                  inputSize, hiddenSize, ...</span><br><span class="line">                                   lambda, sparsityParam, ...</span><br><span class="line">                                   <span class="built_in">beta</span>, unlabeledData), ...</span><br><span class="line">                              theta, options);</span><br><span class="line"></span><br><span class="line"><span class="comment">%% -----------------------------------------------------</span></span><br><span class="line">                          </span><br><span class="line"><span class="comment">% Visualize weights</span></span><br><span class="line">W1 = <span class="built_in">reshape</span>(opttheta(<span class="number">1</span>:hiddenSize * inputSize), hiddenSize, inputSize);</span><br><span class="line">display_network(W1<span class="operator">'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">%%======================================================================</span></span><br><span class="line"><span class="comment">%% STEP 3: Extract Features from the Supervised Dataset</span></span><br><span class="line"><span class="comment">%  </span></span><br><span class="line"><span class="comment">%  You need to complete the code in feedForwardAutoencoder.m so that the </span></span><br><span class="line"><span class="comment">%  following command will extract features from the data.</span></span><br><span class="line"></span><br><span class="line">trainFeatures = feedForwardAutoencoder(opttheta, hiddenSize, inputSize, ...</span><br><span class="line">                                       trainData);</span><br><span class="line"></span><br><span class="line">testFeatures = feedForwardAutoencoder(opttheta, hiddenSize, inputSize, ...</span><br><span class="line">                                       testData);</span><br><span class="line"></span><br><span class="line"><span class="comment">%%======================================================================</span></span><br><span class="line"><span class="comment">%% STEP 4: Train the softmax classifier</span></span><br><span class="line"></span><br><span class="line">softmaxModel = struct;  </span><br><span class="line"><span class="comment">%% ----------------- YOUR CODE HERE ----------------------</span></span><br><span class="line"><span class="comment">%  Use softmaxTrain.m from the previous exercise to train a multi-class</span></span><br><span class="line"><span class="comment">%  classifier. </span></span><br><span class="line"></span><br><span class="line"><span class="comment">%  Use lambda = 1e-4 for the weight regularization for softmax</span></span><br><span class="line"></span><br><span class="line"><span class="comment">% You need to compute softmaxModel using softmaxTrain on trainFeatures and</span></span><br><span class="line"><span class="comment">% trainLabels</span></span><br><span class="line">lambda = <span class="number">1e-4</span>;</span><br><span class="line">options.maxIter = <span class="number">100</span>;</span><br><span class="line">softmaxModel = softmaxTrain(hiddenSize, <span class="number">5</span>, lambda, ...</span><br><span class="line">                            trainFeatures,trainLabels, options);</span><br><span class="line">                        <span class="comment">%注意tainFeatures的大小的hiddenSize</span></span><br><span class="line"></span><br><span class="line"><span class="comment">%% -----------------------------------------------------</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">%%======================================================================</span></span><br><span class="line"><span class="comment">%% STEP 5: Testing </span></span><br><span class="line"></span><br><span class="line"><span class="comment">%% ----------------- YOUR CODE HERE ----------------------</span></span><br><span class="line"><span class="comment">% Compute Predictions on the test set (testFeatures) using softmaxPredict</span></span><br><span class="line"><span class="comment">% and softmaxModel</span></span><br><span class="line"><span class="matrix">[pred]</span> = softmaxPredict(softmaxModel, testFeatures);</span><br><span class="line"></span><br><span class="line"><span class="comment">%% -----------------------------------------------------</span></span><br><span class="line"></span><br><span class="line"><span class="comment">% Classification Score</span></span><br><span class="line">fprintf(<span class="string">'Test Accuracy: %f%%\n'</span>, <span class="number">100</span>*mean(pred(:) == testLabels(:)));</span><br><span class="line"></span><br><span class="line"><span class="comment">% (note that we shift the labels by 1, so that digit 0 now corresponds to</span></span><br><span class="line"><span class="comment">%  label 1)</span></span><br><span class="line"><span class="comment">%</span></span><br><span class="line"><span class="comment">% Accuracy is the proportion of correctly classified images</span></span><br><span class="line"><span class="comment">% The results for our implementation was:</span></span><br><span class="line"><span class="comment">%</span></span><br><span class="line"><span class="comment">% Accuracy: 98.3%</span></span><br><span class="line"><span class="comment">%</span></span><br><span class="line"><span class="comment">%</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>feedForwardAutoencoder.m</li>
+</ul>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="params">[activation]</span> = <span class="title">feedForwardAutoencoder</span><span class="params">(theta, hiddenSize, visibleSize, data)</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">% theta: trained weights from the autoencoder</span></span><br><span class="line"><span class="comment">% visibleSize: the number of input units (probably 64) </span></span><br><span class="line"><span class="comment">% hiddenSize: the number of hidden units (probably 25) </span></span><br><span class="line"><span class="comment">% data: Our matrix containing the training data as columns.  So, data(:,i) is the i-th training example. </span></span><br><span class="line">  </span><br><span class="line"><span class="comment">% We first convert theta to the (W1, W2, b1, b2) matrix/vector format, so that this </span></span><br><span class="line"><span class="comment">% follows the notation convention of the lecture notes. </span></span><br><span class="line"></span><br><span class="line">W1 = <span class="built_in">reshape</span>(theta(<span class="number">1</span>:hiddenSize*visibleSize), hiddenSize, visibleSize);</span><br><span class="line">b1 = theta(<span class="number">2</span>*hiddenSize*visibleSize+<span class="number">1</span>:<span class="number">2</span>*hiddenSize*visibleSize+hiddenSize);</span><br><span class="line"></span><br><span class="line"><span class="comment">%% ---------- YOUR CODE HERE --------------------------------------</span></span><br><span class="line"><span class="comment">%  Instructions: Compute the activation of the hidden layer for the Sparse Autoencoder.</span></span><br><span class="line">m=<span class="built_in">size</span>(data,<span class="number">2</span>);</span><br><span class="line">z2 = W1*data+<span class="built_in">repmat</span>(b1,<span class="number">1</span>,m);<span class="comment">%注意这里一定要将b1向量复制扩展成m列的矩阵</span></span><br><span class="line">activation = sigmoid(z2);</span><br><span class="line"></span><br><span class="line"><span class="comment">%-------------------------------------------------------------------</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">%-------------------------------------------------------------------</span></span><br><span class="line"><span class="comment">% Here's an implementation of the sigmoid function, which you may find useful</span></span><br><span class="line"><span class="comment">% in your computation of the costs and the gradients.  This inputs a (row or</span></span><br><span class="line"><span class="comment">% column) vector (say (z1, z2, z3)) and returns (f(z1), f(z2), f(z3)). </span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">sigm</span> = <span class="title">sigmoid</span><span class="params">(x)</span></span></span><br><span class="line">    sigm = <span class="number">1</span> ./ (<span class="number">1</span> + <span class="built_in">exp</span>(-x));</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure></span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/12/08/‎Summarize/keggle-浮游生物分类--译文（第二部分）/" rel="next" title="kaggle-浮游生物分类比赛一等奖---译文（第二部分）">
+                <i class="fa fa-chevron-left"></i> kaggle-浮游生物分类比赛一等奖---译文（第二部分）
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/12/08/‎Summarize/keggle-浮游生物分类--译文（一）/" rel="prev" title="kaggle-浮游生物分类比赛一等奖---译文（第一部分）">
+                kaggle-浮游生物分类比赛一等奖---译文（第一部分） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+        </div>
+
+        
+
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="John Doe" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">John Doe</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#u672C_u6B21UFLDL_u7EC3_u4E60_u5927_u81F4_u6D41_u7A0B_uFF1A"><span class="nav-number">1.</span> <span class="nav-text">本次UFLDL练习大致流程：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#self-taught__u548Csemi-supervised_u7684_u533A_u522B_uFF1A"><span class="nav-number">2.</span> <span class="nav-text">self-taught 和semi-supervised的区别：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u7EC3_u4E60_u9898_u7B54_u6848_uFF08_u63A8_u8350_u81EA_u5DF1_u5B8C_u6210_u540E_u518D_u53C2_u8003_uFF09"><span class="nav-number">3.</span> <span class="nav-text">练习题答案（推荐自己完成后再参考）</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+    
+    
+
+  
+
+
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
+
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    motionMiddleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+  
+  
+
+  
+  
+
+</body>
+</html>

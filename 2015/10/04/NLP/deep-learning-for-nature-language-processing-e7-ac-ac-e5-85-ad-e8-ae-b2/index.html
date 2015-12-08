@@ -1,0 +1,663 @@
+<!doctype html>
+<html class="theme-next   use-motion ">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+
+
+
+
+<meta name="description" content="Overview Today:&quot;&amp;gt;Overview Today:一些有用的策略和技巧：1.多任务学习（multi-task learning）2.非线性函数（Nonlinearities）3.检查求导是否正确（gradient check）4.Momentum,AdaGrad语言模型（Language Model）RNNMulti-­task learning / Weight sharing&quot;&amp;gt;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Deep Learning for Nature Language Processing --- 第六讲">
+<meta property="og:url" content="http://yoursite.com/2015/10/04/NLP/deep-learning-for-nature-language-processing-e7-ac-ac-e5-85-ad-e8-ae-b2/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Overview Today:&quot;&amp;gt;Overview Today:一些有用的策略和技巧：1.多任务学习（multi-task learning）2.非线性函数（Nonlinearities）3.检查求导是否正确（gradient check）4.Momentum,AdaGrad语言模型（Language Model）RNNMulti-­task learning / Weight sharing&quot;&amp;gt;">
+<meta property="og:image" content="http://img.blog.csdn.net/20150706132930570">
+<meta property="og:image" content="http://img.blog.csdn.net/20150706134109319">
+<meta property="og:image" content="http://img.blog.csdn.net/20150706150720417">
+<meta property="og:image" content="http://img.blog.csdn.net/20150706150607531">
+<meta property="og:image" content="http://img.blog.csdn.net/20150706150642101">
+<meta property="og:image" content="http://img.blog.csdn.net/20150706150844187">
+<meta property="og:image" content="http://img.blog.csdn.net/20150706224029606">
+<meta property="og:image" content="http://img.blog.csdn.net/20150706224000142">
+<meta property="og:image" content="http://img.blog.csdn.net/20150706210351642">
+<meta property="og:image" content="http://img.blog.csdn.net/20150706155317083">
+<meta property="og:image" content="http://img.blog.csdn.net/20150706155330741">
+<meta property="og:image" content="http://img.blog.csdn.net/20150707123350229">
+<meta property="og:image" content="http://img.blog.csdn.net/20150706172250874">
+<meta property="og:image" content="http://img.blog.csdn.net/20150706220615108">
+<meta property="og:image" content="http://img.blog.csdn.net/20150706221235387">
+<meta property="og:image" content="http://img.blog.csdn.net/20150706221634759">
+<meta property="og:image" content="http://img.blog.csdn.net/20150706221736825">
+<meta property="og:image" content="http://img.blog.csdn.net/20150706222943247">
+<meta property="og:image" content="http://img.blog.csdn.net/20150706223102567">
+<meta property="og:image" content="http://img.blog.csdn.net/20150706223238035">
+<meta property="og:updated_time" content="2015-10-05T09:10:12.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Deep Learning for Nature Language Processing --- 第六讲">
+<meta name="twitter:description" content="Overview Today:&quot;&amp;gt;Overview Today:一些有用的策略和技巧：1.多任务学习（multi-task learning）2.非线性函数（Nonlinearities）3.检查求导是否正确（gradient check）4.Momentum,AdaGrad语言模型（Language Model）RNNMulti-­task learning / Weight sharing&quot;&amp;gt;">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post',
+    motion: true
+  };
+</script>
+
+  <title> Deep Learning for Nature Language Processing --- 第六讲 | Hexo </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Hexo</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Deep Learning for Nature Language Processing --- 第六讲
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2015-10-04T20:02:39+08:00" content="2015-10-04">
+              2015-10-04
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分類於
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/NLP/" itemprop="url" rel="index">
+                    <span itemprop="name">NLP</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h1 id="Overview_Today_3A"><a href="#Overview_Today_3A" class="headerlink" title="<strong>Overview Today:</strong>"></a><strong>Overview Today:</strong></h1><h3 id="u4E00_u4E9B_u6709_u7528_u7684_u7B56_u7565_u548C_u6280_u5DE7_uFF1A"><a href="#u4E00_u4E9B_u6709_u7528_u7684_u7B56_u7565_u548C_u6280_u5DE7_uFF1A" class="headerlink" title="一些有用的策略和技巧："></a>一些有用的策略和技巧：</h3><h4 id="1-_u591A_u4EFB_u52A1_u5B66_u4E60_uFF08multi-task_learning_uFF09"><a href="#1-_u591A_u4EFB_u52A1_u5B66_u4E60_uFF08multi-task_learning_uFF09" class="headerlink" title="1.多任务学习（multi-task learning）"></a>1.多任务学习（multi-task learning）</h4><h4 id="2-_u975E_u7EBF_u6027_u51FD_u6570_uFF08Nonlinearities_uFF09"><a href="#2-_u975E_u7EBF_u6027_u51FD_u6570_uFF08Nonlinearities_uFF09" class="headerlink" title="2.非线性函数（Nonlinearities）"></a>2.非线性函数（Nonlinearities）</h4><h4 id="3-_u68C0_u67E5_u6C42_u5BFC_u662F_u5426_u6B63_u786E_uFF08gradient_check_uFF09"><a href="#3-_u68C0_u67E5_u6C42_u5BFC_u662F_u5426_u6B63_u786E_uFF08gradient_check_uFF09" class="headerlink" title="3.检查求导是否正确（gradient check）"></a>3.检查求导是否正确（gradient check）</h4><h4 id="4-Momentum_2CAdaGrad"><a href="#4-Momentum_2CAdaGrad" class="headerlink" title="4.Momentum,AdaGrad"></a>4.Momentum,AdaGrad</h4><h3 id="u8BED_u8A00_u6A21_u578B_uFF08Language_Model_uFF09"><a href="#u8BED_u8A00_u6A21_u578B_uFF08Language_Model_uFF09" class="headerlink" title="语言模型（Language Model）"></a>语言模型（Language Model）</h3><h3 id="RNN"><a href="#RNN" class="headerlink" title="RNN"></a>RNN</h3><h1 id="Multi-_ADtask_learning_/_Weight_sharing"><a href="#Multi-_ADtask_learning_/_Weight_sharing" class="headerlink" title="<strong>Multi-­task learning / Weight sharing</strong>"></a><strong>Multi-­task learning / Weight sharing</strong></h1><h3 id="u548C_u4E0A_u4E00_u7AE0_u8282_u63D0_u5230_u7684NN_u7C7B_u4F3C_uFF0C_u4E0D_u8FC7_u5728Multi-_ADtask_learning_u4E2D_uFF0C_u6700_u540E_u4E00_u5C42_u7531_u4E00_u4E2Ascalar_u53D8_u6210_u4E86softmax__u5206_u7C7B_u5668_uFF08_u8BAD_u7EC3_u65F6_u5229_u7528_u53CD_u5411_u4F20_u64AD_uFF0C_u83B7_u53D6_u9519_u8BEF_u6D41error_uFF09_uFF1A"><a href="#u548C_u4E0A_u4E00_u7AE0_u8282_u63D0_u5230_u7684NN_u7C7B_u4F3C_uFF0C_u4E0D_u8FC7_u5728Multi-_ADtask_learning_u4E2D_uFF0C_u6700_u540E_u4E00_u5C42_u7531_u4E00_u4E2Ascalar_u53D8_u6210_u4E86softmax__u5206_u7C7B_u5668_uFF08_u8BAD_u7EC3_u65F6_u5229_u7528_u53CD_u5411_u4F20_u64AD_uFF0C_u83B7_u53D6_u9519_u8BEF_u6D41error_uFF09_uFF1A" class="headerlink" title="和上一章节提到的NN类似，不过在Multi-­task learning中，最后一层由一个scalar变成了softmax 分类器（训练时利用反向传播，获取错误流error）："></a>和上一章节提到的NN类似，不过在Multi-­task learning中，最后一层由一个scalar变成了softmax 分类器（训练时利用反向传播，获取错误流error）：</h3><p><img src="http://img.blog.csdn.net/20150706132930570" alt="这里写图片描述"></p>
+<h3 id="u5176_u5B9E_u548C_u8BAD_u7EC3softmax_uFF08_u524D_u9762_u8BB2_u8FC7_uFF09_u5DEE_u4E0D_u591A_uFF0C_u53EA_u4E0D_u8FC7_u5BF9_u4E8Edeep_learning_u7684_u6A21_u578B_u6765_u8BB2_uFF0C_u8F93_u5165x_u4E5F_u7ECF_u8FC7_u4E86_u8BAD_u7EC3_uFF0C_u8F6C_u6362_u6210activation_u3002"><a href="#u5176_u5B9E_u548C_u8BAD_u7EC3softmax_uFF08_u524D_u9762_u8BB2_u8FC7_uFF09_u5DEE_u4E0D_u591A_uFF0C_u53EA_u4E0D_u8FC7_u5BF9_u4E8Edeep_learning_u7684_u6A21_u578B_u6765_u8BB2_uFF0C_u8F93_u5165x_u4E5F_u7ECF_u8FC7_u4E86_u8BAD_u7EC3_uFF0C_u8F6C_u6362_u6210activation_u3002" class="headerlink" title="其实和训练softmax（前面讲过）差不多，只不过对于deep learning的模型来讲，输入x也经过了训练，转换成activation。"></a>其实和训练softmax（前面讲过）差不多，只不过对于deep learning的模型来讲，输入x也经过了训练，转换成activation。</h3><h3 id="Main_Idea_uFF1A_u53EF_u4EE5_u5171_u4EAB_u4E24_u4E2A_u6A21_u578B_u4E2D_uFF0Chidden_layer_u5BF9_u5E94_u7684_u6743_u91CD_uFF0C_u548Cword_vectors_uFF08_u5373_u8F93_u5165_uFF09_u3002_u800C_u53EA_u8BAD_u7EC3_u9876_u5C42_u7684softmax_u5206_u7C7B_u5668_28_u603B_u7684cost_function_u5C31_u662F_u4E24_u4E2A_u6A21_u578B_u7684_u4EA4_u53C9_u71B5_u4E4B_u548C_29_3A"><a href="#Main_Idea_uFF1A_u53EF_u4EE5_u5171_u4EAB_u4E24_u4E2A_u6A21_u578B_u4E2D_uFF0Chidden_layer_u5BF9_u5E94_u7684_u6743_u91CD_uFF0C_u548Cword_vectors_uFF08_u5373_u8F93_u5165_uFF09_u3002_u800C_u53EA_u8BAD_u7EC3_u9876_u5C42_u7684softmax_u5206_u7C7B_u5668_28_u603B_u7684cost_function_u5C31_u662F_u4E24_u4E2A_u6A21_u578B_u7684_u4EA4_u53C9_u71B5_u4E4B_u548C_29_3A" class="headerlink" title="Main Idea：可以共享两个模型中，hidden layer对应的权重，和word vectors（即输入）。而只训练顶层的softmax分类器(总的cost function就是两个模型的交叉熵之和):"></a>Main Idea：可以共享两个模型中，hidden layer对应的权重，和word vectors（即输入）。而只训练顶层的softmax分类器(总的cost function就是两个模型的交叉熵之和):</h3><p><img src="http://img.blog.csdn.net/20150706134109319" alt="这里写图片描述"></p>
+<h3 id="u4E0B_u56FE_u8BF4_u660E_u5728NLP_u4E2D_uFF0Cword_vector_u7684pre-training_u662F_u4E00_u4E2A_u5F88_u91CD_u8981_u7684_u56E0_u7D20_uFF1A"><a href="#u4E0B_u56FE_u8BF4_u660E_u5728NLP_u4E2D_uFF0Cword_vector_u7684pre-training_u662F_u4E00_u4E2A_u5F88_u91CD_u8981_u7684_u56E0_u7D20_uFF1A" class="headerlink" title="下图说明在NLP中，word vector的pre-training是一个很重要的因素："></a>下图说明在NLP中，word vector的pre-training是一个很重要的因素：</h3><p><img src="http://img.blog.csdn.net/20150706150720417" alt="这里写图片描述"></p>
+<h1 id="General_Strategy_for_Successful_NNets"><a href="#General_Strategy_for_Successful_NNets" class="headerlink" title="<strong>General Strategy for Successful NNets</strong>"></a><strong>General Strategy for Successful NNets</strong></h1><h3 id="1-_u9009_u62E9_u5408_u9002_u7684_u6A21_u578B_u7ED3_u6784_uFF1A"><a href="#1-_u9009_u62E9_u5408_u9002_u7684_u6A21_u578B_u7ED3_u6784_uFF1A" class="headerlink" title="1.选择合适的模型结构："></a>1.选择合适的模型结构：</h3><h4 id="1_uFF09_u7ED3_u6784_uFF1A_u5355_u4E2A_u8BCD_uFF08single_word_uFF09_uFF0C_u52A0_u7A97_uFF08fixed_window_uFF09_uFF0Cbag_of_bags_uFF0C_recursive_VS_recurrent_uFF0CCNN_uFF0C_u57FA_u4E8E_u53E5_u5B50_u8FD8_u662F_u57FA_u4E8E_u6587_u6863_uFF08sentence_based_VS_document_uFF09"><a href="#1_uFF09_u7ED3_u6784_uFF1A_u5355_u4E2A_u8BCD_uFF08single_word_uFF09_uFF0C_u52A0_u7A97_uFF08fixed_window_uFF09_uFF0Cbag_of_bags_uFF0C_recursive_VS_recurrent_uFF0CCNN_uFF0C_u57FA_u4E8E_u53E5_u5B50_u8FD8_u662F_u57FA_u4E8E_u6587_u6863_uFF08sentence_based_VS_document_uFF09" class="headerlink" title="1）结构：单个词（single word），加窗（fixed window），bag of  bags， recursive VS recurrent，CNN，基于句子还是基于文档（sentence based VS document）"></a>1）结构：单个词（single word），加窗（fixed window），bag of  bags， recursive VS recurrent，CNN，基于句子还是基于文档（sentence based VS document）</h4><h4 id="2_uFF09_u975E_u7EBF_u6027_u51FD_u6570_u7684_u9009_u62E9"><a href="#2_uFF09_u975E_u7EBF_u6027_u51FD_u6570_u7684_u9009_u62E9" class="headerlink" title="2）非线性函数的选择"></a>2）非线性函数的选择</h4><h3 id="2-_u4F7F_u7528gradient_check_u7684_u65B9_u6CD5_u68C0_u67E5_u662F_u5426_u5B58_u5728bug"><a href="#2-_u4F7F_u7528gradient_check_u7684_u65B9_u6CD5_u68C0_u67E5_u662F_u5426_u5B58_u5728bug" class="headerlink" title="2.使用gradient check的方法检查是否存在bug"></a>2.使用gradient check的方法检查是否存在bug</h3><h3 id="3-_u53C2_u6570_u7684_u521D_u59CB_u5316"><a href="#3-_u53C2_u6570_u7684_u521D_u59CB_u5316" class="headerlink" title="3.参数的初始化"></a>3.参数的初始化</h3><h3 id="4-_u4F18_u5316_u7684_u7B56_u7565"><a href="#4-_u4F18_u5316_u7684_u7B56_u7565" class="headerlink" title="4.优化的策略"></a>4.优化的策略</h3><h3 id="5-_u68C0_u67E5_u6A21_u578B_u5BF9_u6570_u636E_u96C6_u662F_u5426_u8FC7_u62DF_u5408_uFF08overfit_uFF09_uFF1A"><a href="#5-_u68C0_u67E5_u6A21_u578B_u5BF9_u6570_u636E_u96C6_u662F_u5426_u8FC7_u62DF_u5408_uFF08overfit_uFF09_uFF1A" class="headerlink" title="5.检查模型对数据集是否过拟合（overfit）："></a>5.检查模型对数据集是否过拟合（overfit）：</h3><h4 id="1_uFF09_u5982_u679C_u6CA1_u6709_uFF0C_u6539_u53D8_u6A21_u578B_u7ED3_u6784_uFF0C_u8BA9_u6A21_u578B_u66F4_u201C_u5927_u201D"><a href="#1_uFF09_u5982_u679C_u6CA1_u6709_uFF0C_u6539_u53D8_u6A21_u578B_u7ED3_u6784_uFF0C_u8BA9_u6A21_u578B_u66F4_u201C_u5927_u201D" class="headerlink" title="1）如果没有，改变模型结构，让模型更“大”"></a>1）如果没有，改变模型结构，让模型更“大”</h4><h4 id="2_uFF09_u5982_u679C_u6709_uFF0C_u8FDB_u884Cregularization_u3002"><a href="#2_uFF09_u5982_u679C_u6709_uFF0C_u8FDB_u884Cregularization_u3002" class="headerlink" title="2）如果有，进行regularization。"></a>2）如果有，进行regularization。</h4><h1 id="Non-_AD_u2010lineariHes_3A_What_u2019s_used"><a href="#Non-_AD_u2010lineariHes_3A_What_u2019s_used" class="headerlink" title="<strong>Non-­‐lineariHes: What’s used</strong>"></a><strong>Non-­‐lineariHes: What’s used</strong></h1><p><img src="http://img.blog.csdn.net/20150706150607531" alt="这里写图片描述"><br><img src="http://img.blog.csdn.net/20150706150642101" alt="这里写图片描述"></p>
+<h3 id="u5BF9_u4E8E_u6DF1_u5EA6_u5B66_u4E60_u6A21_u578B_uFF0Ctanh_u51FD_u6570_u901A_u5E38_u6BD4sigmoid_u51FD_u6570_u8868_u73B0_u7684_u8981_u66F4_u597D_uFF1A"><a href="#u5BF9_u4E8E_u6DF1_u5EA6_u5B66_u4E60_u6A21_u578B_uFF0Ctanh_u51FD_u6570_u901A_u5E38_u6BD4sigmoid_u51FD_u6570_u8868_u73B0_u7684_u8981_u66F4_u597D_uFF1A" class="headerlink" title="对于深度学习模型，tanh函数通常比sigmoid函数表现的要更好："></a>对于深度学习模型，tanh函数通常比sigmoid函数表现的要更好：</h3><h4 id="1_uFF09_u4F7F_u7528tanh_u51FD_u6570_u65F6_uFF0C_u6A21_u578B_u53C2_u6570_u7684_u521D_u59CB_u5316_u503C_u66F4_u8D8B_u5411_u4E8E0"><a href="#1_uFF09_u4F7F_u7528tanh_u51FD_u6570_u65F6_uFF0C_u6A21_u578B_u53C2_u6570_u7684_u521D_u59CB_u5316_u503C_u66F4_u8D8B_u5411_u4E8E0" class="headerlink" title="1）使用tanh函数时，模型参数的初始化值更趋向于0"></a>1）使用tanh函数时，模型参数的初始化值更趋向于0</h4><h4 id="2_uFF09_u66F4_u5FEB_u8FBE_u5230_u6536_u655B"><a href="#2_uFF09_u66F4_u5FEB_u8FBE_u5230_u6536_u655B" class="headerlink" title="2）更快达到收敛"></a>2）更快达到收敛</h4><h4 id="3_uFF09_u6C42_u5BFC_u65B9_u4FBF_uFF1Af_u2019_28z_29_3D1-tanh2_28z_29"><a href="#3_uFF09_u6C42_u5BFC_u65B9_u4FBF_uFF1Af_u2019_28z_29_3D1-tanh2_28z_29" class="headerlink" title="3）求导方便：f’(z)=1-tanh<sup>2</sup>(z)"></a>3）求导方便：f’(z)=1-tanh<sup>2</sup>(z)</h4><h3 id="u8FD8_u6709_u5176_u4ED6_u7684_u975E_u7EBF_u6027_u51FD_u6570_u53EF_u4F9B_u9009_u62E9_uFF1A"><a href="#u8FD8_u6709_u5176_u4ED6_u7684_u975E_u7EBF_u6027_u51FD_u6570_u53EF_u4F9B_u9009_u62E9_uFF1A" class="headerlink" title="还有其他的非线性函数可供选择："></a>还有其他的非线性函数可供选择：</h3><p><img src="http://img.blog.csdn.net/20150706150844187" alt="这里写图片描述"></p>
+<h3 id="u5BF9_u4E8E_u975E_u7EBF_u6027_u51FD_u6570_u7684_u9009_u62E9_uFF0C_u8FD8_u6709_u4E00_u79CDmaxout_network_uFF1A"><a href="#u5BF9_u4E8E_u975E_u7EBF_u6027_u51FD_u6570_u7684_u9009_u62E9_uFF0C_u8FD8_u6709_u4E00_u79CDmaxout_network_uFF1A" class="headerlink" title="对于非线性函数的选择，还有一种maxout network："></a>对于非线性函数的选择，还有一种maxout network：</h3><p><img src="http://img.blog.csdn.net/20150706224029606" alt="这里写图片描述"></p>
+<h1 id="Gradient_Checks"><a href="#Gradient_Checks" class="headerlink" title="<strong>Gradient Checks</strong>"></a><strong>Gradient Checks</strong></h1><h3 id="u6B65_u9AA4_uFF1A"><a href="#u6B65_u9AA4_uFF1A" class="headerlink" title="步骤："></a>步骤：</h3><h4 id="1_uFF09_u5B8C_u6210_u6C42_u5BFC"><a href="#1_uFF09_u5B8C_u6210_u6C42_u5BFC" class="headerlink" title="1）完成求导"></a>1）完成求导</h4><h4 id="2_uFF09_u5B8C_u6210_u4E0B_u9762_u8FD9_u4E2A_u51FD_u6570_uFF0C_u901A_u5E38_24_5Cepsilon_24__u4E3A10e-4_uFF1A"><a href="#2_uFF09_u5B8C_u6210_u4E0B_u9762_u8FD9_u4E2A_u51FD_u6570_uFF0C_u901A_u5E38_24_5Cepsilon_24__u4E3A10e-4_uFF1A" class="headerlink" title="2）完成下面这个函数，通常$\epsilon$ 为10e<sup>-4</sup>："></a>2）完成下面这个函数，通常$\epsilon$ 为10e<sup>-4</sup>：</h4><p><img src="http://img.blog.csdn.net/20150706224000142" alt="这里写图片描述"></p>
+<h4 id="3_uFF09_u6BD4_u8F83_u6C42_u5BFC_u51FD_u6570_u548C_u4E0A_u56FE_u51FD_u6570_u7684_u7ED3_u679C_uFF0C_u770B_u7ED3_u679C_u662F_u5426_u76F8_u8FD1_u3002"><a href="#3_uFF09_u6BD4_u8F83_u6C42_u5BFC_u51FD_u6570_u548C_u4E0A_u56FE_u51FD_u6570_u7684_u7ED3_u679C_uFF0C_u770B_u7ED3_u679C_u662F_u5426_u76F8_u8FD1_u3002" class="headerlink" title="3）比较求导函数和上图函数的结果，看结果是否相近。"></a>3）比较求导函数和上图函数的结果，看结果是否相近。</h4><h3 id="u5982_u679C_u6C42_u5BFC_u51FA_u9519_uFF0C_u53C8_u4E0D_u77E5_u9053_u8BE5_u5982_u4F55_u89E3_u51B3_u3002_u90A3_u4E48_u8BD5_u7740_u5148_u7B80_u5316_u4F60_u7684_u6A21_u578B_u3002_u53EF_u4EE5_u6309_u7167_u4EE5_u4E0B_u6B65_u9AA4_u4E00_u6B65_u6B65_u7684_u6784_u5EFA_u4F60_u7684_u6A21_u578B_uFF1A"><a href="#u5982_u679C_u6C42_u5BFC_u51FA_u9519_uFF0C_u53C8_u4E0D_u77E5_u9053_u8BE5_u5982_u4F55_u89E3_u51B3_u3002_u90A3_u4E48_u8BD5_u7740_u5148_u7B80_u5316_u4F60_u7684_u6A21_u578B_u3002_u53EF_u4EE5_u6309_u7167_u4EE5_u4E0B_u6B65_u9AA4_u4E00_u6B65_u6B65_u7684_u6784_u5EFA_u4F60_u7684_u6A21_u578B_uFF1A" class="headerlink" title="如果求导出错，又不知道该如何解决。那么试着先简化你的模型。可以按照以下步骤一步步的构建你的模型："></a>如果求导出错，又不知道该如何解决。那么试着先简化你的模型。可以按照以下步骤一步步的构建你的模型：</h3><h4 id="1_uFF09_u53EA_u6709_u56FA_u5B9A_u7684_u8F93_u5165_u548Csoftmax_uFF08_u5355_u4E2Aunit_uFF09_u5206_u7C7B_u5668"><a href="#1_uFF09_u53EA_u6709_u56FA_u5B9A_u7684_u8F93_u5165_u548Csoftmax_uFF08_u5355_u4E2Aunit_uFF09_u5206_u7C7B_u5668" class="headerlink" title="1）只有固定的输入和softmax（单个unit）分类器"></a>1）只有固定的输入和softmax（单个unit）分类器</h4><h4 id="2_uFF09_u5BF9word_vector_u548Csoftmax_u8FDB_u884C_u53CD_u5411_u4F20_u64AD_u6C42_u5BFC"><a href="#2_uFF09_u5BF9word_vector_u548Csoftmax_u8FDB_u884C_u53CD_u5411_u4F20_u64AD_u6C42_u5BFC" class="headerlink" title="2）对word vector和softmax进行反向传播求导"></a>2）对word vector和softmax进行反向传播求导</h4><h4 id="3_uFF09_u589E_u52A0_u4E00_u4E2Ahidden_u5C42_uFF0C_u53EA_u5305_u62EC_u4E00_u4E2Ahidden_unit"><a href="#3_uFF09_u589E_u52A0_u4E00_u4E2Ahidden_u5C42_uFF0C_u53EA_u5305_u62EC_u4E00_u4E2Ahidden_unit" class="headerlink" title="3）增加一个hidden层，只包括一个hidden unit"></a>3）增加一个hidden层，只包括一个hidden unit</h4><h4 id="4_uFF09_u4E00_u4E2Ahidden_layer_u4E2D_u5305_u62EC_u591A_u4E2Ahidden_unit"><a href="#4_uFF09_u4E00_u4E2Ahidden_layer_u4E2D_u5305_u62EC_u591A_u4E2Ahidden_unit" class="headerlink" title="4）一个hidden layer中包括多个hidden unit"></a>4）一个hidden layer中包括多个hidden unit</h4><h4 id="5_uFF09_u589E_u52A0_u504F_u7F6Ebias"><a href="#5_uFF09_u589E_u52A0_u504F_u7F6Ebias" class="headerlink" title="5）增加偏置bias"></a>5）增加偏置bias</h4><h4 id="6_uFF09_u518D_u589E_u52A0_u4E00_u4E2Ahidden_layer"><a href="#6_uFF09_u518D_u589E_u52A0_u4E00_u4E2Ahidden_layer" class="headerlink" title="6）再增加一个hidden layer"></a>6）再增加一个hidden layer</h4><h4 id="7_uFF09_u589E_u52A0_u4E24_u4E2Asoftmax_u5C42_u7684unit"><a href="#7_uFF09_u589E_u52A0_u4E24_u4E2Asoftmax_u5C42_u7684unit" class="headerlink" title="7）增加两个softmax层的unit"></a>7）增加两个softmax层的unit</h4><h1 id="Parameter_Initialization"><a href="#Parameter_Initialization" class="headerlink" title="<strong>Parameter Initialization</strong>"></a><strong>Parameter Initialization</strong></h1><h3 id="u5C06hidden_layer_u7684bias_u521D_u59CB_u5316_u4E3A0"><a href="#u5C06hidden_layer_u7684bias_u521D_u59CB_u5316_u4E3A0" class="headerlink" title="将hidden layer的bias初始化为0."></a>将hidden layer的bias初始化为0.</h3><h3 id="u6743_u91CDW_u7684_u521D_u59CB_u5316_uFF08_u5BF9_u4E8E_u975E_u7EBF_u6027_u51FD_u6570tanh_uFF09_uFF1A_u5C06W_u7684_u53C2_u6570_u5927_u5C0F_u9650_u5236_u5728_uFF08-r_uFF0Cr_uFF09_u4E4B_u95F4_u3002_u5176_u4E2Dr_u7684_u5927_u5C0F_u7531_u4E0B_u9762_u7684_u516C_u5F0F_u51B3_u5B9A_uFF08fan-in_u4E3A_u4E0A_u4E00_u4E2Ahidden_layer_u7684_u5927_u5C0F_uFF0Cfan-out_u4E3A_u4E0B_u4E00hidden_layer_u7684_u5927_u5C0F_uFF09_uFF1A"><a href="#u6743_u91CDW_u7684_u521D_u59CB_u5316_uFF08_u5BF9_u4E8E_u975E_u7EBF_u6027_u51FD_u6570tanh_uFF09_uFF1A_u5C06W_u7684_u53C2_u6570_u5927_u5C0F_u9650_u5236_u5728_uFF08-r_uFF0Cr_uFF09_u4E4B_u95F4_u3002_u5176_u4E2Dr_u7684_u5927_u5C0F_u7531_u4E0B_u9762_u7684_u516C_u5F0F_u51B3_u5B9A_uFF08fan-in_u4E3A_u4E0A_u4E00_u4E2Ahidden_layer_u7684_u5927_u5C0F_uFF0Cfan-out_u4E3A_u4E0B_u4E00hidden_layer_u7684_u5927_u5C0F_uFF09_uFF1A" class="headerlink" title="权重W的初始化（对于非线性函数tanh）：将W的参数大小限制在（-r，r）之间。其中r的大小由下面的公式决定（fan-in为上一个hidden layer的大小，fan-out为下一hidden layer的大小）："></a>权重W的初始化（对于非线性函数tanh）：将W的参数大小限制在（-r，r）之间。其中r的大小由下面的公式决定（fan-in为上一个hidden layer的大小，fan-out为下一hidden layer的大小）：</h3><p><img src="http://img.blog.csdn.net/20150706210351642" alt="这里写图片描述"><br>而如果使用sigmoid函数，则需要在此基础上乘以4</p>
+<h1 id="Stochastic_Gradient_Descent__28SGD_29"><a href="#Stochastic_Gradient_Descent__28SGD_29" class="headerlink" title="<strong>Stochastic Gradient Descent (SGD)</strong>"></a><strong>Stochastic Gradient Descent (SGD)</strong></h1><h3 id="SGD_u6BCF_u4E00_u5C42_u66F4_u65B0_u6743_u503C_u65F6_uFF0C_u53EA_u53D6_u4E00_u4E2A_u6216_u4E00_u90E8_u5206_u7684training_set_uFF1A"><a href="#SGD_u6BCF_u4E00_u5C42_u66F4_u65B0_u6743_u503C_u65F6_uFF0C_u53EA_u53D6_u4E00_u4E2A_u6216_u4E00_u90E8_u5206_u7684training_set_uFF1A" class="headerlink" title="SGD每一层更新权值时，只取一个或一部分的training set："></a>SGD每一层更新权值时，只取一个或一部分的training set：</h3><p><img src="http://img.blog.csdn.net/20150706155317083" alt="这里写图片描述"></p>
+<h3 id="u5BF9_u4E8E_u5927_u7684_u6570_u636E_u96C6_uFF0CSGD_u901A_u5E38_u8868_u73B0_u7684_u6BD4_u6240_u6709_u7684batch_method_u8981_u597D_u3002_u800C_u5BF9_u4E8E_u66F4_u5C0F_u4E00_u70B9_u7684_u6570_u636E_u96C6_uFF0C_u50CF_L-BFGS_u548CCG_u7684_u4E00_u4E9Bbatch_methods_u8868_u73B0_u7684_u8981_u6BD4SGD_u597D_u3002"><a href="#u5BF9_u4E8E_u5927_u7684_u6570_u636E_u96C6_uFF0CSGD_u901A_u5E38_u8868_u73B0_u7684_u6BD4_u6240_u6709_u7684batch_method_u8981_u597D_u3002_u800C_u5BF9_u4E8E_u66F4_u5C0F_u4E00_u70B9_u7684_u6570_u636E_u96C6_uFF0C_u50CF_L-BFGS_u548CCG_u7684_u4E00_u4E9Bbatch_methods_u8868_u73B0_u7684_u8981_u6BD4SGD_u597D_u3002" class="headerlink" title="对于大的数据集，SGD通常表现的比所有的batch method要好。而对于更小一点的数据集，像 L-BFGS和CG的一些batch methods表现的要比SGD好。"></a>对于大的数据集，SGD通常表现的比所有的batch method要好。而对于更小一点的数据集，像 L-BFGS和CG的一些batch methods表现的要比SGD好。</h3><h1 id="Learning_Rates"><a href="#Learning_Rates" class="headerlink" title="<strong>Learning Rates</strong>"></a><strong>Learning Rates</strong></h1><h3 id="u6700_u7B80_u5355_u7684_u7528_u6CD5_uFF1A_u5BF9_u4E8E_u6240_u6709_u7684_u53C2_u6570_uFF0C_u4E00_u76F4_u90FD_u4FDD_u6301_u56FA_u5B9A_u4E0D_u53D8_u3002"><a href="#u6700_u7B80_u5355_u7684_u7528_u6CD5_uFF1A_u5BF9_u4E8E_u6240_u6709_u7684_u53C2_u6570_uFF0C_u4E00_u76F4_u90FD_u4FDD_u6301_u56FA_u5B9A_u4E0D_u53D8_u3002" class="headerlink" title="最简单的用法：对于所有的参数，一直都保持固定不变。"></a>最简单的用法：对于所有的参数，一直都保持固定不变。</h3><h3 id="u8BA9_u5B66_u4E60_u7387_uFF08learning_rates_uFF09_u9012_u51CF_u4F1A_u6709_u66F4_u597D_u7684_u6548_u679C_uFF1A"><a href="#u8BA9_u5B66_u4E60_u7387_uFF08learning_rates_uFF09_u9012_u51CF_u4F1A_u6709_u66F4_u597D_u7684_u6548_u679C_uFF1A" class="headerlink" title="让学习率（learning rates）递减会有更好的效果："></a>让学习率（learning rates）递减会有更好的效果：</h3><p><img src="http://img.blog.csdn.net/20150706155330741" alt="这里写图片描述"></p>
+<h3 id="u53EF_u4EE5_u4F7F_u7528_u4E00_u4E9B_u4E0D_u7528_u8BBE_u7F6E_u5B66_u4E60_u7387_u7684_u7B97_u6CD5_u5305_uFF1A_u5982L-FBGS_uFF0CAdaGrad_u3002"><a href="#u53EF_u4EE5_u4F7F_u7528_u4E00_u4E9B_u4E0D_u7528_u8BBE_u7F6E_u5B66_u4E60_u7387_u7684_u7B97_u6CD5_u5305_uFF1A_u5982L-FBGS_uFF0CAdaGrad_u3002" class="headerlink" title="可以使用一些不用设置学习率的算法包：如L-FBGS，AdaGrad。"></a>可以使用一些不用设置学习率的算法包：如L-FBGS，AdaGrad。</h3><h3 id="AdaGrad_uFF08Adaptive_learning_rates_uFF09_uFF1A_u5B66_u4E60_u7387_uFF08learning_rates_uFF09_u4F1A_u6839_u636E_u4E0D_u540C_u53C2_u6570_u53D1_u751F_u6539_u53D8_u3002_u5C31word_vector_u800C_u8A00_uFF0C_u4F7F_u7528AdaGrad_u7684_u65F6_u5019_uFF0C_u5BF9_u4E8E_u5C11_u51FA_u73B0_u7684_u8BCD_u7684word_vector_uFF0C_u5176_u5B66_u4E60_u7387_u4F1A_u6BD4_u9891_u7E41_u51FA_u73B0_u8BCD_u7684word_vector_u66F4_u5927_u3002_u4E5F_u5C31_u662F_u8BF4_u5C11_u51FA_u73B0_u7684_u8BCD_u7684word_vector_u4F1A_u5F97_u5230_u66F4_u5927_u7684_u66F4_u65B0_u7387_uFF1A"><a href="#AdaGrad_uFF08Adaptive_learning_rates_uFF09_uFF1A_u5B66_u4E60_u7387_uFF08learning_rates_uFF09_u4F1A_u6839_u636E_u4E0D_u540C_u53C2_u6570_u53D1_u751F_u6539_u53D8_u3002_u5C31word_vector_u800C_u8A00_uFF0C_u4F7F_u7528AdaGrad_u7684_u65F6_u5019_uFF0C_u5BF9_u4E8E_u5C11_u51FA_u73B0_u7684_u8BCD_u7684word_vector_uFF0C_u5176_u5B66_u4E60_u7387_u4F1A_u6BD4_u9891_u7E41_u51FA_u73B0_u8BCD_u7684word_vector_u66F4_u5927_u3002_u4E5F_u5C31_u662F_u8BF4_u5C11_u51FA_u73B0_u7684_u8BCD_u7684word_vector_u4F1A_u5F97_u5230_u66F4_u5927_u7684_u66F4_u65B0_u7387_uFF1A" class="headerlink" title="AdaGrad（Adaptive learning rates）：学习率（learning rates）会根据不同参数发生改变。就word vector而言，使用AdaGrad的时候，对于少出现的词的word vector，其学习率会比频繁出现词的word vector更大。也就是说少出现的词的word vector会得到更大的更新率："></a>AdaGrad（Adaptive learning rates）：学习率（learning rates）会根据不同参数发生改变。就word vector而言，使用AdaGrad的时候，对于少出现的词的word vector，其学习率会比频繁出现词的word vector更大。也就是说少出现的词的word vector会得到更大的更新率：</h3><p><img src="http://img.blog.csdn.net/20150707123350229" alt="这里写图片描述"><br>因为公式里面每一次迭代的梯度会除以历史梯度之和。也就是说历史上更新太多次之后，接下来就要打折扣了。历史上很少更新，那么每一次更新都会被重视。但是这相当于修改了梯度，是否还能收敛到原来的极值是一个问题，所以结果可能会有偏差。</p>
+<h1 id="Long-_AD_u2010Term_Dependencies_and_Clipping_Trick"><a href="#Long-_AD_u2010Term_Dependencies_and_Clipping_Trick" class="headerlink" title="<strong>Long-­‐Term Dependencies and Clipping Trick</strong>"></a><strong>Long-­‐Term Dependencies and Clipping Trick</strong></h1><h3 id="u5BF9_u4E8ERNN_u8FD9_u79CD_u7ED3_u6784_u5F88_u6DF1_u7684_u7F51_u7EDC_u6A21_u578B_uFF0C_u6BCF_u4E00_u6B21_u7684_u68AF_u5EA6_u8BA1_u7B97_u90FD_u4F1A_u8054_u7CFB_u5230_u4E4B_u524D_u7684_u8BA1_u7B97_uFF08_u8FDE_u9501_u6548_u5E94_uFF09_uFF0C_u6240_u4EE5_u68AF_u5EA6_u6700_u540E_u4F1A_u53D8_u5F97_u975E_u5E38_u5927_u6216_u8005_u975E_u5E38_u5C0F_uFF0C_u4ECE_u800C_u5BFC_u81F4_u68AF_u5EA6_u4E0B_u964D_u5D29_u6E83_u3002Mikolov_u63D0_u51FA_u4E86_u4E00_u4E2Aclip_gradients_to_a_maximum_value_u7684_u601D_u60F3_uFF08_u76F4_u63A5_u5BF9_u68AF_u5EA6_u8FDB_u884C_u4FEE_u6539_uFF0C_u4F46_u662F_u8FD9_u76F8_u5F53_u4E8E_u4FEE_u6539_u4E86_u76EE_u6807_u51FD_u6570_uFF0C_u662F_u5426_u8FD8_u80FD_u6536_u655B_u5230_u539F_u6765_u7684_u6781_u503C_u8FD8_u662F_u4E00_u4E2A_u95EE_u9898_uFF0C_u6240_u4EE5_u7ED3_u679C_u53EF_u80FD_u4F1A_u6709_u504F_u5DEE_u3002_u800C_u7C7B_u4F3Cdropout_u90A3_u4E9B_u5219_u6CA1_u6709_u5BF9_u68AF_u5EA6_u8FDB_u884C_u4FEE_u6539_uFF09_uFF0C_u8FD9_u5BF9RNN_u6A21_u578B_u6709_u5F88_u5927_u7684_u5F71_u54CD_u3002"><a href="#u5BF9_u4E8ERNN_u8FD9_u79CD_u7ED3_u6784_u5F88_u6DF1_u7684_u7F51_u7EDC_u6A21_u578B_uFF0C_u6BCF_u4E00_u6B21_u7684_u68AF_u5EA6_u8BA1_u7B97_u90FD_u4F1A_u8054_u7CFB_u5230_u4E4B_u524D_u7684_u8BA1_u7B97_uFF08_u8FDE_u9501_u6548_u5E94_uFF09_uFF0C_u6240_u4EE5_u68AF_u5EA6_u6700_u540E_u4F1A_u53D8_u5F97_u975E_u5E38_u5927_u6216_u8005_u975E_u5E38_u5C0F_uFF0C_u4ECE_u800C_u5BFC_u81F4_u68AF_u5EA6_u4E0B_u964D_u5D29_u6E83_u3002Mikolov_u63D0_u51FA_u4E86_u4E00_u4E2Aclip_gradients_to_a_maximum_value_u7684_u601D_u60F3_uFF08_u76F4_u63A5_u5BF9_u68AF_u5EA6_u8FDB_u884C_u4FEE_u6539_uFF0C_u4F46_u662F_u8FD9_u76F8_u5F53_u4E8E_u4FEE_u6539_u4E86_u76EE_u6807_u51FD_u6570_uFF0C_u662F_u5426_u8FD8_u80FD_u6536_u655B_u5230_u539F_u6765_u7684_u6781_u503C_u8FD8_u662F_u4E00_u4E2A_u95EE_u9898_uFF0C_u6240_u4EE5_u7ED3_u679C_u53EF_u80FD_u4F1A_u6709_u504F_u5DEE_u3002_u800C_u7C7B_u4F3Cdropout_u90A3_u4E9B_u5219_u6CA1_u6709_u5BF9_u68AF_u5EA6_u8FDB_u884C_u4FEE_u6539_uFF09_uFF0C_u8FD9_u5BF9RNN_u6A21_u578B_u6709_u5F88_u5927_u7684_u5F71_u54CD_u3002" class="headerlink" title="对于RNN这种结构很深的网络模型，每一次的梯度计算都会联系到之前的计算（连锁效应），所以梯度最后会变得非常大或者非常小，从而导致梯度下降崩溃。Mikolov提出了一个clip gradients to a maximum value的思想（直接对梯度进行修改，但是这相当于修改了目标函数，是否还能收敛到原来的极值还是一个问题，所以结果可能会有偏差。而类似dropout那些则没有对梯度进行修改），这对RNN模型有很大的影响。"></a>对于RNN这种结构很深的网络模型，每一次的梯度计算都会联系到之前的计算（连锁效应），所以梯度最后会变得非常大或者非常小，从而导致梯度下降崩溃。Mikolov提出了一个clip gradients to a maximum value的思想（直接对梯度进行修改，但是这相当于修改了目标函数，是否还能收敛到原来的极值还是一个问题，所以结果可能会有偏差。而类似dropout那些则没有对梯度进行修改），这对RNN模型有很大的影响。</h3><h1 id="Prevent_overfiting_3A_Model_Size_and_Regularization"><a href="#Prevent_overfiting_3A_Model_Size_and_Regularization" class="headerlink" title="<strong>Prevent overfiting: Model Size and Regularization</strong>"></a><strong>Prevent overfiting: Model Size and Regularization</strong></h1><h3 id="u7B80_u5316_u6A21_u578B_uFF0C_u6BD4_u5982_u51CF_u5C11hidden_layer_u5C42_u6570_u6216_u66FE_u6BCF_u5C42_u7684_u7684unit_u6570"><a href="#u7B80_u5316_u6A21_u578B_uFF0C_u6BD4_u5982_u51CF_u5C11hidden_layer_u5C42_u6570_u6216_u66FE_u6BCF_u5C42_u7684_u7684unit_u6570" class="headerlink" title="简化模型，比如减少hidden layer层数或曾每层的的unit数"></a>简化模型，比如减少hidden layer层数或曾每层的的unit数</h3><h3 id="u4F7F_u7528L1_u6216_u8005L2_u8303_u5F0F_u5BF9_u6743_u503CW_u8FDB_u884Cregularization"><a href="#u4F7F_u7528L1_u6216_u8005L2_u8303_u5F0F_u5BF9_u6743_u503CW_u8FDB_u884Cregularization" class="headerlink" title="使用L1或者L2范式对权值W进行regularization"></a>使用L1或者L2范式对权值W进行regularization</h3><h3 id="Early_Stopping_uFF1A_u9009_u62E9_u4F7Fcv_set_u9519_u8BEF_u7387_u5C0F_u7684_u6A21_u578B_u53C2_u6570"><a href="#Early_Stopping_uFF1A_u9009_u62E9_u4F7Fcv_set_u9519_u8BEF_u7387_u5C0F_u7684_u6A21_u578B_u53C2_u6570" class="headerlink" title="Early Stopping：选择使cv set错误率小的模型参数"></a>Early Stopping：选择使cv set错误率小的模型参数</h3><h3 id="u5BF9hidden_layer_u5C42_u7684activation_u8FDB_u884C_u7A00_u758F_u6027_u9650_u5236_uFF1A"><a href="#u5BF9hidden_layer_u5C42_u7684activation_u8FDB_u884C_u7A00_u758F_u6027_u9650_u5236_uFF1A" class="headerlink" title="对hidden layer层的activation进行稀疏性限制："></a>对hidden layer层的activation进行稀疏性限制：</h3><p><img src="http://img.blog.csdn.net/20150706172250874" alt="这里写图片描述"></p>
+<h1 id="Prevent_Feature_Co-_AD_u2010adaptation"><a href="#Prevent_Feature_Co-_AD_u2010adaptation" class="headerlink" title="<strong>Prevent Feature Co-­‐adaptation</strong>"></a><strong>Prevent Feature Co-­‐adaptation</strong></h1><h3 id="Dropout_uFF1A"><a href="#Dropout_uFF1A" class="headerlink" title="Dropout："></a>Dropout：</h3><h4 id="1_uFF09_u8BAD_u7EC3_u65F6_uFF1A_u4F7F_u7528SGD_u65F6_uFF0C_u5BF9_u4E8E_u6BCF_u4E00_u4E2A_u8BAD_u7EC3_u6837_u672C_uFF0C_u968F_u673A_u7684_u5C06_u8F93_u5165_u5C42_u768450_25unit_u8BBE_u7F6E_u4E3A0"><a href="#1_uFF09_u8BAD_u7EC3_u65F6_uFF1A_u4F7F_u7528SGD_u65F6_uFF0C_u5BF9_u4E8E_u6BCF_u4E00_u4E2A_u8BAD_u7EC3_u6837_u672C_uFF0C_u968F_u673A_u7684_u5C06_u8F93_u5165_u5C42_u768450_25unit_u8BBE_u7F6E_u4E3A0" class="headerlink" title="1）训练时：使用SGD时，对于每一个训练样本，随机的将输入层的50%unit设置为0"></a>1）训练时：使用SGD时，对于每一个训练样本，随机的将输入层的50%unit设置为0</h4><h4 id="2_uFF09_u6D4B_u8BD5_u65F6_uFF08test_time_uFF09_uFF1A_u5C06_u6743_u91CDW_u7684_u503C_u51CF_u534A"><a href="#2_uFF09_u6D4B_u8BD5_u65F6_uFF08test_time_uFF09_uFF1A_u5C06_u6743_u91CDW_u7684_u503C_u51CF_u534A" class="headerlink" title="2）测试时（test time）：将权重W的值减半"></a>2）测试时（test time）：将权重W的值减半</h4><h4 id="3_uFF09naive_bayes_u91CC_u6BCF_u4E2A_u53C2_u6570_u90FD_u662F_u72EC_u7ACB_u7684_uFF0Cnaive_u5047_u8BBE_u3002_u4F46_u662Flogistic_u56DE_u5F52_uFF0C_u5176_u5B9E_u4E5F_u5E94_u8BE5_u5305_u62EC_u795E_u7ECF_u7F51_u7EDC_u4E00_u5927_u7C7B_uFF0C_u53C2_u6570_u4E4B_u95F4_u662F_u4EA4_u9519_u878D_u5408_u7684_u3002dropout_u662F_u60F3_u5728_u4E24_u8005_u4E4B_u95F4_u7528_u968F_u673A_u786C_u5207_u65AD_u7684_u65B9_u5F0F_uFF0C_u53D6_u4E00_u4E2A_u5E73_u8861_u70B9_u3002"><a href="#3_uFF09naive_bayes_u91CC_u6BCF_u4E2A_u53C2_u6570_u90FD_u662F_u72EC_u7ACB_u7684_uFF0Cnaive_u5047_u8BBE_u3002_u4F46_u662Flogistic_u56DE_u5F52_uFF0C_u5176_u5B9E_u4E5F_u5E94_u8BE5_u5305_u62EC_u795E_u7ECF_u7F51_u7EDC_u4E00_u5927_u7C7B_uFF0C_u53C2_u6570_u4E4B_u95F4_u662F_u4EA4_u9519_u878D_u5408_u7684_u3002dropout_u662F_u60F3_u5728_u4E24_u8005_u4E4B_u95F4_u7528_u968F_u673A_u786C_u5207_u65AD_u7684_u65B9_u5F0F_uFF0C_u53D6_u4E00_u4E2A_u5E73_u8861_u70B9_u3002" class="headerlink" title="3）naive bayes里每个参数都是独立的，naive假设。但是logistic回归，其实也应该包括神经网络一大类，参数之间是交错融合的。dropout是想在两者之间用随机硬切断的方式，取一个平衡点。"></a>3）naive bayes里每个参数都是独立的，naive假设。但是logistic回归，其实也应该包括神经网络一大类，参数之间是交错融合的。dropout是想在两者之间用随机硬切断的方式，取一个平衡点。</h4><h4 id="4_uFF09_u6BD4_u5982_u8F93_u5165x1_2Cx2_2Cx3_u3002_u53C2_u6570w1_2Cw2_2Cw3_u3002_u5F53_u968F_u673Ax2_u4E3A0_u65F6_uFF0C_u5C31_u6210_u4E86w1x1+w3x3_u3002_u5728_u8FD9_u4E00_u6B21_u8F93_u5165_u4E2D_uFF0Cw1_2Cw3_u5C31_u548Cw2_u6CA1_u6709_u4EA4_u53C9_u4E86"><a href="#4_uFF09_u6BD4_u5982_u8F93_u5165x1_2Cx2_2Cx3_u3002_u53C2_u6570w1_2Cw2_2Cw3_u3002_u5F53_u968F_u673Ax2_u4E3A0_u65F6_uFF0C_u5C31_u6210_u4E86w1x1+w3x3_u3002_u5728_u8FD9_u4E00_u6B21_u8F93_u5165_u4E2D_uFF0Cw1_2Cw3_u5C31_u548Cw2_u6CA1_u6709_u4EA4_u53C9_u4E86" class="headerlink" title="4）比如输入x1,x2,x3。参数w1,w2,w3。当随机x2为0时，就成了w1x1+w3x3。在这一次输入中，w1,w3就和w2没有交叉了"></a>4）比如输入x1,x2,x3。参数w1,w2,w3。当随机x2为0时，就成了w1x1+w3x3。在这一次输入中，w1,w3就和w2没有交叉了</h4><h4 id="5_uFF09_u53EF_u4EE5_u4F5C_u4E3Aregularization_u5DE5_u5177_u6765_u4F7F_u7528"><a href="#5_uFF09_u53EF_u4EE5_u4F5C_u4E3Aregularization_u5DE5_u5177_u6765_u4F7F_u7528" class="headerlink" title="5）可以作为regularization工具来使用"></a>5）可以作为regularization工具来使用</h4><h1 id="Deep_Learning_Tricks_of_the_Trade"><a href="#Deep_Learning_Tricks_of_the_Trade" class="headerlink" title="<strong>Deep Learning Tricks of the Trade</strong>"></a><strong>Deep Learning Tricks of the Trade</strong></h1><h3 id="u65E0_u76D1_u7763_u7684pre-training"><a href="#u65E0_u76D1_u7763_u7684pre-training" class="headerlink" title="无监督的pre-training"></a>无监督的pre-training</h3><h3 id="SGD_u548Clearning_rate"><a href="#SGD_u548Clearning_rate" class="headerlink" title="SGD和learning rate"></a>SGD和learning rate</h3><h3 id="u5404_u7C7B_u4E3B_u8981_u53C2_u6570_u7684_u8BBE_u5B9A_uFF1A"><a href="#u5404_u7C7B_u4E3B_u8981_u53C2_u6570_u7684_u8BBE_u5B9A_uFF1A" class="headerlink" title="各类主要参数的设定："></a>各类主要参数的设定：</h3><h4 id="1_uFF09_u5B66_u4E60_u7387_26amp_3Bearly_stopping"><a href="#1_uFF09_u5B66_u4E60_u7387_26amp_3Bearly_stopping" class="headerlink" title="1）学习率&amp;early stopping"></a>1）学习率&amp;early stopping</h4><h4 id="2_uFF09_u5C0F_u6279_u5EA6minibatch"><a href="#2_uFF09_u5C0F_u6279_u5EA6minibatch" class="headerlink" title="2）小批度minibatch"></a>2）小批度minibatch</h4><h4 id="3_uFF09_u53C2_u6570_u7684_u521D_u59CB_u5316"><a href="#3_uFF09_u53C2_u6570_u7684_u521D_u59CB_u5316" class="headerlink" title="3）参数的初始化"></a>3）参数的初始化</h4><h4 id="4_uFF09hidden_units_u7684_u6570_u91CF"><a href="#4_uFF09hidden_units_u7684_u6570_u91CF" class="headerlink" title="4）hidden units的数量"></a>4）hidden units的数量</h4><h4 id="5_uFF09L1_u548CL2_u8303_u6570_u7684weight_decay"><a href="#5_uFF09L1_u548CL2_u8303_u6570_u7684weight_decay" class="headerlink" title="5）L1和L2范数的weight decay"></a>5）L1和L2范数的weight decay</h4><h4 id="6_uFF09_u7A00_u758F_u6027_u9650_u5236_u548Cregularization"><a href="#6_uFF09_u7A00_u758F_u6027_u9650_u5236_u548Cregularization" class="headerlink" title="6）稀疏性限制和regularization"></a>6）稀疏性限制和regularization</h4><h3 id="u5982_u4F55_u6709_u6548_u7387_u7684_u8BBE_u7F6E_u6A21_u578B_u7684_u5404_u4E2A_u4E3B_u8981_u53C2_u6570_uFF1F_u968F_u673A_u8BBE_u7F6E_uFF01"><a href="#u5982_u4F55_u6709_u6548_u7387_u7684_u8BBE_u7F6E_u6A21_u578B_u7684_u5404_u4E2A_u4E3B_u8981_u53C2_u6570_uFF1F_u968F_u673A_u8BBE_u7F6E_uFF01" class="headerlink" title="如何有效率的设置模型的各个主要参数？随机设置！"></a>如何有效率的设置模型的各个主要参数？随机设置！</h3><h3 id="u53C2_u8003_uFF1AY-Bengio_282012_29_2C_u201CPractical_Recommendations_for_Gradient-_AD_u2010Based_Training_of_Deep_Architectures_u201D"><a href="#u53C2_u8003_uFF1AY-Bengio_282012_29_2C_u201CPractical_Recommendations_for_Gradient-_AD_u2010Based_Training_of_Deep_Architectures_u201D" class="headerlink" title="参考：Y.Bengio(2012),“Practical Recommendations for Gradient-­‐Based Training of Deep Architectures”"></a>参考：Y.Bengio(2012),“Practical Recommendations for Gradient-­‐Based Training of Deep Architectures”</h3><h1 id="Language_Models"><a href="#Language_Models" class="headerlink" title="<strong>Language Models</strong>"></a><strong>Language Models</strong></h1><h3 id="u8BED_u8A00_u6A21_u578B_u4E2D_u8BA1_u7B97_u4E00_u7CFB_u5217_u5355_u8BCD_u76F8_u5173_u7684_u6982_u7387_uFF1AP_uFF08w1_2C_u2026_2CwT_uFF09_uFF1A"><a href="#u8BED_u8A00_u6A21_u578B_u4E2D_u8BA1_u7B97_u4E00_u7CFB_u5217_u5355_u8BCD_u76F8_u5173_u7684_u6982_u7387_uFF1AP_uFF08w1_2C_u2026_2CwT_uFF09_uFF1A" class="headerlink" title="语言模型中计算一系列单词相关的概率：P（w<sub>1</sub>,…,w<sub>T</sub>）："></a>语言模型中计算一系列单词相关的概率：P（w<sub>1</sub>,…,w<sub>T</sub>）：</h3><p><img src="http://img.blog.csdn.net/20150706220615108" alt="这里写图片描述"><br>根据前m-1个词计算前m个词的概率</p>
+<h3 id="u4F20_u7EDF_u7684_u9488_u5BF9_u8BED_u8A00_u6A21_u578B_u7684_u795E_u7ECF_u7F51_u7EDC_uFF1A"><a href="#u4F20_u7EDF_u7684_u9488_u5BF9_u8BED_u8A00_u6A21_u578B_u7684_u795E_u7ECF_u7F51_u7EDC_uFF1A" class="headerlink" title="传统的针对语言模型的神经网络："></a>传统的针对语言模型的神经网络：</h3><p><img src="http://img.blog.csdn.net/20150706221235387" alt="这里写图片描述"><br>训练时只能是固定不变的context window size</p>
+<h1 id="Recurrent_Neural_Networks_21"><a href="#Recurrent_Neural_Networks_21" class="headerlink" title="<strong>Recurrent Neural Networks!</strong>"></a><strong>Recurrent Neural Networks!</strong></h1><h3 id="u8BAD_u7EC3_u65F6_uFF0C_u5728_u6BCF_u4E2A_u65F6_u95F4_u70B9__uFF08time_step_uFF09_u4E0A_u5C06word_vector_u4E0E_u5BF9_u5E94_u7684weight_u4E00_u8D77_u653E_u8FDB_u6A21_u578B_u8BAD_u7EC3_uFF1A"><a href="#u8BAD_u7EC3_u65F6_uFF0C_u5728_u6BCF_u4E2A_u65F6_u95F4_u70B9__uFF08time_step_uFF09_u4E0A_u5C06word_vector_u4E0E_u5BF9_u5E94_u7684weight_u4E00_u8D77_u653E_u8FDB_u6A21_u578B_u8BAD_u7EC3_uFF1A" class="headerlink" title="训练时，在每个时间点 （time step）上将word vector与对应的weight一起放进模型训练："></a>训练时，在每个时间点 （time step）上将word vector与对应的weight一起放进模型训练：</h3><p><img src="http://img.blog.csdn.net/20150706221634759" alt="这里写图片描述"><br><img src="http://img.blog.csdn.net/20150706221736825" alt="这里写图片描述"></p>
+<h3 id="h0_u662F_u7B2C0_u4E2Ahidden_layer_u7684_u521D_u59CB_u5316_u5411_u91CF"><a href="#h0_u662F_u7B2C0_u4E2Ahidden_layer_u7684_u521D_u59CB_u5316_u5411_u91CF" class="headerlink" title="h<sub>0</sub>是第0个hidden layer的初始化向量"></a>h<sub>0</sub>是第0个hidden layer的初始化向量</h3><h3 id="x_u3010t_u3011_u662F_u5728time_step_u4E3At_u65F6_uFF0Cword_vector_u77E9_u9635L_u4E2D_u5BF9_u5E94_u7684_u4E00_u4E2A_u9879_u5411_u91CF_uFF08_u5373_u5176_u4E2D_u7684_u4E00_u4E2Aword_vector_uFF09_uFF1A"><a href="#x_u3010t_u3011_u662F_u5728time_step_u4E3At_u65F6_uFF0Cword_vector_u77E9_u9635L_u4E2D_u5BF9_u5E94_u7684_u4E00_u4E2A_u9879_u5411_u91CF_uFF08_u5373_u5176_u4E2D_u7684_u4E00_u4E2Aword_vector_uFF09_uFF1A" class="headerlink" title="x<sub>【t】</sub>是在time step为t时，word vector矩阵L中对应的一个项向量（即其中的一个word vector）："></a>x<sub>【t】</sub>是在time step为t时，word vector矩阵L中对应的一个项向量（即其中的一个word vector）：</h3><p><img src="http://img.blog.csdn.net/20150706222943247" alt="这里写图片描述"></p>
+<h3 id="u5BF9_u4E8E_u9876_u5C42_u7684y_uFF1A"><a href="#u5BF9_u4E8E_u9876_u5C42_u7684y_uFF1A" class="headerlink" title="对于顶层的y："></a>对于顶层的y：</h3><p><img src="http://img.blog.csdn.net/20150706223102567" alt="这里写图片描述"><br>是整个词库的概率分布（预测的是单词），交叉熵不变：<br><img src="http://img.blog.csdn.net/20150706223238035" alt="这里写图片描述"></p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/10/04/NLP/deep-learning-for-nature-language-processing-e7-ac-ac-e4-ba-94-e8-ae-b2/" rel="next" title="Deep Learning for Nature Language Processing --- 第五讲">
+                <i class="fa fa-chevron-left"></i> Deep Learning for Nature Language Processing --- 第五讲
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/10/04/NLP/deep-learning-for-nature-language-processing-e7-ac-ac-e4-b8-83-e8-ae-b2/" rel="prev" title="Deep Learning for Nature Language Processing --- 第七讲">
+                Deep Learning for Nature Language Processing --- 第七讲 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+        </div>
+
+        
+
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="John Doe" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">John Doe</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Overview_Today_3A"><span class="nav-number">1.</span> <span class="nav-text">Overview Today:</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u4E00_u4E9B_u6709_u7528_u7684_u7B56_u7565_u548C_u6280_u5DE7_uFF1A"><span class="nav-number">1.0.1.</span> <span class="nav-text">一些有用的策略和技巧：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-_u591A_u4EFB_u52A1_u5B66_u4E60_uFF08multi-task_learning_uFF09"><span class="nav-number">1.0.1.1.</span> <span class="nav-text">1.多任务学习（multi-task learning）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-_u975E_u7EBF_u6027_u51FD_u6570_uFF08Nonlinearities_uFF09"><span class="nav-number">1.0.1.2.</span> <span class="nav-text">2.非线性函数（Nonlinearities）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-_u68C0_u67E5_u6C42_u5BFC_u662F_u5426_u6B63_u786E_uFF08gradient_check_uFF09"><span class="nav-number">1.0.1.3.</span> <span class="nav-text">3.检查求导是否正确（gradient check）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-Momentum_2CAdaGrad"><span class="nav-number">1.0.1.4.</span> <span class="nav-text">4.Momentum,AdaGrad</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u8BED_u8A00_u6A21_u578B_uFF08Language_Model_uFF09"><span class="nav-number">1.0.2.</span> <span class="nav-text">语言模型（Language Model）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RNN"><span class="nav-number">1.0.3.</span> <span class="nav-text">RNN</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Multi-_ADtask_learning_/_Weight_sharing"><span class="nav-number">2.</span> <span class="nav-text">Multi-­task learning / Weight sharing</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u548C_u4E0A_u4E00_u7AE0_u8282_u63D0_u5230_u7684NN_u7C7B_u4F3C_uFF0C_u4E0D_u8FC7_u5728Multi-_ADtask_learning_u4E2D_uFF0C_u6700_u540E_u4E00_u5C42_u7531_u4E00_u4E2Ascalar_u53D8_u6210_u4E86softmax__u5206_u7C7B_u5668_uFF08_u8BAD_u7EC3_u65F6_u5229_u7528_u53CD_u5411_u4F20_u64AD_uFF0C_u83B7_u53D6_u9519_u8BEF_u6D41error_uFF09_uFF1A"><span class="nav-number">2.0.1.</span> <span class="nav-text">和上一章节提到的NN类似，不过在Multi-­task learning中，最后一层由一个scalar变成了softmax 分类器（训练时利用反向传播，获取错误流error）：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u5176_u5B9E_u548C_u8BAD_u7EC3softmax_uFF08_u524D_u9762_u8BB2_u8FC7_uFF09_u5DEE_u4E0D_u591A_uFF0C_u53EA_u4E0D_u8FC7_u5BF9_u4E8Edeep_learning_u7684_u6A21_u578B_u6765_u8BB2_uFF0C_u8F93_u5165x_u4E5F_u7ECF_u8FC7_u4E86_u8BAD_u7EC3_uFF0C_u8F6C_u6362_u6210activation_u3002"><span class="nav-number">2.0.2.</span> <span class="nav-text">其实和训练softmax（前面讲过）差不多，只不过对于deep learning的模型来讲，输入x也经过了训练，转换成activation。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Main_Idea_uFF1A_u53EF_u4EE5_u5171_u4EAB_u4E24_u4E2A_u6A21_u578B_u4E2D_uFF0Chidden_layer_u5BF9_u5E94_u7684_u6743_u91CD_uFF0C_u548Cword_vectors_uFF08_u5373_u8F93_u5165_uFF09_u3002_u800C_u53EA_u8BAD_u7EC3_u9876_u5C42_u7684softmax_u5206_u7C7B_u5668_28_u603B_u7684cost_function_u5C31_u662F_u4E24_u4E2A_u6A21_u578B_u7684_u4EA4_u53C9_u71B5_u4E4B_u548C_29_3A"><span class="nav-number">2.0.3.</span> <span class="nav-text">Main Idea：可以共享两个模型中，hidden layer对应的权重，和word vectors（即输入）。而只训练顶层的softmax分类器(总的cost function就是两个模型的交叉熵之和):</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u4E0B_u56FE_u8BF4_u660E_u5728NLP_u4E2D_uFF0Cword_vector_u7684pre-training_u662F_u4E00_u4E2A_u5F88_u91CD_u8981_u7684_u56E0_u7D20_uFF1A"><span class="nav-number">2.0.4.</span> <span class="nav-text">下图说明在NLP中，word vector的pre-training是一个很重要的因素：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#General_Strategy_for_Successful_NNets"><span class="nav-number">3.</span> <span class="nav-text">General Strategy for Successful NNets</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-_u9009_u62E9_u5408_u9002_u7684_u6A21_u578B_u7ED3_u6784_uFF1A"><span class="nav-number">3.0.1.</span> <span class="nav-text">1.选择合适的模型结构：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1_uFF09_u7ED3_u6784_uFF1A_u5355_u4E2A_u8BCD_uFF08single_word_uFF09_uFF0C_u52A0_u7A97_uFF08fixed_window_uFF09_uFF0Cbag_of_bags_uFF0C_recursive_VS_recurrent_uFF0CCNN_uFF0C_u57FA_u4E8E_u53E5_u5B50_u8FD8_u662F_u57FA_u4E8E_u6587_u6863_uFF08sentence_based_VS_document_uFF09"><span class="nav-number">3.0.1.1.</span> <span class="nav-text">1）结构：单个词（single word），加窗（fixed window），bag of  bags， recursive VS recurrent，CNN，基于句子还是基于文档（sentence based VS document）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2_uFF09_u975E_u7EBF_u6027_u51FD_u6570_u7684_u9009_u62E9"><span class="nav-number">3.0.1.2.</span> <span class="nav-text">2）非线性函数的选择</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-_u4F7F_u7528gradient_check_u7684_u65B9_u6CD5_u68C0_u67E5_u662F_u5426_u5B58_u5728bug"><span class="nav-number">3.0.2.</span> <span class="nav-text">2.使用gradient check的方法检查是否存在bug</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-_u53C2_u6570_u7684_u521D_u59CB_u5316"><span class="nav-number">3.0.3.</span> <span class="nav-text">3.参数的初始化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-_u4F18_u5316_u7684_u7B56_u7565"><span class="nav-number">3.0.4.</span> <span class="nav-text">4.优化的策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-_u68C0_u67E5_u6A21_u578B_u5BF9_u6570_u636E_u96C6_u662F_u5426_u8FC7_u62DF_u5408_uFF08overfit_uFF09_uFF1A"><span class="nav-number">3.0.5.</span> <span class="nav-text">5.检查模型对数据集是否过拟合（overfit）：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1_uFF09_u5982_u679C_u6CA1_u6709_uFF0C_u6539_u53D8_u6A21_u578B_u7ED3_u6784_uFF0C_u8BA9_u6A21_u578B_u66F4_u201C_u5927_u201D"><span class="nav-number">3.0.5.1.</span> <span class="nav-text">1）如果没有，改变模型结构，让模型更“大”</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2_uFF09_u5982_u679C_u6709_uFF0C_u8FDB_u884Cregularization_u3002"><span class="nav-number">3.0.5.2.</span> <span class="nav-text">2）如果有，进行regularization。</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Non-_AD_u2010lineariHes_3A_What_u2019s_used"><span class="nav-number">4.</span> <span class="nav-text">Non-­‐lineariHes: What’s used</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u5BF9_u4E8E_u6DF1_u5EA6_u5B66_u4E60_u6A21_u578B_uFF0Ctanh_u51FD_u6570_u901A_u5E38_u6BD4sigmoid_u51FD_u6570_u8868_u73B0_u7684_u8981_u66F4_u597D_uFF1A"><span class="nav-number">4.0.1.</span> <span class="nav-text">对于深度学习模型，tanh函数通常比sigmoid函数表现的要更好：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1_uFF09_u4F7F_u7528tanh_u51FD_u6570_u65F6_uFF0C_u6A21_u578B_u53C2_u6570_u7684_u521D_u59CB_u5316_u503C_u66F4_u8D8B_u5411_u4E8E0"><span class="nav-number">4.0.1.1.</span> <span class="nav-text">1）使用tanh函数时，模型参数的初始化值更趋向于0</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2_uFF09_u66F4_u5FEB_u8FBE_u5230_u6536_u655B"><span class="nav-number">4.0.1.2.</span> <span class="nav-text">2）更快达到收敛</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3_uFF09_u6C42_u5BFC_u65B9_u4FBF_uFF1Af_u2019_28z_29_3D1-tanh2_28z_29"><span class="nav-number">4.0.1.3.</span> <span class="nav-text">3）求导方便：f’(z)=1-tanh2(z)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u8FD8_u6709_u5176_u4ED6_u7684_u975E_u7EBF_u6027_u51FD_u6570_u53EF_u4F9B_u9009_u62E9_uFF1A"><span class="nav-number">4.0.2.</span> <span class="nav-text">还有其他的非线性函数可供选择：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u5BF9_u4E8E_u975E_u7EBF_u6027_u51FD_u6570_u7684_u9009_u62E9_uFF0C_u8FD8_u6709_u4E00_u79CDmaxout_network_uFF1A"><span class="nav-number">4.0.3.</span> <span class="nav-text">对于非线性函数的选择，还有一种maxout network：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Gradient_Checks"><span class="nav-number">5.</span> <span class="nav-text">Gradient Checks</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u6B65_u9AA4_uFF1A"><span class="nav-number">5.0.1.</span> <span class="nav-text">步骤：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1_uFF09_u5B8C_u6210_u6C42_u5BFC"><span class="nav-number">5.0.1.1.</span> <span class="nav-text">1）完成求导</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2_uFF09_u5B8C_u6210_u4E0B_u9762_u8FD9_u4E2A_u51FD_u6570_uFF0C_u901A_u5E38_24_5Cepsilon_24__u4E3A10e-4_uFF1A"><span class="nav-number">5.0.1.2.</span> <span class="nav-text">2）完成下面这个函数，通常$\epsilon$ 为10e-4：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3_uFF09_u6BD4_u8F83_u6C42_u5BFC_u51FD_u6570_u548C_u4E0A_u56FE_u51FD_u6570_u7684_u7ED3_u679C_uFF0C_u770B_u7ED3_u679C_u662F_u5426_u76F8_u8FD1_u3002"><span class="nav-number">5.0.1.3.</span> <span class="nav-text">3）比较求导函数和上图函数的结果，看结果是否相近。</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u5982_u679C_u6C42_u5BFC_u51FA_u9519_uFF0C_u53C8_u4E0D_u77E5_u9053_u8BE5_u5982_u4F55_u89E3_u51B3_u3002_u90A3_u4E48_u8BD5_u7740_u5148_u7B80_u5316_u4F60_u7684_u6A21_u578B_u3002_u53EF_u4EE5_u6309_u7167_u4EE5_u4E0B_u6B65_u9AA4_u4E00_u6B65_u6B65_u7684_u6784_u5EFA_u4F60_u7684_u6A21_u578B_uFF1A"><span class="nav-number">5.0.2.</span> <span class="nav-text">如果求导出错，又不知道该如何解决。那么试着先简化你的模型。可以按照以下步骤一步步的构建你的模型：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1_uFF09_u53EA_u6709_u56FA_u5B9A_u7684_u8F93_u5165_u548Csoftmax_uFF08_u5355_u4E2Aunit_uFF09_u5206_u7C7B_u5668"><span class="nav-number">5.0.2.1.</span> <span class="nav-text">1）只有固定的输入和softmax（单个unit）分类器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2_uFF09_u5BF9word_vector_u548Csoftmax_u8FDB_u884C_u53CD_u5411_u4F20_u64AD_u6C42_u5BFC"><span class="nav-number">5.0.2.2.</span> <span class="nav-text">2）对word vector和softmax进行反向传播求导</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3_uFF09_u589E_u52A0_u4E00_u4E2Ahidden_u5C42_uFF0C_u53EA_u5305_u62EC_u4E00_u4E2Ahidden_unit"><span class="nav-number">5.0.2.3.</span> <span class="nav-text">3）增加一个hidden层，只包括一个hidden unit</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4_uFF09_u4E00_u4E2Ahidden_layer_u4E2D_u5305_u62EC_u591A_u4E2Ahidden_unit"><span class="nav-number">5.0.2.4.</span> <span class="nav-text">4）一个hidden layer中包括多个hidden unit</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5_uFF09_u589E_u52A0_u504F_u7F6Ebias"><span class="nav-number">5.0.2.5.</span> <span class="nav-text">5）增加偏置bias</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6_uFF09_u518D_u589E_u52A0_u4E00_u4E2Ahidden_layer"><span class="nav-number">5.0.2.6.</span> <span class="nav-text">6）再增加一个hidden layer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7_uFF09_u589E_u52A0_u4E24_u4E2Asoftmax_u5C42_u7684unit"><span class="nav-number">5.0.2.7.</span> <span class="nav-text">7）增加两个softmax层的unit</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Parameter_Initialization"><span class="nav-number">6.</span> <span class="nav-text">Parameter Initialization</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u5C06hidden_layer_u7684bias_u521D_u59CB_u5316_u4E3A0"><span class="nav-number">6.0.1.</span> <span class="nav-text">将hidden layer的bias初始化为0.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u6743_u91CDW_u7684_u521D_u59CB_u5316_uFF08_u5BF9_u4E8E_u975E_u7EBF_u6027_u51FD_u6570tanh_uFF09_uFF1A_u5C06W_u7684_u53C2_u6570_u5927_u5C0F_u9650_u5236_u5728_uFF08-r_uFF0Cr_uFF09_u4E4B_u95F4_u3002_u5176_u4E2Dr_u7684_u5927_u5C0F_u7531_u4E0B_u9762_u7684_u516C_u5F0F_u51B3_u5B9A_uFF08fan-in_u4E3A_u4E0A_u4E00_u4E2Ahidden_layer_u7684_u5927_u5C0F_uFF0Cfan-out_u4E3A_u4E0B_u4E00hidden_layer_u7684_u5927_u5C0F_uFF09_uFF1A"><span class="nav-number">6.0.2.</span> <span class="nav-text">权重W的初始化（对于非线性函数tanh）：将W的参数大小限制在（-r，r）之间。其中r的大小由下面的公式决定（fan-in为上一个hidden layer的大小，fan-out为下一hidden layer的大小）：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Stochastic_Gradient_Descent__28SGD_29"><span class="nav-number">7.</span> <span class="nav-text">Stochastic Gradient Descent (SGD)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SGD_u6BCF_u4E00_u5C42_u66F4_u65B0_u6743_u503C_u65F6_uFF0C_u53EA_u53D6_u4E00_u4E2A_u6216_u4E00_u90E8_u5206_u7684training_set_uFF1A"><span class="nav-number">7.0.1.</span> <span class="nav-text">SGD每一层更新权值时，只取一个或一部分的training set：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u5BF9_u4E8E_u5927_u7684_u6570_u636E_u96C6_uFF0CSGD_u901A_u5E38_u8868_u73B0_u7684_u6BD4_u6240_u6709_u7684batch_method_u8981_u597D_u3002_u800C_u5BF9_u4E8E_u66F4_u5C0F_u4E00_u70B9_u7684_u6570_u636E_u96C6_uFF0C_u50CF_L-BFGS_u548CCG_u7684_u4E00_u4E9Bbatch_methods_u8868_u73B0_u7684_u8981_u6BD4SGD_u597D_u3002"><span class="nav-number">7.0.2.</span> <span class="nav-text">对于大的数据集，SGD通常表现的比所有的batch method要好。而对于更小一点的数据集，像 L-BFGS和CG的一些batch methods表现的要比SGD好。</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Learning_Rates"><span class="nav-number">8.</span> <span class="nav-text">Learning Rates</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u6700_u7B80_u5355_u7684_u7528_u6CD5_uFF1A_u5BF9_u4E8E_u6240_u6709_u7684_u53C2_u6570_uFF0C_u4E00_u76F4_u90FD_u4FDD_u6301_u56FA_u5B9A_u4E0D_u53D8_u3002"><span class="nav-number">8.0.1.</span> <span class="nav-text">最简单的用法：对于所有的参数，一直都保持固定不变。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u8BA9_u5B66_u4E60_u7387_uFF08learning_rates_uFF09_u9012_u51CF_u4F1A_u6709_u66F4_u597D_u7684_u6548_u679C_uFF1A"><span class="nav-number">8.0.2.</span> <span class="nav-text">让学习率（learning rates）递减会有更好的效果：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u53EF_u4EE5_u4F7F_u7528_u4E00_u4E9B_u4E0D_u7528_u8BBE_u7F6E_u5B66_u4E60_u7387_u7684_u7B97_u6CD5_u5305_uFF1A_u5982L-FBGS_uFF0CAdaGrad_u3002"><span class="nav-number">8.0.3.</span> <span class="nav-text">可以使用一些不用设置学习率的算法包：如L-FBGS，AdaGrad。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AdaGrad_uFF08Adaptive_learning_rates_uFF09_uFF1A_u5B66_u4E60_u7387_uFF08learning_rates_uFF09_u4F1A_u6839_u636E_u4E0D_u540C_u53C2_u6570_u53D1_u751F_u6539_u53D8_u3002_u5C31word_vector_u800C_u8A00_uFF0C_u4F7F_u7528AdaGrad_u7684_u65F6_u5019_uFF0C_u5BF9_u4E8E_u5C11_u51FA_u73B0_u7684_u8BCD_u7684word_vector_uFF0C_u5176_u5B66_u4E60_u7387_u4F1A_u6BD4_u9891_u7E41_u51FA_u73B0_u8BCD_u7684word_vector_u66F4_u5927_u3002_u4E5F_u5C31_u662F_u8BF4_u5C11_u51FA_u73B0_u7684_u8BCD_u7684word_vector_u4F1A_u5F97_u5230_u66F4_u5927_u7684_u66F4_u65B0_u7387_uFF1A"><span class="nav-number">8.0.4.</span> <span class="nav-text">AdaGrad（Adaptive learning rates）：学习率（learning rates）会根据不同参数发生改变。就word vector而言，使用AdaGrad的时候，对于少出现的词的word vector，其学习率会比频繁出现词的word vector更大。也就是说少出现的词的word vector会得到更大的更新率：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Long-_AD_u2010Term_Dependencies_and_Clipping_Trick"><span class="nav-number">9.</span> <span class="nav-text">Long-­‐Term Dependencies and Clipping Trick</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u5BF9_u4E8ERNN_u8FD9_u79CD_u7ED3_u6784_u5F88_u6DF1_u7684_u7F51_u7EDC_u6A21_u578B_uFF0C_u6BCF_u4E00_u6B21_u7684_u68AF_u5EA6_u8BA1_u7B97_u90FD_u4F1A_u8054_u7CFB_u5230_u4E4B_u524D_u7684_u8BA1_u7B97_uFF08_u8FDE_u9501_u6548_u5E94_uFF09_uFF0C_u6240_u4EE5_u68AF_u5EA6_u6700_u540E_u4F1A_u53D8_u5F97_u975E_u5E38_u5927_u6216_u8005_u975E_u5E38_u5C0F_uFF0C_u4ECE_u800C_u5BFC_u81F4_u68AF_u5EA6_u4E0B_u964D_u5D29_u6E83_u3002Mikolov_u63D0_u51FA_u4E86_u4E00_u4E2Aclip_gradients_to_a_maximum_value_u7684_u601D_u60F3_uFF08_u76F4_u63A5_u5BF9_u68AF_u5EA6_u8FDB_u884C_u4FEE_u6539_uFF0C_u4F46_u662F_u8FD9_u76F8_u5F53_u4E8E_u4FEE_u6539_u4E86_u76EE_u6807_u51FD_u6570_uFF0C_u662F_u5426_u8FD8_u80FD_u6536_u655B_u5230_u539F_u6765_u7684_u6781_u503C_u8FD8_u662F_u4E00_u4E2A_u95EE_u9898_uFF0C_u6240_u4EE5_u7ED3_u679C_u53EF_u80FD_u4F1A_u6709_u504F_u5DEE_u3002_u800C_u7C7B_u4F3Cdropout_u90A3_u4E9B_u5219_u6CA1_u6709_u5BF9_u68AF_u5EA6_u8FDB_u884C_u4FEE_u6539_uFF09_uFF0C_u8FD9_u5BF9RNN_u6A21_u578B_u6709_u5F88_u5927_u7684_u5F71_u54CD_u3002"><span class="nav-number">9.0.1.</span> <span class="nav-text">对于RNN这种结构很深的网络模型，每一次的梯度计算都会联系到之前的计算（连锁效应），所以梯度最后会变得非常大或者非常小，从而导致梯度下降崩溃。Mikolov提出了一个clip gradients to a maximum value的思想（直接对梯度进行修改，但是这相当于修改了目标函数，是否还能收敛到原来的极值还是一个问题，所以结果可能会有偏差。而类似dropout那些则没有对梯度进行修改），这对RNN模型有很大的影响。</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Prevent_overfiting_3A_Model_Size_and_Regularization"><span class="nav-number">10.</span> <span class="nav-text">Prevent overfiting: Model Size and Regularization</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u7B80_u5316_u6A21_u578B_uFF0C_u6BD4_u5982_u51CF_u5C11hidden_layer_u5C42_u6570_u6216_u66FE_u6BCF_u5C42_u7684_u7684unit_u6570"><span class="nav-number">10.0.1.</span> <span class="nav-text">简化模型，比如减少hidden layer层数或曾每层的的unit数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u4F7F_u7528L1_u6216_u8005L2_u8303_u5F0F_u5BF9_u6743_u503CW_u8FDB_u884Cregularization"><span class="nav-number">10.0.2.</span> <span class="nav-text">使用L1或者L2范式对权值W进行regularization</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Early_Stopping_uFF1A_u9009_u62E9_u4F7Fcv_set_u9519_u8BEF_u7387_u5C0F_u7684_u6A21_u578B_u53C2_u6570"><span class="nav-number">10.0.3.</span> <span class="nav-text">Early Stopping：选择使cv set错误率小的模型参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u5BF9hidden_layer_u5C42_u7684activation_u8FDB_u884C_u7A00_u758F_u6027_u9650_u5236_uFF1A"><span class="nav-number">10.0.4.</span> <span class="nav-text">对hidden layer层的activation进行稀疏性限制：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Prevent_Feature_Co-_AD_u2010adaptation"><span class="nav-number">11.</span> <span class="nav-text">Prevent Feature Co-­‐adaptation</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Dropout_uFF1A"><span class="nav-number">11.0.1.</span> <span class="nav-text">Dropout：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1_uFF09_u8BAD_u7EC3_u65F6_uFF1A_u4F7F_u7528SGD_u65F6_uFF0C_u5BF9_u4E8E_u6BCF_u4E00_u4E2A_u8BAD_u7EC3_u6837_u672C_uFF0C_u968F_u673A_u7684_u5C06_u8F93_u5165_u5C42_u768450_25unit_u8BBE_u7F6E_u4E3A0"><span class="nav-number">11.0.1.1.</span> <span class="nav-text">1）训练时：使用SGD时，对于每一个训练样本，随机的将输入层的50%unit设置为0</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2_uFF09_u6D4B_u8BD5_u65F6_uFF08test_time_uFF09_uFF1A_u5C06_u6743_u91CDW_u7684_u503C_u51CF_u534A"><span class="nav-number">11.0.1.2.</span> <span class="nav-text">2）测试时（test time）：将权重W的值减半</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3_uFF09naive_bayes_u91CC_u6BCF_u4E2A_u53C2_u6570_u90FD_u662F_u72EC_u7ACB_u7684_uFF0Cnaive_u5047_u8BBE_u3002_u4F46_u662Flogistic_u56DE_u5F52_uFF0C_u5176_u5B9E_u4E5F_u5E94_u8BE5_u5305_u62EC_u795E_u7ECF_u7F51_u7EDC_u4E00_u5927_u7C7B_uFF0C_u53C2_u6570_u4E4B_u95F4_u662F_u4EA4_u9519_u878D_u5408_u7684_u3002dropout_u662F_u60F3_u5728_u4E24_u8005_u4E4B_u95F4_u7528_u968F_u673A_u786C_u5207_u65AD_u7684_u65B9_u5F0F_uFF0C_u53D6_u4E00_u4E2A_u5E73_u8861_u70B9_u3002"><span class="nav-number">11.0.1.3.</span> <span class="nav-text">3）naive bayes里每个参数都是独立的，naive假设。但是logistic回归，其实也应该包括神经网络一大类，参数之间是交错融合的。dropout是想在两者之间用随机硬切断的方式，取一个平衡点。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4_uFF09_u6BD4_u5982_u8F93_u5165x1_2Cx2_2Cx3_u3002_u53C2_u6570w1_2Cw2_2Cw3_u3002_u5F53_u968F_u673Ax2_u4E3A0_u65F6_uFF0C_u5C31_u6210_u4E86w1x1+w3x3_u3002_u5728_u8FD9_u4E00_u6B21_u8F93_u5165_u4E2D_uFF0Cw1_2Cw3_u5C31_u548Cw2_u6CA1_u6709_u4EA4_u53C9_u4E86"><span class="nav-number">11.0.1.4.</span> <span class="nav-text">4）比如输入x1,x2,x3。参数w1,w2,w3。当随机x2为0时，就成了w1x1+w3x3。在这一次输入中，w1,w3就和w2没有交叉了</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5_uFF09_u53EF_u4EE5_u4F5C_u4E3Aregularization_u5DE5_u5177_u6765_u4F7F_u7528"><span class="nav-number">11.0.1.5.</span> <span class="nav-text">5）可以作为regularization工具来使用</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Deep_Learning_Tricks_of_the_Trade"><span class="nav-number">12.</span> <span class="nav-text">Deep Learning Tricks of the Trade</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u65E0_u76D1_u7763_u7684pre-training"><span class="nav-number">12.0.1.</span> <span class="nav-text">无监督的pre-training</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SGD_u548Clearning_rate"><span class="nav-number">12.0.2.</span> <span class="nav-text">SGD和learning rate</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u5404_u7C7B_u4E3B_u8981_u53C2_u6570_u7684_u8BBE_u5B9A_uFF1A"><span class="nav-number">12.0.3.</span> <span class="nav-text">各类主要参数的设定：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1_uFF09_u5B66_u4E60_u7387_26amp_3Bearly_stopping"><span class="nav-number">12.0.3.1.</span> <span class="nav-text">1）学习率&early stopping</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2_uFF09_u5C0F_u6279_u5EA6minibatch"><span class="nav-number">12.0.3.2.</span> <span class="nav-text">2）小批度minibatch</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3_uFF09_u53C2_u6570_u7684_u521D_u59CB_u5316"><span class="nav-number">12.0.3.3.</span> <span class="nav-text">3）参数的初始化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4_uFF09hidden_units_u7684_u6570_u91CF"><span class="nav-number">12.0.3.4.</span> <span class="nav-text">4）hidden units的数量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5_uFF09L1_u548CL2_u8303_u6570_u7684weight_decay"><span class="nav-number">12.0.3.5.</span> <span class="nav-text">5）L1和L2范数的weight decay</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6_uFF09_u7A00_u758F_u6027_u9650_u5236_u548Cregularization"><span class="nav-number">12.0.3.6.</span> <span class="nav-text">6）稀疏性限制和regularization</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u5982_u4F55_u6709_u6548_u7387_u7684_u8BBE_u7F6E_u6A21_u578B_u7684_u5404_u4E2A_u4E3B_u8981_u53C2_u6570_uFF1F_u968F_u673A_u8BBE_u7F6E_uFF01"><span class="nav-number">12.0.4.</span> <span class="nav-text">如何有效率的设置模型的各个主要参数？随机设置！</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u53C2_u8003_uFF1AY-Bengio_282012_29_2C_u201CPractical_Recommendations_for_Gradient-_AD_u2010Based_Training_of_Deep_Architectures_u201D"><span class="nav-number">12.0.5.</span> <span class="nav-text">参考：Y.Bengio(2012),“Practical Recommendations for Gradient-­‐Based Training of Deep Architectures”</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Language_Models"><span class="nav-number">13.</span> <span class="nav-text">Language Models</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u8BED_u8A00_u6A21_u578B_u4E2D_u8BA1_u7B97_u4E00_u7CFB_u5217_u5355_u8BCD_u76F8_u5173_u7684_u6982_u7387_uFF1AP_uFF08w1_2C_u2026_2CwT_uFF09_uFF1A"><span class="nav-number">13.0.1.</span> <span class="nav-text">语言模型中计算一系列单词相关的概率：P（w1,…,wT）：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u4F20_u7EDF_u7684_u9488_u5BF9_u8BED_u8A00_u6A21_u578B_u7684_u795E_u7ECF_u7F51_u7EDC_uFF1A"><span class="nav-number">13.0.2.</span> <span class="nav-text">传统的针对语言模型的神经网络：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Recurrent_Neural_Networks_21"><span class="nav-number">14.</span> <span class="nav-text">Recurrent Neural Networks!</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u8BAD_u7EC3_u65F6_uFF0C_u5728_u6BCF_u4E2A_u65F6_u95F4_u70B9__uFF08time_step_uFF09_u4E0A_u5C06word_vector_u4E0E_u5BF9_u5E94_u7684weight_u4E00_u8D77_u653E_u8FDB_u6A21_u578B_u8BAD_u7EC3_uFF1A"><span class="nav-number">14.0.1.</span> <span class="nav-text">训练时，在每个时间点 （time step）上将word vector与对应的weight一起放进模型训练：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#h0_u662F_u7B2C0_u4E2Ahidden_layer_u7684_u521D_u59CB_u5316_u5411_u91CF"><span class="nav-number">14.0.2.</span> <span class="nav-text">h0是第0个hidden layer的初始化向量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#x_u3010t_u3011_u662F_u5728time_step_u4E3At_u65F6_uFF0Cword_vector_u77E9_u9635L_u4E2D_u5BF9_u5E94_u7684_u4E00_u4E2A_u9879_u5411_u91CF_uFF08_u5373_u5176_u4E2D_u7684_u4E00_u4E2Aword_vector_uFF09_uFF1A"><span class="nav-number">14.0.3.</span> <span class="nav-text">x【t】是在time step为t时，word vector矩阵L中对应的一个项向量（即其中的一个word vector）：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u5BF9_u4E8E_u9876_u5C42_u7684y_uFF1A"><span class="nav-number">14.0.4.</span> <span class="nav-text">对于顶层的y：</span></a></li></ol></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+    
+    
+
+  
+
+
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
+
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    motionMiddleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+  
+  
+
+  
+  
+
+</body>
+</html>

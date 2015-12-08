@@ -1,0 +1,689 @@
+<!doctype html>
+<html class="theme-next   use-motion ">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+
+
+
+
+<meta name="description" content="Current statistical machine translation systems源语言：法语目标语言：英语概率公式（利用贝叶斯定理）：
+在平行语料库（parallel corpora）上训练翻译模型p(f|e)在英语语料库上训练语言模型p(e)
+Step1: Alignment目标：将源语言中的单词或者短语匹配到正确的目标语言中的单词或者短语
+假如匹配好了单词和短语，那么又如何给这些">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Deep Learning for Nature Language Processing --- 第八讲">
+<meta property="og:url" content="http://yoursite.com/2015/10/04/NLP/deep-learning-for-nature-language-processing-e7-ac-ac-e5-85-ab-e8-ae-b2/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Current statistical machine translation systems源语言：法语目标语言：英语概率公式（利用贝叶斯定理）：
+在平行语料库（parallel corpora）上训练翻译模型p(f|e)在英语语料库上训练语言模型p(e)
+Step1: Alignment目标：将源语言中的单词或者短语匹配到正确的目标语言中的单词或者短语
+假如匹配好了单词和短语，那么又如何给这些">
+<meta property="og:image" content="http://img.blog.csdn.net/20150731205213965">
+<meta property="og:image" content="http://img.blog.csdn.net/20150731205605714">
+<meta property="og:image" content="http://img.blog.csdn.net/20150731210230036">
+<meta property="og:image" content="http://img.blog.csdn.net/20150731210733410">
+<meta property="og:image" content="http://img.blog.csdn.net/20150731211112548">
+<meta property="og:image" content="http://img.blog.csdn.net/20150731211537838">
+<meta property="og:image" content="http://img.blog.csdn.net/20150731212259152">
+<meta property="og:image" content="http://img.blog.csdn.net/20150731213020539">
+<meta property="og:image" content="http://img.blog.csdn.net/20150731213059456">
+<meta property="og:image" content="http://img.blog.csdn.net/20150731213526877">
+<meta property="og:image" content="http://img.blog.csdn.net/20150731213623734">
+<meta property="og:image" content="http://img.blog.csdn.net/20150731214652150">
+<meta property="og:image" content="http://img.blog.csdn.net/20150731214935311">
+<meta property="og:image" content="http://img.blog.csdn.net/20150731215429501">
+<meta property="og:image" content="http://img.blog.csdn.net/20150731215827412">
+<meta property="og:image" content="http://img.blog.csdn.net/20150801194318489">
+<meta property="og:image" content="http://img.blog.csdn.net/20150801194718220">
+<meta property="og:image" content="http://img.blog.csdn.net/20150801195731421">
+<meta property="og:image" content="http://img.blog.csdn.net/20150801200346528">
+<meta property="og:image" content="http://img.blog.csdn.net/20150801201054604">
+<meta property="og:image" content="http://img.blog.csdn.net/20150801201542928">
+<meta property="og:image" content="http://img.blog.csdn.net/20150801205701211">
+<meta property="og:image" content="http://img.blog.csdn.net/20150801210239108">
+<meta property="og:image" content="http://img.blog.csdn.net/20150801210322081">
+<meta property="og:image" content="http://img.blog.csdn.net/20150801210411549">
+<meta property="og:image" content="http://img.blog.csdn.net/20150801211413933">
+<meta property="og:image" content="http://img.blog.csdn.net/20150801211901483">
+<meta property="og:image" content="http://img.blog.csdn.net/20150801212131810">
+<meta property="og:updated_time" content="2015-10-05T12:14:41.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Deep Learning for Nature Language Processing --- 第八讲">
+<meta name="twitter:description" content="Current statistical machine translation systems源语言：法语目标语言：英语概率公式（利用贝叶斯定理）：
+在平行语料库（parallel corpora）上训练翻译模型p(f|e)在英语语料库上训练语言模型p(e)
+Step1: Alignment目标：将源语言中的单词或者短语匹配到正确的目标语言中的单词或者短语
+假如匹配好了单词和短语，那么又如何给这些">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post',
+    motion: true
+  };
+</script>
+
+  <title> Deep Learning for Nature Language Processing --- 第八讲 | Hexo </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Hexo</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Deep Learning for Nature Language Processing --- 第八讲
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2015-10-04T20:05:28+08:00" content="2015-10-04">
+              2015-10-04
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分類於
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/NLP/" itemprop="url" rel="index">
+                    <span itemprop="name">NLP</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h1 id="Current_statistical_machine_translation_systems"><a href="#Current_statistical_machine_translation_systems" class="headerlink" title="Current statistical machine translation systems"></a>Current statistical machine translation systems</h1><h3 id="u6E90_u8BED_u8A00_uFF1A_u6CD5_u8BED"><a href="#u6E90_u8BED_u8A00_uFF1A_u6CD5_u8BED" class="headerlink" title="源语言：法语"></a>源语言：法语</h3><h3 id="u76EE_u6807_u8BED_u8A00_uFF1A_u82F1_u8BED"><a href="#u76EE_u6807_u8BED_u8A00_uFF1A_u82F1_u8BED" class="headerlink" title="目标语言：英语"></a>目标语言：英语</h3><h3 id="u6982_u7387_u516C_u5F0F_uFF08_u5229_u7528_u8D1D_u53F6_u65AF_u5B9A_u7406_uFF09_uFF1A"><a href="#u6982_u7387_u516C_u5F0F_uFF08_u5229_u7528_u8D1D_u53F6_u65AF_u5B9A_u7406_uFF09_uFF1A" class="headerlink" title="概率公式（利用贝叶斯定理）："></a>概率公式（利用贝叶斯定理）：</h3><p><img src="http://img.blog.csdn.net/20150731205213965" alt="这里写图片描述"></p>
+<h3 id="u5728_u5E73_u884C_u8BED_u6599_u5E93_uFF08parallel_corpora_uFF09_u4E0A_u8BAD_u7EC3_u7FFB_u8BD1_u6A21_u578Bp_28f_7Ce_29"><a href="#u5728_u5E73_u884C_u8BED_u6599_u5E93_uFF08parallel_corpora_uFF09_u4E0A_u8BAD_u7EC3_u7FFB_u8BD1_u6A21_u578Bp_28f_7Ce_29" class="headerlink" title="在平行语料库（parallel corpora）上训练翻译模型p(f|e)"></a>在平行语料库（parallel corpora）上训练翻译模型p(f|e)</h3><h3 id="u5728_u82F1_u8BED_u8BED_u6599_u5E93_u4E0A_u8BAD_u7EC3_u8BED_u8A00_u6A21_u578Bp_28e_29"><a href="#u5728_u82F1_u8BED_u8BED_u6599_u5E93_u4E0A_u8BAD_u7EC3_u8BED_u8A00_u6A21_u578Bp_28e_29" class="headerlink" title="在英语语料库上训练语言模型p(e)"></a>在英语语料库上训练语言模型p(e)</h3><p><img src="http://img.blog.csdn.net/20150731205605714" alt="这里写图片描述"></p>
+<h1 id="Step1_3A_Alignment"><a href="#Step1_3A_Alignment" class="headerlink" title="Step1: Alignment"></a>Step1: Alignment</h1><h3 id="u76EE_u6807_uFF1A_u5C06_u6E90_u8BED_u8A00_u4E2D_u7684_u5355_u8BCD_u6216_u8005_u77ED_u8BED_u5339_u914D_u5230_u6B63_u786E_u7684_u76EE_u6807_u8BED_u8A00_u4E2D_u7684_u5355_u8BCD_u6216_u8005_u77ED_u8BED"><a href="#u76EE_u6807_uFF1A_u5C06_u6E90_u8BED_u8A00_u4E2D_u7684_u5355_u8BCD_u6216_u8005_u77ED_u8BED_u5339_u914D_u5230_u6B63_u786E_u7684_u76EE_u6807_u8BED_u8A00_u4E2D_u7684_u5355_u8BCD_u6216_u8005_u77ED_u8BED" class="headerlink" title="目标：将源语言中的单词或者短语匹配到正确的目标语言中的单词或者短语"></a>目标：将源语言中的单词或者短语匹配到正确的目标语言中的单词或者短语</h3><p><img src="http://img.blog.csdn.net/20150731210230036" alt="这里写图片描述"></p>
+<h3 id="u5047_u5982_u5339_u914D_u597D_u4E86_u5355_u8BCD_u548C_u77ED_u8BED_uFF0C_u90A3_u4E48_u53C8_u5982_u4F55_u7ED9_u8FD9_u4E9B_u5355_u8BCD_u548C_u77ED_u8BED_u91CD_u65B0_u6392_u5E8F_u5462_3F"><a href="#u5047_u5982_u5339_u914D_u597D_u4E86_u5355_u8BCD_u548C_u77ED_u8BED_uFF0C_u90A3_u4E48_u53C8_u5982_u4F55_u7ED9_u8FD9_u4E9B_u5355_u8BCD_u548C_u77ED_u8BED_u91CD_u65B0_u6392_u5E8F_u5462_3F" class="headerlink" title="假如匹配好了单词和短语，那么又如何给这些单词和短语重新排序呢?"></a>假如匹配好了单词和短语，那么又如何给这些单词和短语重新排序呢?</h3><p><img src="http://img.blog.csdn.net/20150731210733410" alt="这里写图片描述"></p>
+<h1 id="After_many_steps"><a href="#After_many_steps" class="headerlink" title="After many steps"></a>After many steps</h1><h3 id="u6BCF_u4E2A_u6E90_u8BED_u8A00_u4E2D_u7684_u5355_u8BCD_u6216_u8005_u77ED_u8BED_uFF0C_u5728_u76EE_u6807_u8BED_u8A00_u4E2D_u90FD_u6709_u4E0D_u6B62_u4E00_u4E2A_u76F8_u5339_u914D_u7684_u5355_u8BCD_u6216_u8005_u77ED_u8BED_uFF1A"><a href="#u6BCF_u4E2A_u6E90_u8BED_u8A00_u4E2D_u7684_u5355_u8BCD_u6216_u8005_u77ED_u8BED_uFF0C_u5728_u76EE_u6807_u8BED_u8A00_u4E2D_u90FD_u6709_u4E0D_u6B62_u4E00_u4E2A_u76F8_u5339_u914D_u7684_u5355_u8BCD_u6216_u8005_u77ED_u8BED_uFF1A" class="headerlink" title="每个源语言中的单词或者短语，在目标语言中都有不止一个相匹配的单词或者短语："></a>每个源语言中的单词或者短语，在目标语言中都有不止一个相匹配的单词或者短语：</h3><p><img src="http://img.blog.csdn.net/20150731211112548" alt="这里写图片描述"></p>
+<h1 id="Decode_3A_Search_for_best_of_many_hypotheses"><a href="#Decode_3A_Search_for_best_of_many_hypotheses" class="headerlink" title="Decode: Search for best of many hypotheses"></a>Decode: Search for best of many hypotheses</h1><p><img src="http://img.blog.csdn.net/20150731211537838" alt="这里写图片描述"></p>
+<h1 id="TradiBonal_MT_uFF08Machine_Translation_uFF09"><a href="#TradiBonal_MT_uFF08Machine_Translation_uFF09" class="headerlink" title="TradiBonal MT（Machine Translation）"></a>TradiBonal MT（Machine Translation）</h1><h3 id="u76F4_u63A5_u8DF3_u8FC7_u975E_u5E38_u591A_u7684_u7EC6_u8282_u90E8_u5206"><a href="#u76F4_u63A5_u8DF3_u8FC7_u975E_u5E38_u591A_u7684_u7EC6_u8282_u90E8_u5206" class="headerlink" title="直接跳过非常多的细节部分"></a>直接跳过非常多的细节部分</h3><h3 id="u9700_u8981_u975E_u5E38_u591A_u7684_u4EBA_u5DE5_u5904_u7406_u7279_u5F81_u4FE1_u606F"><a href="#u9700_u8981_u975E_u5E38_u591A_u7684_u4EBA_u5DE5_u5904_u7406_u7279_u5F81_u4FE1_u606F" class="headerlink" title="需要非常多的人工处理特征信息"></a>需要非常多的人工处理特征信息</h3><h3 id="u975E_u5E38_u590D_u6742_u7684_u7CFB_u7EDF"><a href="#u975E_u5E38_u590D_u6742_u7684_u7CFB_u7EDF" class="headerlink" title="非常复杂的系统"></a>非常复杂的系统</h3><h1 id="Deep_learning_to_the_rescue_21__u2026__3F"><a href="#Deep_learning_to_the_rescue_21__u2026__3F" class="headerlink" title="Deep learning to the rescue! … ?"></a>Deep learning to the rescue! … ?</h1><h3 id="u4E5F_u8BB8_u6211_u4EEC_u80FD_u76F4_u63A5_u4F7F_u7528RNN_u505A_u673A_u5668_u7FFB_u8BD1"><a href="#u4E5F_u8BB8_u6211_u4EEC_u80FD_u76F4_u63A5_u4F7F_u7528RNN_u505A_u673A_u5668_u7FFB_u8BD1" class="headerlink" title="也许我们能直接使用RNN做机器翻译"></a>也许我们能直接使用RNN做机器翻译</h3><p><img src="http://img.blog.csdn.net/20150731212259152" alt="这里写图片描述"></p>
+<h1 id="MT_with_RNNs__u2013_Simplest_Model"><a href="#MT_with_RNNs__u2013_Simplest_Model" class="headerlink" title="MT with RNNs – Simplest Model"></a>MT with RNNs – Simplest Model</h1><p><img src="http://img.blog.csdn.net/20150731213020539" alt="这里写图片描述"></p>
+<h3 id="u6700_u5C0F_u5316_u57FA_u4E8E_u6E90_u8BED_u8A00_uFF0C_u5BF9_u5E94_u7684_u76EE_u6807_u8BED_u8A00_u4E2D_u7684_u8BCD_u7684_u4EA4_u53C9_u71B5_uFF1A"><a href="#u6700_u5C0F_u5316_u57FA_u4E8E_u6E90_u8BED_u8A00_uFF0C_u5BF9_u5E94_u7684_u76EE_u6807_u8BED_u8A00_u4E2D_u7684_u8BCD_u7684_u4EA4_u53C9_u71B5_uFF1A" class="headerlink" title="最小化基于源语言，对应的目标语言中的词的交叉熵："></a>最小化基于源语言，对应的目标语言中的词的交叉熵：</h3><p><img src="http://img.blog.csdn.net/20150731213059456" alt="这里写图片描述"></p>
+<h3 id="u7136_u800C_u5E76_u6CA1_u6709_u8FD9_u4E48_u7684_u7B80_u5355_3A_uFF09"><a href="#u7136_u800C_u5E76_u6CA1_u6709_u8FD9_u4E48_u7684_u7B80_u5355_3A_uFF09" class="headerlink" title="然而并没有这么的简单:）"></a>然而并没有这么的简单:）</h3><h1 id="RNN_Translation_Model_Extensions"><a href="#RNN_Translation_Model_Extensions" class="headerlink" title="RNN Translation Model Extensions"></a>RNN Translation Model Extensions</h1><h3 id="1_uFF09decoding_u548Cencoding_u90E8_u5206_uFF0C_u8BAD_u7EC3_u5F97_u5230_u7684RNN_u7684Weeights_u662F_u4E0D_u4E00_u6837_u7684_uFF1A"><a href="#1_uFF09decoding_u548Cencoding_u90E8_u5206_uFF0C_u8BAD_u7EC3_u5F97_u5230_u7684RNN_u7684Weeights_u662F_u4E0D_u4E00_u6837_u7684_uFF1A" class="headerlink" title="1）decoding和encoding部分，训练得到的RNN的Weeights是不一样的："></a>1）decoding和encoding部分，训练得到的RNN的Weeights是不一样的：</h3><p><img src="http://img.blog.csdn.net/20150731213526877" alt="这里写图片描述"><br><img src="http://img.blog.csdn.net/20150731213623734" alt="这里写图片描述"></p>
+<h3 id="2_uFF09_u5728_u89E3_u7801_u65F6_uFF0C_u6839_u636E_u4E0B_u9762_u7684_u4E09_u9879_u8BA1_u7B97_u5F53_u524D_u7684hidden_u5C42_uFF1A"><a href="#2_uFF09_u5728_u89E3_u7801_u65F6_uFF0C_u6839_u636E_u4E0B_u9762_u7684_u4E09_u9879_u8BA1_u7B97_u5F53_u524D_u7684hidden_u5C42_uFF1A" class="headerlink" title="2）在解码时，根据下面的三项计算当前的hidden层："></a>2）在解码时，根据下面的三项计算当前的hidden层：</h3><h4 id="1-_u4E4B_u524D_u7684hidden_u5C42"><a href="#1-_u4E4B_u524D_u7684hidden_u5C42" class="headerlink" title="1.之前的hidden层"></a>1.之前的hidden层</h4><h4 id="2-_u4E0A_u4E00_u4E2A_u7F16_u7801_u5668_u7684hidden_u5C42_uFF1Ac_3DhT"><a href="#2-_u4E0A_u4E00_u4E2A_u7F16_u7801_u5668_u7684hidden_u5C42_uFF1Ac_3DhT" class="headerlink" title="2.上一个编码器的hidden层：c=h<sub>T</sub>"></a>2.上一个编码器的hidden层：c=h<sub>T</sub></h4><h4 id="3-_u4E4B_u524D_u9884_u6D4B_u5F97_u5230_u7684_u8BCDyt-1"><a href="#3-_u4E4B_u524D_u9884_u6D4B_u5F97_u5230_u7684_u8BCDyt-1" class="headerlink" title="3.之前预测得到的词y<sub>t-1</sub>"></a>3.之前预测得到的词y<sub>t-1</sub></h4><p><img src="http://img.blog.csdn.net/20150731214652150" alt="这里写图片描述"><br><img src="http://img.blog.csdn.net/20150731214935311" alt="这里写图片描述"></p>
+<h3 id="u5BF9_u4E0A_u4E00_u5E45_u56FE_u66F4_u8BE6_u7EC6_u7684_u63CF_u8FF0"><a href="#u5BF9_u4E0A_u4E00_u5E45_u56FE_u66F4_u8BE6_u7EC6_u7684_u63CF_u8FF0" class="headerlink" title="对上一幅图更详细的描述"></a>对上一幅图更详细的描述</h3><p><img src="http://img.blog.csdn.net/20150731215429501" alt="这里写图片描述"></p>
+<h3 id="3_uFF09_u8BAD_u7EC3_u591A_u5C42_stacked/deep_RNNs"><a href="#3_uFF09_u8BAD_u7EC3_u591A_u5C42_stacked/deep_RNNs" class="headerlink" title="3）训练多层 stacked/deep RNNs"></a>3）训练多层 stacked/deep RNNs</h3><h3 id="4_uFF09_u4E5F_u53EF_u8BAD_u7EC3_u53CC_u5411RNN"><a href="#4_uFF09_u4E5F_u53EF_u8BAD_u7EC3_u53CC_u5411RNN" class="headerlink" title="4）也可训练双向RNN"></a>4）也可训练双向RNN</h3><p><img src="http://img.blog.csdn.net/20150731215827412" alt="这里写图片描述"></p>
+<h3 id="5_uFF09_u5C06_u8F93_u5165_u5E8F_u5217_u53CD_u5411_u540E_u8BAD_u7EC3_uFF0C_u4EE5_u4F7F_u5F97_u4F18_u5316_u66F4_u52A0_u7B80_u5355_uFF0C_u5982_uFF1AA_B_C-_u300BX_Y_u6362_u6210C_B_A-_u300BX_Y"><a href="#5_uFF09_u5C06_u8F93_u5165_u5E8F_u5217_u53CD_u5411_u540E_u8BAD_u7EC3_uFF0C_u4EE5_u4F7F_u5F97_u4F18_u5316_u66F4_u52A0_u7B80_u5355_uFF0C_u5982_uFF1AA_B_C-_u300BX_Y_u6362_u6210C_B_A-_u300BX_Y" class="headerlink" title="5）将输入序列反向后训练，以使得优化更加简单，如：A B C-》X Y换成C B A-》X Y"></a>5）将输入序列反向后训练，以使得优化更加简单，如：A B C-》X Y换成C B A-》X Y</h3><h3 id="6_uFF09Main_Improvement_3A_Better_Units_u3002_u5728_u5FAA_u73AF_u7684_u65F6_u5019_u4F7F_u7528_u66F4_u52A0_u590D_u6742_u7684hidden_units_uFF0C_u5982Gated_Recurrent_Units_28GRU_29"><a href="#6_uFF09Main_Improvement_3A_Better_Units_u3002_u5728_u5FAA_u73AF_u7684_u65F6_u5019_u4F7F_u7528_u66F4_u52A0_u590D_u6742_u7684hidden_units_uFF0C_u5982Gated_Recurrent_Units_28GRU_29" class="headerlink" title="6）Main Improvement: Better Units。在循环的时候使用更加复杂的hidden units，如Gated Recurrent Units(GRU)"></a>6）Main Improvement: Better Units。在循环的时候使用更加复杂的hidden units，如Gated Recurrent Units(GRU)</h3><h1 id="GRUs"><a href="#GRUs" class="headerlink" title="GRUs"></a>GRUs</h1><h3 id="u6807_u51C6_u7684RNN_u76F4_u63A5_u8BA1_u7B97_u4E0B_u4E00_u4E2Atime_step_u7684hidden_layer_uFF1A"><a href="#u6807_u51C6_u7684RNN_u76F4_u63A5_u8BA1_u7B97_u4E0B_u4E00_u4E2Atime_step_u7684hidden_layer_uFF1A" class="headerlink" title="标准的RNN直接计算下一个time step的hidden layer："></a>标准的RNN直接计算下一个time step的hidden layer：</h3><p><img src="http://img.blog.csdn.net/20150801194318489" alt="这里写图片描述"></p>
+<h3 id="u800C_u5728GRU_u4E2D_uFF0C_u5219_u662F_u5148_u8BA1_u7B97_u4E00_u4E2Aupdate_gate_uFF0Cupdate_gate_u662F_u7531_u5F53_u524D_u7684_u8F93_u5165_u5411_u91CF_u4EE5_u53CA_u4E0A_u4E00_u4E2Ahidden__u5C42_u51B3_u5B9A_uFF1A"><a href="#u800C_u5728GRU_u4E2D_uFF0C_u5219_u662F_u5148_u8BA1_u7B97_u4E00_u4E2Aupdate_gate_uFF0Cupdate_gate_u662F_u7531_u5F53_u524D_u7684_u8F93_u5165_u5411_u91CF_u4EE5_u53CA_u4E0A_u4E00_u4E2Ahidden__u5C42_u51B3_u5B9A_uFF1A" class="headerlink" title="而在GRU中，则是先计算一个update gate，update gate是由当前的输入向量以及上一个hidden 层决定："></a>而在GRU中，则是先计算一个update gate，update gate是由当前的输入向量以及上一个hidden 层决定：</h3><p><img src="http://img.blog.csdn.net/20150801194718220" alt="这里写图片描述"></p>
+<h3 id="u518D_u7528_u4E0D_u540C_u7684Weights_u8BA1_u7B97reset_gate"><a href="#u518D_u7528_u4E0D_u540C_u7684Weights_u8BA1_u7B97reset_gate" class="headerlink" title="再用不同的Weights计算reset gate"></a>再用不同的Weights计算reset gate</h3><p><img src="http://img.blog.csdn.net/20150801195731421" alt="这里写图片描述"></p>
+<h3 id="u7531update_gate_u548Creset_gate_u7684_u516C_u5F0F_u53EF_u4EE5_u5F97_u5230_u65B0_u7684_u8BB0_u5FC6_u5185_u5BB9_uFF0C_u5982_u679Creset_gate_u63A5_u8FD1_u4E8E0_uFF0C_u5219_u5FFD_u7565_u4E4B_u524D_u7684_u8BB0_u5FC6_u5355_u5143_uFF08_u9690_u5C42_u5355_u5143_uFF09_uFF0C_u53EA_u53D6_u5F53_u524Dtime_step_u7684_u8BCD_u5411_u91CF_uFF1A"><a href="#u7531update_gate_u548Creset_gate_u7684_u516C_u5F0F_u53EF_u4EE5_u5F97_u5230_u65B0_u7684_u8BB0_u5FC6_u5185_u5BB9_uFF0C_u5982_u679Creset_gate_u63A5_u8FD1_u4E8E0_uFF0C_u5219_u5FFD_u7565_u4E4B_u524D_u7684_u8BB0_u5FC6_u5355_u5143_uFF08_u9690_u5C42_u5355_u5143_uFF09_uFF0C_u53EA_u53D6_u5F53_u524Dtime_step_u7684_u8BCD_u5411_u91CF_uFF1A" class="headerlink" title="由update gate和reset gate的公式可以得到新的记忆内容，如果reset gate接近于0，则忽略之前的记忆单元（隐层单元），只取当前time step的词向量："></a>由update gate和reset gate的公式可以得到新的记忆内容，如果reset gate接近于0，则忽略之前的记忆单元（隐层单元），只取当前time step的词向量：</h3><p><img src="http://img.blog.csdn.net/20150801200346528" alt="这里写图片描述"></p>
+<h3 id="u6700_u7EC8_u7684time_step_u7684_u8BB0_u5FC6_u5355_u5143_uFF08_u9690_u5C42_u5355_u5143_uFF09_u516C_u5F0F_uFF1A"><a href="#u6700_u7EC8_u7684time_step_u7684_u8BB0_u5FC6_u5355_u5143_uFF08_u9690_u5C42_u5355_u5143_uFF09_u516C_u5F0F_uFF1A" class="headerlink" title="最终的time step的记忆单元（隐层单元）公式："></a>最终的time step的记忆单元（隐层单元）公式：</h3><p><img src="http://img.blog.csdn.net/20150801201054604" alt="这里写图片描述"></p>
+<h3 id="u4E0B_u9762_u8FD9_u5F20_u56FE_u6709_u5229_u4E8E_u4F60_u7406_u89E3GRU_uFF1A"><a href="#u4E0B_u9762_u8FD9_u5F20_u56FE_u6709_u5229_u4E8E_u4F60_u7406_u89E3GRU_uFF1A" class="headerlink" title="下面这张图有利于你理解GRU："></a>下面这张图有利于你理解GRU：</h3><p><img src="http://img.blog.csdn.net/20150801201542928" alt="这里写图片描述"></p>
+<h1 id="GRU_intuition"><a href="#GRU_intuition" class="headerlink" title="GRU intuition"></a>GRU intuition</h1><h3 id="u5982_u679Creset_gate_u63A5_u8FD1_u4E8E0_uFF0C_u5219_u5FFD_u7565_u4E4B_u524Dhidden_u5C42_u7684h_u3002_u8FD9_u6837_u505A_u7684_u597D_u5904_u662F_u53EF_u4EE5_u4E22_u5F03_u548C_u540E_u9762_u8BAD_u7EC3_u8FC7_u7A0B_u65E0_u5173_u7684_u4FE1_u606F_u3002"><a href="#u5982_u679Creset_gate_u63A5_u8FD1_u4E8E0_uFF0C_u5219_u5FFD_u7565_u4E4B_u524Dhidden_u5C42_u7684h_u3002_u8FD9_u6837_u505A_u7684_u597D_u5904_u662F_u53EF_u4EE5_u4E22_u5F03_u548C_u540E_u9762_u8BAD_u7EC3_u8FC7_u7A0B_u65E0_u5173_u7684_u4FE1_u606F_u3002" class="headerlink" title="如果reset gate接近于0，则忽略之前hidden层的h。这样做的好处是可以丢弃和后面训练过程无关的信息。"></a>如果reset gate接近于0，则忽略之前hidden层的h。这样做的好处是可以丢弃和后面训练过程无关的信息。</h3><h3 id="update_gate_z_u7684_u4F5C_u7528_u5219_u662F_u63A7_u5236_u4E4B_u524D_u7684_u90E8_u5206_u5BF9_u5F53_u524Dtime_step_u8BA1_u7B97_u7ED3_u679C_u7684_u5F71_u54CD_u7A0B_u5EA6_uFF08_u5927_u5C0F_uFF09_u3002_u5982_u679Cz_u63A5_u8FD1_u4E8E1_uFF0C_u6211_u4EEC_u5C31_u53EF_u4EE5_u5C06_u4FE1_u606F_u76F4_u63A5copy_u8FC7_u6765_uFF0C_u8FD9_u6837_u7684_u8BDD_u6709_u5229_u4E8E_u907F_u514Dvanishing_gradient_u3002"><a href="#update_gate_z_u7684_u4F5C_u7528_u5219_u662F_u63A7_u5236_u4E4B_u524D_u7684_u90E8_u5206_u5BF9_u5F53_u524Dtime_step_u8BA1_u7B97_u7ED3_u679C_u7684_u5F71_u54CD_u7A0B_u5EA6_uFF08_u5927_u5C0F_uFF09_u3002_u5982_u679Cz_u63A5_u8FD1_u4E8E1_uFF0C_u6211_u4EEC_u5C31_u53EF_u4EE5_u5C06_u4FE1_u606F_u76F4_u63A5copy_u8FC7_u6765_uFF0C_u8FD9_u6837_u7684_u8BDD_u6709_u5229_u4E8E_u907F_u514Dvanishing_gradient_u3002" class="headerlink" title="update gate z的作用则是控制之前的部分对当前time step计算结果的影响程度（大小）。如果z接近于1，我们就可以将信息直接copy过来，这样的话有利于避免vanishing gradient。"></a>update gate z的作用则是控制之前的部分对当前time step计算结果的影响程度（大小）。如果z接近于1，我们就可以将信息直接copy过来，这样的话有利于避免vanishing gradient。</h3><h3 id="u77ED_u671F_u4F9D_u8D56_uFF08short_term_dependences_uFF09_u7684reset_gate_u5F88_u6D3B_u8DC3"><a href="#u77ED_u671F_u4F9D_u8D56_uFF08short_term_dependences_uFF09_u7684reset_gate_u5F88_u6D3B_u8DC3" class="headerlink" title="短期依赖（short term dependences）的reset gate很活跃"></a>短期依赖（short term dependences）的reset gate很活跃</h3><h3 id="u957F_u671F_u4F9D_u8D56_uFF08long_term_dependendces_uFF09_u7684update_gate_u5F88_u6D3B_u8DC3"><a href="#u957F_u671F_u4F9D_u8D56_uFF08long_term_dependendces_uFF09_u7684update_gate_u5F88_u6D3B_u8DC3" class="headerlink" title="长期依赖（long term dependendces）的update gate很活跃"></a>长期依赖（long term dependendces）的update gate很活跃</h3><h3 id="u53C2_u8003_u56FE_uFF1A"><a href="#u53C2_u8003_u56FE_uFF1A" class="headerlink" title="参考图："></a>参考图：</h3><p><img src="http://img.blog.csdn.net/20150801205701211" alt="这里写图片描述"></p>
+<h3 id="x1*x2_u5BF9x1_u7684_u5BFC_u6570_u5982_u4F55_u6C42_uFF1F_u540C_u6837_u4F7F_u7528_u7684_u662F_u94FE_u5F0F_u6CD5_u5219_uFF0C_u4E0D_u540C_u7684_u662F_u8FD9_u91CC_u662F_u901A_u8FC7_u6A21_u5757_u5316_uFF08modularization_uFF09_u548C_u81EA_u5B9A_u533A_u5212_uFF08automatic_differentiation_uFF09_u5B9E_u73B0_u7684"><a href="#x1*x2_u5BF9x1_u7684_u5BFC_u6570_u5982_u4F55_u6C42_uFF1F_u540C_u6837_u4F7F_u7528_u7684_u662F_u94FE_u5F0F_u6CD5_u5219_uFF0C_u4E0D_u540C_u7684_u662F_u8FD9_u91CC_u662F_u901A_u8FC7_u6A21_u5757_u5316_uFF08modularization_uFF09_u548C_u81EA_u5B9A_u533A_u5212_uFF08automatic_differentiation_uFF09_u5B9E_u73B0_u7684" class="headerlink" title="x1*x2对x1的导数如何求？同样使用的是链式法则，不同的是这里是通过模块化（modularization）和自定区划（automatic differentiation）实现的"></a>x1*x2对x1的导数如何求？同样使用的是链式法则，不同的是这里是通过模块化（modularization）和自定区划（automatic differentiation）实现的</h3><h1 id="Long-_AD_u2010short-_AD_u2010term-_AD_u2010memories_28LSTMs_29"><a href="#Long-_AD_u2010short-_AD_u2010term-_AD_u2010memories_28LSTMs_29" class="headerlink" title="Long-­‐short-­‐term-­‐memories(LSTMs)"></a>Long-­‐short-­‐term-­‐memories(LSTMs)</h1><h3 id="u6211_u4EEC_u53EF_u4EE5_u4F7F_u4F20_u7EDFRNN_u4E2D_u7684_u5355_u4E2AUnit_uFF08time_step_uFF09_u66F4_u52A0_u590D_u6742"><a href="#u6211_u4EEC_u53EF_u4EE5_u4F7F_u4F20_u7EDFRNN_u4E2D_u7684_u5355_u4E2AUnit_uFF08time_step_uFF09_u66F4_u52A0_u590D_u6742" class="headerlink" title="我们可以使传统RNN中的单个Unit（time step）更加复杂"></a>我们可以使传统RNN中的单个Unit（time step）更加复杂</h3><h3 id="u53EF_u4EE5_u5728_u6BCF_u4E2Atime_step_u4E2D_u6DFB_u52A0_u4E0B_u56FE_u4E2D_u7684_u51E0_u9879_uFF1A"><a href="#u53EF_u4EE5_u5728_u6BCF_u4E2Atime_step_u4E2D_u6DFB_u52A0_u4E0B_u56FE_u4E2D_u7684_u51E0_u9879_uFF1A" class="headerlink" title="可以在每个time step中添加下图中的几项："></a>可以在每个time step中添加下图中的几项：</h3><p><img src="http://img.blog.csdn.net/20150801210239108" alt="这里写图片描述"></p>
+<h3 id="u6700_u7EC8_u7684_u8BB0_u5FC6_u5355_u5143_uFF1A"><a href="#u6700_u7EC8_u7684_u8BB0_u5FC6_u5355_u5143_uFF1A" class="headerlink" title="最终的记忆单元："></a>最终的记忆单元：</h3><p><img src="http://img.blog.csdn.net/20150801210322081" alt="这里写图片描述"></p>
+<h3 id="u6700_u7EC8_u5F97_u5230_u7684hidden_u5C42_u7684_u8BA1_u7B97_u516C_u5F0F_uFF1A"><a href="#u6700_u7EC8_u5F97_u5230_u7684hidden_u5C42_u7684_u8BA1_u7B97_u516C_u5F0F_uFF1A" class="headerlink" title="最终得到的hidden层的计算公式："></a>最终得到的hidden层的计算公式：</h3><p><img src="http://img.blog.csdn.net/20150801210411549" alt="这里写图片描述"></p>
+<h3 id="LSTM_u8BE6_u89E3_u56FE_uFF1A"><a href="#LSTM_u8BE6_u89E3_u56FE_uFF1A" class="headerlink" title="LSTM详解图："></a>LSTM详解图：</h3><p><img src="http://img.blog.csdn.net/20150801211413933" alt="这里写图片描述"></p>
+<h1 id="LSTMs_are_currently_very_hip_21"><a href="#LSTMs_are_currently_very_hip_21" class="headerlink" title="LSTMs are currently very hip!"></a>LSTMs are currently very hip!</h1><h3 id="LSTM_u662F_u5927_u591A_u6570_u5E8F_u5217_u6807_u8BB0_u4EFB_u52A1_u7684_u9ED8_u8BA4_u6A21_u578B"><a href="#LSTM_u662F_u5927_u591A_u6570_u5E8F_u5217_u6807_u8BB0_u4EFB_u52A1_u7684_u9ED8_u8BA4_u6A21_u578B" class="headerlink" title="LSTM是大多数序列标记任务的默认模型"></a>LSTM是大多数序列标记任务的默认模型</h3><h3 id="u975E_u5E38_u7684_u7BA1_u7528_uFF0C_u7279_u522B_u662F_u5728_u4F7F_u6A21_u578Bdeeper_u4E4B_u540E_uFF08_u5373_u6BCF_u4E00_u4E2Ahidden_u5C42_u90FD_u662F_u7531_u4E00_u4E2A_u5185_u90E8_u7684_u6DF1_u5EA6_u7F51_u7EDC_u8BA1_u7B97_u5F97_u5230_uFF09"><a href="#u975E_u5E38_u7684_u7BA1_u7528_uFF0C_u7279_u522B_u662F_u5728_u4F7F_u6A21_u578Bdeeper_u4E4B_u540E_uFF08_u5373_u6BCF_u4E00_u4E2Ahidden_u5C42_u90FD_u662F_u7531_u4E00_u4E2A_u5185_u90E8_u7684_u6DF1_u5EA6_u7F51_u7EDC_u8BA1_u7B97_u5F97_u5230_uFF09" class="headerlink" title="非常的管用，特别是在使模型deeper之后（即每一个hidden层都是由一个内部的深度网络计算得到）"></a>非常的管用，特别是在使模型deeper之后（即每一个hidden层都是由一个内部的深度网络计算得到）</h3><h3 id="u6570_u636E_u8D8A_u591A_u8D8A_u7BA1_u7528"><a href="#u6570_u636E_u8D8A_u591A_u8D8A_u7BA1_u7528" class="headerlink" title="数据越多越管用"></a>数据越多越管用</h3><h3 id="u4F46_u662FDeep_LSTM_u548C_u4E00_u4E9B_u4F20_u7EDF_u7684MT_u65B9_u6CD5_u7684_u6D4B_u8BD5_u7ED3_u679C_u76F8_u5DEE_u4E0D_u5927_uFF1A"><a href="#u4F46_u662FDeep_LSTM_u548C_u4E00_u4E9B_u4F20_u7EDF_u7684MT_u65B9_u6CD5_u7684_u6D4B_u8BD5_u7ED3_u679C_u76F8_u5DEE_u4E0D_u5927_uFF1A" class="headerlink" title="但是Deep LSTM和一些传统的MT方法的测试结果相差不大："></a>但是Deep LSTM和一些传统的MT方法的测试结果相差不大：</h3><p><img src="http://img.blog.csdn.net/20150801211901483" alt="这里写图片描述"></p>
+<h1 id="Further_Improvements_3A_More_Gates_21"><a href="#Further_Improvements_3A_More_Gates_21" class="headerlink" title="Further Improvements: More Gates!"></a>Further Improvements: More Gates!</h1><p><img src="http://img.blog.csdn.net/20150801212131810" alt="这里写图片描述"></p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/10/04/NLP/deep-learning-for-nature-language-processing-e7-ac-ac-e4-b8-83-e8-ae-b2/" rel="next" title="Deep Learning for Nature Language Processing --- 第七讲">
+                <i class="fa fa-chevron-left"></i> Deep Learning for Nature Language Processing --- 第七讲
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/12/08/DeepLearning译文/DeepLearning--Part2--Chapter6：Feedforward-Deep-Networks（1）/" rel="prev" title="DeepLearning--Part2--Chapter6：Feedforward-Deep-Networks（1）">
+                DeepLearning--Part2--Chapter6：Feedforward-Deep-Networks（1） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+        </div>
+
+        
+
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="John Doe" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">John Doe</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Current_statistical_machine_translation_systems"><span class="nav-number">1.</span> <span class="nav-text">Current statistical machine translation systems</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u6E90_u8BED_u8A00_uFF1A_u6CD5_u8BED"><span class="nav-number">1.0.1.</span> <span class="nav-text">源语言：法语</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u76EE_u6807_u8BED_u8A00_uFF1A_u82F1_u8BED"><span class="nav-number">1.0.2.</span> <span class="nav-text">目标语言：英语</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u6982_u7387_u516C_u5F0F_uFF08_u5229_u7528_u8D1D_u53F6_u65AF_u5B9A_u7406_uFF09_uFF1A"><span class="nav-number">1.0.3.</span> <span class="nav-text">概率公式（利用贝叶斯定理）：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u5728_u5E73_u884C_u8BED_u6599_u5E93_uFF08parallel_corpora_uFF09_u4E0A_u8BAD_u7EC3_u7FFB_u8BD1_u6A21_u578Bp_28f_7Ce_29"><span class="nav-number">1.0.4.</span> <span class="nav-text">在平行语料库（parallel corpora）上训练翻译模型p(f|e)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u5728_u82F1_u8BED_u8BED_u6599_u5E93_u4E0A_u8BAD_u7EC3_u8BED_u8A00_u6A21_u578Bp_28e_29"><span class="nav-number">1.0.5.</span> <span class="nav-text">在英语语料库上训练语言模型p(e)</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Step1_3A_Alignment"><span class="nav-number">2.</span> <span class="nav-text">Step1: Alignment</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u76EE_u6807_uFF1A_u5C06_u6E90_u8BED_u8A00_u4E2D_u7684_u5355_u8BCD_u6216_u8005_u77ED_u8BED_u5339_u914D_u5230_u6B63_u786E_u7684_u76EE_u6807_u8BED_u8A00_u4E2D_u7684_u5355_u8BCD_u6216_u8005_u77ED_u8BED"><span class="nav-number">2.0.1.</span> <span class="nav-text">目标：将源语言中的单词或者短语匹配到正确的目标语言中的单词或者短语</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u5047_u5982_u5339_u914D_u597D_u4E86_u5355_u8BCD_u548C_u77ED_u8BED_uFF0C_u90A3_u4E48_u53C8_u5982_u4F55_u7ED9_u8FD9_u4E9B_u5355_u8BCD_u548C_u77ED_u8BED_u91CD_u65B0_u6392_u5E8F_u5462_3F"><span class="nav-number">2.0.2.</span> <span class="nav-text">假如匹配好了单词和短语，那么又如何给这些单词和短语重新排序呢?</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#After_many_steps"><span class="nav-number">3.</span> <span class="nav-text">After many steps</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u6BCF_u4E2A_u6E90_u8BED_u8A00_u4E2D_u7684_u5355_u8BCD_u6216_u8005_u77ED_u8BED_uFF0C_u5728_u76EE_u6807_u8BED_u8A00_u4E2D_u90FD_u6709_u4E0D_u6B62_u4E00_u4E2A_u76F8_u5339_u914D_u7684_u5355_u8BCD_u6216_u8005_u77ED_u8BED_uFF1A"><span class="nav-number">3.0.1.</span> <span class="nav-text">每个源语言中的单词或者短语，在目标语言中都有不止一个相匹配的单词或者短语：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Decode_3A_Search_for_best_of_many_hypotheses"><span class="nav-number">4.</span> <span class="nav-text">Decode: Search for best of many hypotheses</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#TradiBonal_MT_uFF08Machine_Translation_uFF09"><span class="nav-number">5.</span> <span class="nav-text">TradiBonal MT（Machine Translation）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u76F4_u63A5_u8DF3_u8FC7_u975E_u5E38_u591A_u7684_u7EC6_u8282_u90E8_u5206"><span class="nav-number">5.0.1.</span> <span class="nav-text">直接跳过非常多的细节部分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u9700_u8981_u975E_u5E38_u591A_u7684_u4EBA_u5DE5_u5904_u7406_u7279_u5F81_u4FE1_u606F"><span class="nav-number">5.0.2.</span> <span class="nav-text">需要非常多的人工处理特征信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u975E_u5E38_u590D_u6742_u7684_u7CFB_u7EDF"><span class="nav-number">5.0.3.</span> <span class="nav-text">非常复杂的系统</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Deep_learning_to_the_rescue_21__u2026__3F"><span class="nav-number">6.</span> <span class="nav-text">Deep learning to the rescue! … ?</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u4E5F_u8BB8_u6211_u4EEC_u80FD_u76F4_u63A5_u4F7F_u7528RNN_u505A_u673A_u5668_u7FFB_u8BD1"><span class="nav-number">6.0.1.</span> <span class="nav-text">也许我们能直接使用RNN做机器翻译</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#MT_with_RNNs__u2013_Simplest_Model"><span class="nav-number">7.</span> <span class="nav-text">MT with RNNs – Simplest Model</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u6700_u5C0F_u5316_u57FA_u4E8E_u6E90_u8BED_u8A00_uFF0C_u5BF9_u5E94_u7684_u76EE_u6807_u8BED_u8A00_u4E2D_u7684_u8BCD_u7684_u4EA4_u53C9_u71B5_uFF1A"><span class="nav-number">7.0.1.</span> <span class="nav-text">最小化基于源语言，对应的目标语言中的词的交叉熵：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u7136_u800C_u5E76_u6CA1_u6709_u8FD9_u4E48_u7684_u7B80_u5355_3A_uFF09"><span class="nav-number">7.0.2.</span> <span class="nav-text">然而并没有这么的简单:）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RNN_Translation_Model_Extensions"><span class="nav-number">8.</span> <span class="nav-text">RNN Translation Model Extensions</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1_uFF09decoding_u548Cencoding_u90E8_u5206_uFF0C_u8BAD_u7EC3_u5F97_u5230_u7684RNN_u7684Weeights_u662F_u4E0D_u4E00_u6837_u7684_uFF1A"><span class="nav-number">8.0.1.</span> <span class="nav-text">1）decoding和encoding部分，训练得到的RNN的Weeights是不一样的：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2_uFF09_u5728_u89E3_u7801_u65F6_uFF0C_u6839_u636E_u4E0B_u9762_u7684_u4E09_u9879_u8BA1_u7B97_u5F53_u524D_u7684hidden_u5C42_uFF1A"><span class="nav-number">8.0.2.</span> <span class="nav-text">2）在解码时，根据下面的三项计算当前的hidden层：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-_u4E4B_u524D_u7684hidden_u5C42"><span class="nav-number">8.0.2.1.</span> <span class="nav-text">1.之前的hidden层</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-_u4E0A_u4E00_u4E2A_u7F16_u7801_u5668_u7684hidden_u5C42_uFF1Ac_3DhT"><span class="nav-number">8.0.2.2.</span> <span class="nav-text">2.上一个编码器的hidden层：c=hT</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-_u4E4B_u524D_u9884_u6D4B_u5F97_u5230_u7684_u8BCDyt-1"><span class="nav-number">8.0.2.3.</span> <span class="nav-text">3.之前预测得到的词yt-1</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u5BF9_u4E0A_u4E00_u5E45_u56FE_u66F4_u8BE6_u7EC6_u7684_u63CF_u8FF0"><span class="nav-number">8.0.3.</span> <span class="nav-text">对上一幅图更详细的描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3_uFF09_u8BAD_u7EC3_u591A_u5C42_stacked/deep_RNNs"><span class="nav-number">8.0.4.</span> <span class="nav-text">3）训练多层 stacked/deep RNNs</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4_uFF09_u4E5F_u53EF_u8BAD_u7EC3_u53CC_u5411RNN"><span class="nav-number">8.0.5.</span> <span class="nav-text">4）也可训练双向RNN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5_uFF09_u5C06_u8F93_u5165_u5E8F_u5217_u53CD_u5411_u540E_u8BAD_u7EC3_uFF0C_u4EE5_u4F7F_u5F97_u4F18_u5316_u66F4_u52A0_u7B80_u5355_uFF0C_u5982_uFF1AA_B_C-_u300BX_Y_u6362_u6210C_B_A-_u300BX_Y"><span class="nav-number">8.0.6.</span> <span class="nav-text">5）将输入序列反向后训练，以使得优化更加简单，如：A B C-》X Y换成C B A-》X Y</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6_uFF09Main_Improvement_3A_Better_Units_u3002_u5728_u5FAA_u73AF_u7684_u65F6_u5019_u4F7F_u7528_u66F4_u52A0_u590D_u6742_u7684hidden_units_uFF0C_u5982Gated_Recurrent_Units_28GRU_29"><span class="nav-number">8.0.7.</span> <span class="nav-text">6）Main Improvement: Better Units。在循环的时候使用更加复杂的hidden units，如Gated Recurrent Units(GRU)</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GRUs"><span class="nav-number">9.</span> <span class="nav-text">GRUs</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u6807_u51C6_u7684RNN_u76F4_u63A5_u8BA1_u7B97_u4E0B_u4E00_u4E2Atime_step_u7684hidden_layer_uFF1A"><span class="nav-number">9.0.1.</span> <span class="nav-text">标准的RNN直接计算下一个time step的hidden layer：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u800C_u5728GRU_u4E2D_uFF0C_u5219_u662F_u5148_u8BA1_u7B97_u4E00_u4E2Aupdate_gate_uFF0Cupdate_gate_u662F_u7531_u5F53_u524D_u7684_u8F93_u5165_u5411_u91CF_u4EE5_u53CA_u4E0A_u4E00_u4E2Ahidden__u5C42_u51B3_u5B9A_uFF1A"><span class="nav-number">9.0.2.</span> <span class="nav-text">而在GRU中，则是先计算一个update gate，update gate是由当前的输入向量以及上一个hidden 层决定：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u518D_u7528_u4E0D_u540C_u7684Weights_u8BA1_u7B97reset_gate"><span class="nav-number">9.0.3.</span> <span class="nav-text">再用不同的Weights计算reset gate</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u7531update_gate_u548Creset_gate_u7684_u516C_u5F0F_u53EF_u4EE5_u5F97_u5230_u65B0_u7684_u8BB0_u5FC6_u5185_u5BB9_uFF0C_u5982_u679Creset_gate_u63A5_u8FD1_u4E8E0_uFF0C_u5219_u5FFD_u7565_u4E4B_u524D_u7684_u8BB0_u5FC6_u5355_u5143_uFF08_u9690_u5C42_u5355_u5143_uFF09_uFF0C_u53EA_u53D6_u5F53_u524Dtime_step_u7684_u8BCD_u5411_u91CF_uFF1A"><span class="nav-number">9.0.4.</span> <span class="nav-text">由update gate和reset gate的公式可以得到新的记忆内容，如果reset gate接近于0，则忽略之前的记忆单元（隐层单元），只取当前time step的词向量：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u6700_u7EC8_u7684time_step_u7684_u8BB0_u5FC6_u5355_u5143_uFF08_u9690_u5C42_u5355_u5143_uFF09_u516C_u5F0F_uFF1A"><span class="nav-number">9.0.5.</span> <span class="nav-text">最终的time step的记忆单元（隐层单元）公式：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u4E0B_u9762_u8FD9_u5F20_u56FE_u6709_u5229_u4E8E_u4F60_u7406_u89E3GRU_uFF1A"><span class="nav-number">9.0.6.</span> <span class="nav-text">下面这张图有利于你理解GRU：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GRU_intuition"><span class="nav-number">10.</span> <span class="nav-text">GRU intuition</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u5982_u679Creset_gate_u63A5_u8FD1_u4E8E0_uFF0C_u5219_u5FFD_u7565_u4E4B_u524Dhidden_u5C42_u7684h_u3002_u8FD9_u6837_u505A_u7684_u597D_u5904_u662F_u53EF_u4EE5_u4E22_u5F03_u548C_u540E_u9762_u8BAD_u7EC3_u8FC7_u7A0B_u65E0_u5173_u7684_u4FE1_u606F_u3002"><span class="nav-number">10.0.1.</span> <span class="nav-text">如果reset gate接近于0，则忽略之前hidden层的h。这样做的好处是可以丢弃和后面训练过程无关的信息。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#update_gate_z_u7684_u4F5C_u7528_u5219_u662F_u63A7_u5236_u4E4B_u524D_u7684_u90E8_u5206_u5BF9_u5F53_u524Dtime_step_u8BA1_u7B97_u7ED3_u679C_u7684_u5F71_u54CD_u7A0B_u5EA6_uFF08_u5927_u5C0F_uFF09_u3002_u5982_u679Cz_u63A5_u8FD1_u4E8E1_uFF0C_u6211_u4EEC_u5C31_u53EF_u4EE5_u5C06_u4FE1_u606F_u76F4_u63A5copy_u8FC7_u6765_uFF0C_u8FD9_u6837_u7684_u8BDD_u6709_u5229_u4E8E_u907F_u514Dvanishing_gradient_u3002"><span class="nav-number">10.0.2.</span> <span class="nav-text">update gate z的作用则是控制之前的部分对当前time step计算结果的影响程度（大小）。如果z接近于1，我们就可以将信息直接copy过来，这样的话有利于避免vanishing gradient。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u77ED_u671F_u4F9D_u8D56_uFF08short_term_dependences_uFF09_u7684reset_gate_u5F88_u6D3B_u8DC3"><span class="nav-number">10.0.3.</span> <span class="nav-text">短期依赖（short term dependences）的reset gate很活跃</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u957F_u671F_u4F9D_u8D56_uFF08long_term_dependendces_uFF09_u7684update_gate_u5F88_u6D3B_u8DC3"><span class="nav-number">10.0.4.</span> <span class="nav-text">长期依赖（long term dependendces）的update gate很活跃</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u53C2_u8003_u56FE_uFF1A"><span class="nav-number">10.0.5.</span> <span class="nav-text">参考图：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#x1*x2_u5BF9x1_u7684_u5BFC_u6570_u5982_u4F55_u6C42_uFF1F_u540C_u6837_u4F7F_u7528_u7684_u662F_u94FE_u5F0F_u6CD5_u5219_uFF0C_u4E0D_u540C_u7684_u662F_u8FD9_u91CC_u662F_u901A_u8FC7_u6A21_u5757_u5316_uFF08modularization_uFF09_u548C_u81EA_u5B9A_u533A_u5212_uFF08automatic_differentiation_uFF09_u5B9E_u73B0_u7684"><span class="nav-number">10.0.6.</span> <span class="nav-text">x1*x2对x1的导数如何求？同样使用的是链式法则，不同的是这里是通过模块化（modularization）和自定区划（automatic differentiation）实现的</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Long-_AD_u2010short-_AD_u2010term-_AD_u2010memories_28LSTMs_29"><span class="nav-number">11.</span> <span class="nav-text">Long-­‐short-­‐term-­‐memories(LSTMs)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u6211_u4EEC_u53EF_u4EE5_u4F7F_u4F20_u7EDFRNN_u4E2D_u7684_u5355_u4E2AUnit_uFF08time_step_uFF09_u66F4_u52A0_u590D_u6742"><span class="nav-number">11.0.1.</span> <span class="nav-text">我们可以使传统RNN中的单个Unit（time step）更加复杂</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u53EF_u4EE5_u5728_u6BCF_u4E2Atime_step_u4E2D_u6DFB_u52A0_u4E0B_u56FE_u4E2D_u7684_u51E0_u9879_uFF1A"><span class="nav-number">11.0.2.</span> <span class="nav-text">可以在每个time step中添加下图中的几项：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u6700_u7EC8_u7684_u8BB0_u5FC6_u5355_u5143_uFF1A"><span class="nav-number">11.0.3.</span> <span class="nav-text">最终的记忆单元：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u6700_u7EC8_u5F97_u5230_u7684hidden_u5C42_u7684_u8BA1_u7B97_u516C_u5F0F_uFF1A"><span class="nav-number">11.0.4.</span> <span class="nav-text">最终得到的hidden层的计算公式：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LSTM_u8BE6_u89E3_u56FE_uFF1A"><span class="nav-number">11.0.5.</span> <span class="nav-text">LSTM详解图：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LSTMs_are_currently_very_hip_21"><span class="nav-number">12.</span> <span class="nav-text">LSTMs are currently very hip!</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#LSTM_u662F_u5927_u591A_u6570_u5E8F_u5217_u6807_u8BB0_u4EFB_u52A1_u7684_u9ED8_u8BA4_u6A21_u578B"><span class="nav-number">12.0.1.</span> <span class="nav-text">LSTM是大多数序列标记任务的默认模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u975E_u5E38_u7684_u7BA1_u7528_uFF0C_u7279_u522B_u662F_u5728_u4F7F_u6A21_u578Bdeeper_u4E4B_u540E_uFF08_u5373_u6BCF_u4E00_u4E2Ahidden_u5C42_u90FD_u662F_u7531_u4E00_u4E2A_u5185_u90E8_u7684_u6DF1_u5EA6_u7F51_u7EDC_u8BA1_u7B97_u5F97_u5230_uFF09"><span class="nav-number">12.0.2.</span> <span class="nav-text">非常的管用，特别是在使模型deeper之后（即每一个hidden层都是由一个内部的深度网络计算得到）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u6570_u636E_u8D8A_u591A_u8D8A_u7BA1_u7528"><span class="nav-number">12.0.3.</span> <span class="nav-text">数据越多越管用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u4F46_u662FDeep_LSTM_u548C_u4E00_u4E9B_u4F20_u7EDF_u7684MT_u65B9_u6CD5_u7684_u6D4B_u8BD5_u7ED3_u679C_u76F8_u5DEE_u4E0D_u5927_uFF1A"><span class="nav-number">12.0.4.</span> <span class="nav-text">但是Deep LSTM和一些传统的MT方法的测试结果相差不大：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Further_Improvements_3A_More_Gates_21"><span class="nav-number">13.</span> <span class="nav-text">Further Improvements: More Gates!</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+    
+    
+
+  
+
+
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
+
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    motionMiddleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+  
+  
+
+  
+  
+
+</body>
+</html>

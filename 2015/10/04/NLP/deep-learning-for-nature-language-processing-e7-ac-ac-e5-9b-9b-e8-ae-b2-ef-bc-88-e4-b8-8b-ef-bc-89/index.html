@@ -1,0 +1,648 @@
+<!doctype html>
+<html class="theme-next   use-motion ">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+
+
+
+
+<meta name="description" content="A note on matrix implementations&quot;&amp;gt;A note on matrix implementations将J对softmax的权重W和每个word vector进行求导：
+尽量使用矩阵运算（向量化），不要使用for loop。模型训练中有两个开销比较大的运算：矩阵乘法f=Wx和指数函数exp
+Softmax(=logistic regression) is not ve">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Deep Learning for Nature Language Processing --- 第四讲（下）">
+<meta property="og:url" content="http://yoursite.com/2015/10/04/NLP/deep-learning-for-nature-language-processing-e7-ac-ac-e5-9b-9b-e8-ae-b2-ef-bc-88-e4-b8-8b-ef-bc-89/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="A note on matrix implementations&quot;&amp;gt;A note on matrix implementations将J对softmax的权重W和每个word vector进行求导：
+尽量使用矩阵运算（向量化），不要使用for loop。模型训练中有两个开销比较大的运算：矩阵乘法f=Wx和指数函数exp
+Softmax(=logistic regression) is not ve">
+<meta property="og:image" content="http://img.blog.csdn.net/20150704201050299">
+<meta property="og:image" content="http://img.blog.csdn.net/20150704201755684">
+<meta property="og:image" content="http://img.blog.csdn.net/20150704202600084">
+<meta property="og:image" content="http://img.blog.csdn.net/20150704202811264">
+<meta property="og:image" content="http://img.blog.csdn.net/20150704204427513">
+<meta property="og:image" content="http://img.blog.csdn.net/20150704204830544">
+<meta property="og:image" content="http://img.blog.csdn.net/20150704204952342">
+<meta property="og:image" content="http://img.blog.csdn.net/20150704205955886">
+<meta property="og:updated_time" content="2015-10-05T12:14:13.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Deep Learning for Nature Language Processing --- 第四讲（下）">
+<meta name="twitter:description" content="A note on matrix implementations&quot;&amp;gt;A note on matrix implementations将J对softmax的权重W和每个word vector进行求导：
+尽量使用矩阵运算（向量化），不要使用for loop。模型训练中有两个开销比较大的运算：矩阵乘法f=Wx和指数函数exp
+Softmax(=logistic regression) is not ve">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post',
+    motion: true
+  };
+</script>
+
+  <title> Deep Learning for Nature Language Processing --- 第四讲（下） | Hexo </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Hexo</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Deep Learning for Nature Language Processing --- 第四讲（下）
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2015-10-04T19:44:02+08:00" content="2015-10-04">
+              2015-10-04
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分類於
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/NLP/" itemprop="url" rel="index">
+                    <span itemprop="name">NLP</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h1 id="A_note_on_matrix_implementations"><a href="#A_note_on_matrix_implementations" class="headerlink" title="<strong>A note on matrix implementations</strong>"></a><strong>A note on matrix implementations</strong></h1><h3 id="u5C06J_u5BF9softmax_u7684_u6743_u91CDW_u548C_u6BCF_u4E2Aword_vector_u8FDB_u884C_u6C42_u5BFC_uFF1A"><a href="#u5C06J_u5BF9softmax_u7684_u6743_u91CDW_u548C_u6BCF_u4E2Aword_vector_u8FDB_u884C_u6C42_u5BFC_uFF1A" class="headerlink" title="将J对softmax的权重W和每个word vector进行求导："></a>将J对softmax的权重W和每个word vector进行求导：</h3><p><img src="http://img.blog.csdn.net/20150704201050299" alt="这里写图片描述"></p>
+<h3 id="u5C3D_u91CF_u4F7F_u7528_u77E9_u9635_u8FD0_u7B97_uFF08_u5411_u91CF_u5316_uFF09_uFF0C_u4E0D_u8981_u4F7F_u7528for_loop_u3002"><a href="#u5C3D_u91CF_u4F7F_u7528_u77E9_u9635_u8FD0_u7B97_uFF08_u5411_u91CF_u5316_uFF09_uFF0C_u4E0D_u8981_u4F7F_u7528for_loop_u3002" class="headerlink" title="尽量使用矩阵运算（向量化），不要使用for loop。"></a>尽量使用矩阵运算（向量化），不要使用for loop。</h3><h3 id="u6A21_u578B_u8BAD_u7EC3_u4E2D_u6709_u4E24_u4E2A_u5F00_u9500_u6BD4_u8F83_u5927_u7684_u8FD0_u7B97_uFF1A_u77E9_u9635_u4E58_u6CD5f_3DWx_u548C_u6307_u6570_u51FD_u6570exp"><a href="#u6A21_u578B_u8BAD_u7EC3_u4E2D_u6709_u4E24_u4E2A_u5F00_u9500_u6BD4_u8F83_u5927_u7684_u8FD0_u7B97_uFF1A_u77E9_u9635_u4E58_u6CD5f_3DWx_u548C_u6307_u6570_u51FD_u6570exp" class="headerlink" title="模型训练中有两个开销比较大的运算：矩阵乘法f=Wx和指数函数exp"></a>模型训练中有两个开销比较大的运算：矩阵乘法f=Wx和指数函数exp</h3><p><img src="http://img.blog.csdn.net/20150704201755684" alt="for loop"></p>
+<h1 id="Softmax_28_3Dlogistic_regression_29_is_not_very_powerful"><a href="#Softmax_28_3Dlogistic_regression_29_is_not_very_powerful" class="headerlink" title="<strong>Softmax(=logistic regression) is not very powerful</strong>"></a><strong>Softmax(=logistic regression) is not very powerful</strong></h1><h3 id="softmax_u53EA_u662F_u5728_u539F_u6765_u7684_u5411_u91CF_u7A7A_u95F4_u4E2D_u7ED9_u51FA_u4E86_u4E00_u4E9Blinear_decision_boundary_uFF08_u7EBF_u6027_u51B3_u7B56_u7EBF_uFF09_uFF0C_u5728_u5C0F_u7684_u6570_u636E_u96C6_u4E0A_u6709_u5F88_u597D_u7684regularization_uFF0C_u4F46_u662F_u5728_u5904_u7406_u5927_u6570_u636E_u96C6_u7684_u65F6_u5019_u4F1A_u53D7_u5230_u5F88_u5927_u7684_u9650_u5236_u3002"><a href="#softmax_u53EA_u662F_u5728_u539F_u6765_u7684_u5411_u91CF_u7A7A_u95F4_u4E2D_u7ED9_u51FA_u4E86_u4E00_u4E9Blinear_decision_boundary_uFF08_u7EBF_u6027_u51B3_u7B56_u7EBF_uFF09_uFF0C_u5728_u5C0F_u7684_u6570_u636E_u96C6_u4E0A_u6709_u5F88_u597D_u7684regularization_uFF0C_u4F46_u662F_u5728_u5904_u7406_u5927_u6570_u636E_u96C6_u7684_u65F6_u5019_u4F1A_u53D7_u5230_u5F88_u5927_u7684_u9650_u5236_u3002" class="headerlink" title="softmax只是在原来的向量空间中给出了一些linear decision boundary（线性决策线），在小的数据集上有很好的regularization，但是在处理大数据集的时候会受到很大的限制。"></a>softmax只是在原来的向量空间中给出了一些linear decision boundary（线性决策线），在小的数据集上有很好的regularization，但是在处理大数据集的时候会受到很大的限制。</h3><p><img src="http://img.blog.csdn.net/20150704202600084" alt="这里写图片描述"></p>
+<h3 id="u4F46_u662Fneural_network_u80FD_u591F_u5F88_u597D_u5730_u514B_u670Dsoftmax_u7684_u7F3A_u70B9_uFF1A"><a href="#u4F46_u662Fneural_network_u80FD_u591F_u5F88_u597D_u5730_u514B_u670Dsoftmax_u7684_u7F3A_u70B9_uFF1A" class="headerlink" title="但是neural network能够很好地克服softmax的缺点："></a>但是neural network能够很好地克服softmax的缺点：</h3><p><img src="http://img.blog.csdn.net/20150704202811264" alt="这里写图片描述"></p>
+<h1 id="From_logistic_regression_to_neural_nets"><a href="#From_logistic_regression_to_neural_nets" class="headerlink" title="<strong>From logistic regression to neural nets</strong>"></a><strong>From logistic regression to neural nets</strong></h1><h3 id="u4E0D_u5355_u72EC_u4ECB_u7ECD_u795E_u7ECF_u7F51_u7EDC_uFF0C_u53EF_u4EE5_u53C2_u8003_u5176_u4ED6_u4ECB_u7ECD_u795E_u7ECF_u7F51_u7EDC_u7684_u6587_u7AE0"><a href="#u4E0D_u5355_u72EC_u4ECB_u7ECD_u795E_u7ECF_u7F51_u7EDC_uFF0C_u53EF_u4EE5_u53C2_u8003_u5176_u4ED6_u4ECB_u7ECD_u795E_u7ECF_u7F51_u7EDC_u7684_u6587_u7AE0" class="headerlink" title="不单独介绍神经网络，可以参考其他介绍神经网络的文章"></a>不单独介绍神经网络，可以参考其他介绍神经网络的文章</h3><h3 id="u5982_u679C_u6CA1_u6709_u975E_u7EBF_u6027_u7684_u6FC0_u6D3B_u51FD_u6570_uFF0C_u90A3_u4E48_u8F93_u5165x_u540E_uFF0C_u7B2C_u4E00_u5C42_u5C31_u662FW1_x_uFF0C_u7B2C_u4E8C_u5C42_u5C31_u662FW2_W1_x_uFF0C_u7B49_u540C_u4E8E_u8FD9_u4E2A_u795E_u7ECF_u7F51_u7EDC_u53EA_u6709_u4E00_u5C42_uFF0C_u6743_u91CD_u4E3AW2_W1_u3002"><a href="#u5982_u679C_u6CA1_u6709_u975E_u7EBF_u6027_u7684_u6FC0_u6D3B_u51FD_u6570_uFF0C_u90A3_u4E48_u8F93_u5165x_u540E_uFF0C_u7B2C_u4E00_u5C42_u5C31_u662FW1_x_uFF0C_u7B2C_u4E8C_u5C42_u5C31_u662FW2_W1_x_uFF0C_u7B49_u540C_u4E8E_u8FD9_u4E2A_u795E_u7ECF_u7F51_u7EDC_u53EA_u6709_u4E00_u5C42_uFF0C_u6743_u91CD_u4E3AW2_W1_u3002" class="headerlink" title="如果没有非线性的激活函数，那么输入x后，第一层就是W1_x，第二层就是W2_W1_x，等同于这个神经网络只有一层，权重为W2_W1。"></a>如果没有非线性的激活函数，那么输入x后，第一层就是W1_x，第二层就是W2_W1_x，等同于这个神经网络只有一层，权重为W2_W1。</h3><h3 id="u6709_u66F4_u591A_u7684_u5C42_uFF0Cdeep_learning_u5C31_u53EF_u4EE5_u6709_u8FD1_u4F3C_uFF08_u5206_u7C7B_uFF09_u66F4_u590D_u6742_u6570_u636E_u96C6_u7684_u529F_u80FD_uFF1A"><a href="#u6709_u66F4_u591A_u7684_u5C42_uFF0Cdeep_learning_u5C31_u53EF_u4EE5_u6709_u8FD1_u4F3C_uFF08_u5206_u7C7B_uFF09_u66F4_u590D_u6742_u6570_u636E_u96C6_u7684_u529F_u80FD_uFF1A" class="headerlink" title="有更多的层，deep learning就可以有近似（分类）更复杂数据集的功能："></a>有更多的层，deep learning就可以有近似（分类）更复杂数据集的功能：</h3><p><img src="http://img.blog.csdn.net/20150704204427513" alt="这里写图片描述"></p>
+<h3 id="u795E_u7ECF_u7F51_u7EDC_u7684_u5355_u5C42single_layer_u5C31_u662F_u4E00_u4E2A_u7EBF_u6027_u8868_u8FBE_u5F0F_u548C_u4E00_u4E2A_u975E_u7EBF_u6027_u51FD_u6570_u7684_u7EC4_u5408_uFF1A"><a href="#u795E_u7ECF_u7F51_u7EDC_u7684_u5355_u5C42single_layer_u5C31_u662F_u4E00_u4E2A_u7EBF_u6027_u8868_u8FBE_u5F0F_u548C_u4E00_u4E2A_u975E_u7EBF_u6027_u51FD_u6570_u7684_u7EC4_u5408_uFF1A" class="headerlink" title="神经网络的单层single layer就是一个线性表达式和一个非线性函数的组合："></a>神经网络的单层single layer就是一个线性表达式和一个非线性函数的组合：</h3><p><img src="http://img.blog.csdn.net/20150704204830544" alt="这里写图片描述"></p>
+<h3 id="u6FC0_u52B1activation_u53EF_u4EE5_u7528_u6765_u8BA1_u7B97_u67D0_u4E2A_u51FD_u6570_uFF0C_u4F8B_u5982_u5728softmax_u4E2D_uFF1A"><a href="#u6FC0_u52B1activation_u53EF_u4EE5_u7528_u6765_u8BA1_u7B97_u67D0_u4E2A_u51FD_u6570_uFF0C_u4F8B_u5982_u5728softmax_u4E2D_uFF1A" class="headerlink" title="激励activation可以用来计算某个函数，例如在softmax中："></a>激励activation可以用来计算某个函数，例如在softmax中：</h3><p><img src="http://img.blog.csdn.net/20150704204952342" alt="这里写图片描述"></p>
+<h3 id="u793A_u4F8B_uFF1A_u8BA1_u7B97_u4E09_u5C42_u795E_u7ECF_u7F51_u7EDC_u4E2D_u4E00_u4E2Awindow_u2019_score_uFF08s_3Dscore_28museumsinParisareamazing_29_uFF09_uFF1A"><a href="#u793A_u4F8B_uFF1A_u8BA1_u7B97_u4E09_u5C42_u795E_u7ECF_u7F51_u7EDC_u4E2D_u4E00_u4E2Awindow_u2019_score_uFF08s_3Dscore_28museumsinParisareamazing_29_uFF09_uFF1A" class="headerlink" title="示例：计算三层神经网络中一个window’ score（s=score(museumsinParisareamazing)）："></a>示例：计算三层神经网络中一个window’ score（s=score(museumsinParisareamazing)）：</h3><p><img src="http://img.blog.csdn.net/20150704205955886" alt="这里写图片描述"><br>score其实就是softmax的概率值</p>
+<h1 id="u4E0B_u4E00_u8BB2"><a href="#u4E0B_u4E00_u8BB2" class="headerlink" title="<strong>下一讲</strong>"></a><strong>下一讲</strong></h1><h3 id="u8BAD_u7EC3_u4E00_u4E2Awindow-based_u7684_u795E_u7ECF_u7F51_u7EDC"><a href="#u8BAD_u7EC3_u4E00_u4E2Awindow-based_u7684_u795E_u7ECF_u7F51_u7EDC" class="headerlink" title="训练一个window-based的神经网络"></a>训练一个window-based的神经网络</h3><h3 id="u53CD_u5411_u4F20_u64ADbackpropagation"><a href="#u53CD_u5411_u4F20_u64ADbackpropagation" class="headerlink" title="反向传播backpropagation"></a>反向传播backpropagation</h3></span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/10/04/NLP/deep-learning-for-nature-language-processing-e7-ac-ac-e5-9b-9b-e8-ae-b2-e4-b8-8a/" rel="next" title="Deep Learning for Nature Language Processing---第四讲(上)">
+                <i class="fa fa-chevron-left"></i> Deep Learning for Nature Language Processing---第四讲(上)
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/10/04/NLP/deep-learning-for-nature-language-processing-e7-ac-ac-e4-ba-94-e8-ae-b2/" rel="prev" title="Deep Learning for Nature Language Processing --- 第五讲">
+                Deep Learning for Nature Language Processing --- 第五讲 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+        </div>
+
+        
+
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="John Doe" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">John Doe</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#A_note_on_matrix_implementations"><span class="nav-number">1.</span> <span class="nav-text">A note on matrix implementations</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u5C06J_u5BF9softmax_u7684_u6743_u91CDW_u548C_u6BCF_u4E2Aword_vector_u8FDB_u884C_u6C42_u5BFC_uFF1A"><span class="nav-number">1.0.1.</span> <span class="nav-text">将J对softmax的权重W和每个word vector进行求导：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u5C3D_u91CF_u4F7F_u7528_u77E9_u9635_u8FD0_u7B97_uFF08_u5411_u91CF_u5316_uFF09_uFF0C_u4E0D_u8981_u4F7F_u7528for_loop_u3002"><span class="nav-number">1.0.2.</span> <span class="nav-text">尽量使用矩阵运算（向量化），不要使用for loop。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u6A21_u578B_u8BAD_u7EC3_u4E2D_u6709_u4E24_u4E2A_u5F00_u9500_u6BD4_u8F83_u5927_u7684_u8FD0_u7B97_uFF1A_u77E9_u9635_u4E58_u6CD5f_3DWx_u548C_u6307_u6570_u51FD_u6570exp"><span class="nav-number">1.0.3.</span> <span class="nav-text">模型训练中有两个开销比较大的运算：矩阵乘法f=Wx和指数函数exp</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Softmax_28_3Dlogistic_regression_29_is_not_very_powerful"><span class="nav-number">2.</span> <span class="nav-text">Softmax(=logistic regression) is not very powerful</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#softmax_u53EA_u662F_u5728_u539F_u6765_u7684_u5411_u91CF_u7A7A_u95F4_u4E2D_u7ED9_u51FA_u4E86_u4E00_u4E9Blinear_decision_boundary_uFF08_u7EBF_u6027_u51B3_u7B56_u7EBF_uFF09_uFF0C_u5728_u5C0F_u7684_u6570_u636E_u96C6_u4E0A_u6709_u5F88_u597D_u7684regularization_uFF0C_u4F46_u662F_u5728_u5904_u7406_u5927_u6570_u636E_u96C6_u7684_u65F6_u5019_u4F1A_u53D7_u5230_u5F88_u5927_u7684_u9650_u5236_u3002"><span class="nav-number">2.0.1.</span> <span class="nav-text">softmax只是在原来的向量空间中给出了一些linear decision boundary（线性决策线），在小的数据集上有很好的regularization，但是在处理大数据集的时候会受到很大的限制。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u4F46_u662Fneural_network_u80FD_u591F_u5F88_u597D_u5730_u514B_u670Dsoftmax_u7684_u7F3A_u70B9_uFF1A"><span class="nav-number">2.0.2.</span> <span class="nav-text">但是neural network能够很好地克服softmax的缺点：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#From_logistic_regression_to_neural_nets"><span class="nav-number">3.</span> <span class="nav-text">From logistic regression to neural nets</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u4E0D_u5355_u72EC_u4ECB_u7ECD_u795E_u7ECF_u7F51_u7EDC_uFF0C_u53EF_u4EE5_u53C2_u8003_u5176_u4ED6_u4ECB_u7ECD_u795E_u7ECF_u7F51_u7EDC_u7684_u6587_u7AE0"><span class="nav-number">3.0.1.</span> <span class="nav-text">不单独介绍神经网络，可以参考其他介绍神经网络的文章</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u5982_u679C_u6CA1_u6709_u975E_u7EBF_u6027_u7684_u6FC0_u6D3B_u51FD_u6570_uFF0C_u90A3_u4E48_u8F93_u5165x_u540E_uFF0C_u7B2C_u4E00_u5C42_u5C31_u662FW1_x_uFF0C_u7B2C_u4E8C_u5C42_u5C31_u662FW2_W1_x_uFF0C_u7B49_u540C_u4E8E_u8FD9_u4E2A_u795E_u7ECF_u7F51_u7EDC_u53EA_u6709_u4E00_u5C42_uFF0C_u6743_u91CD_u4E3AW2_W1_u3002"><span class="nav-number">3.0.2.</span> <span class="nav-text">如果没有非线性的激活函数，那么输入x后，第一层就是W1_x，第二层就是W2_W1_x，等同于这个神经网络只有一层，权重为W2_W1。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u6709_u66F4_u591A_u7684_u5C42_uFF0Cdeep_learning_u5C31_u53EF_u4EE5_u6709_u8FD1_u4F3C_uFF08_u5206_u7C7B_uFF09_u66F4_u590D_u6742_u6570_u636E_u96C6_u7684_u529F_u80FD_uFF1A"><span class="nav-number">3.0.3.</span> <span class="nav-text">有更多的层，deep learning就可以有近似（分类）更复杂数据集的功能：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u795E_u7ECF_u7F51_u7EDC_u7684_u5355_u5C42single_layer_u5C31_u662F_u4E00_u4E2A_u7EBF_u6027_u8868_u8FBE_u5F0F_u548C_u4E00_u4E2A_u975E_u7EBF_u6027_u51FD_u6570_u7684_u7EC4_u5408_uFF1A"><span class="nav-number">3.0.4.</span> <span class="nav-text">神经网络的单层single layer就是一个线性表达式和一个非线性函数的组合：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u6FC0_u52B1activation_u53EF_u4EE5_u7528_u6765_u8BA1_u7B97_u67D0_u4E2A_u51FD_u6570_uFF0C_u4F8B_u5982_u5728softmax_u4E2D_uFF1A"><span class="nav-number">3.0.5.</span> <span class="nav-text">激励activation可以用来计算某个函数，例如在softmax中：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u793A_u4F8B_uFF1A_u8BA1_u7B97_u4E09_u5C42_u795E_u7ECF_u7F51_u7EDC_u4E2D_u4E00_u4E2Awindow_u2019_score_uFF08s_3Dscore_28museumsinParisareamazing_29_uFF09_uFF1A"><span class="nav-number">3.0.6.</span> <span class="nav-text">示例：计算三层神经网络中一个window’ score（s=score(museumsinParisareamazing)）：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u4E0B_u4E00_u8BB2"><span class="nav-number">4.</span> <span class="nav-text">下一讲</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u8BAD_u7EC3_u4E00_u4E2Awindow-based_u7684_u795E_u7ECF_u7F51_u7EDC"><span class="nav-number">4.0.1.</span> <span class="nav-text">训练一个window-based的神经网络</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u53CD_u5411_u4F20_u64ADbackpropagation"><span class="nav-number">4.0.2.</span> <span class="nav-text">反向传播backpropagation</span></a></li></ol></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+    
+    
+
+  
+
+
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
+
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    motionMiddleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+  
+  
+
+  
+  
+
+</body>
+</html>

@@ -1,0 +1,657 @@
+<!doctype html>
+<html class="theme-next   use-motion ">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+
+
+
+
+<meta name="description" content="Class Project&quot;&amp;gt;Class Project占40%的成绩比重尽早规划好任务和数据集project类别：1. 用已存的神经网络应用在一个新的任务task上2.开发出一个新的神经网络结构Class Project: Apply Existing NNets to Tasks&quot;&amp;gt;Class Project: Apply Existing NNets to Tasks1.构建任务，如：生成摘">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Deep Learning for Nature Language Processing --- 第五讲">
+<meta property="og:url" content="http://yoursite.com/2015/10/04/NLP/deep-learning-for-nature-language-processing-e7-ac-ac-e4-ba-94-e8-ae-b2/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Class Project&quot;&amp;gt;Class Project占40%的成绩比重尽早规划好任务和数据集project类别：1. 用已存的神经网络应用在一个新的任务task上2.开发出一个新的神经网络结构Class Project: Apply Existing NNets to Tasks&quot;&amp;gt;Class Project: Apply Existing NNets to Tasks1.构建任务，如：生成摘">
+<meta property="og:image" content="http://img.blog.csdn.net/20150705130832756">
+<meta property="og:image" content="http://img.blog.csdn.net/20150705130937000">
+<meta property="og:image" content="http://img.blog.csdn.net/20150705133953039">
+<meta property="og:image" content="http://img.blog.csdn.net/20150705135516121">
+<meta property="og:image" content="http://img.blog.csdn.net/20150705135754529">
+<meta property="og:image" content="http://img.blog.csdn.net/20150705140000958">
+<meta property="og:image" content="http://img.blog.csdn.net/20150705140326080">
+<meta property="og:image" content="http://img.blog.csdn.net/20150705151640676">
+<meta property="og:image" content="http://img.blog.csdn.net/20150705151753479">
+<meta property="og:image" content="http://img.blog.csdn.net/20150705202901545">
+<meta property="og:image" content="http://img.blog.csdn.net/20150705204148461">
+<meta property="og:image" content="http://img.blog.csdn.net/20150705204638285">
+<meta property="og:image" content="http://img.blog.csdn.net/20150705204942810">
+<meta property="og:image" content="http://img.blog.csdn.net/20150705205727298">
+<meta property="og:image" content="http://img.blog.csdn.net/20150705210712508">
+<meta property="og:image" content="http://img.blog.csdn.net/20150705220531733">
+<meta property="og:updated_time" content="2015-10-05T12:13:17.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Deep Learning for Nature Language Processing --- 第五讲">
+<meta name="twitter:description" content="Class Project&quot;&amp;gt;Class Project占40%的成绩比重尽早规划好任务和数据集project类别：1. 用已存的神经网络应用在一个新的任务task上2.开发出一个新的神经网络结构Class Project: Apply Existing NNets to Tasks&quot;&amp;gt;Class Project: Apply Existing NNets to Tasks1.构建任务，如：生成摘">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post',
+    motion: true
+  };
+</script>
+
+  <title> Deep Learning for Nature Language Processing --- 第五讲 | Hexo </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Hexo</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Deep Learning for Nature Language Processing --- 第五讲
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2015-10-04T19:44:50+08:00" content="2015-10-04">
+              2015-10-04
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分類於
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/NLP/" itemprop="url" rel="index">
+                    <span itemprop="name">NLP</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h1 id="Class_Project"><a href="#Class_Project" class="headerlink" title="<strong>Class Project</strong>"></a><strong>Class Project</strong></h1><h3 id="u536040_25_u7684_u6210_u7EE9_u6BD4_u91CD"><a href="#u536040_25_u7684_u6210_u7EE9_u6BD4_u91CD" class="headerlink" title="占40%的成绩比重"></a>占40%的成绩比重</h3><h3 id="u5C3D_u65E9_u89C4_u5212_u597D_u4EFB_u52A1_u548C_u6570_u636E_u96C6"><a href="#u5C3D_u65E9_u89C4_u5212_u597D_u4EFB_u52A1_u548C_u6570_u636E_u96C6" class="headerlink" title="尽早规划好任务和数据集"></a>尽早规划好任务和数据集</h3><h3 id="project_u7C7B_u522B_uFF1A"><a href="#project_u7C7B_u522B_uFF1A" class="headerlink" title="project类别："></a>project类别：</h3><h4 id="1-__u7528_u5DF2_u5B58_u7684_u795E_u7ECF_u7F51_u7EDC_u5E94_u7528_u5728_u4E00_u4E2A_u65B0_u7684_u4EFB_u52A1task_u4E0A"><a href="#1-__u7528_u5DF2_u5B58_u7684_u795E_u7ECF_u7F51_u7EDC_u5E94_u7528_u5728_u4E00_u4E2A_u65B0_u7684_u4EFB_u52A1task_u4E0A" class="headerlink" title="1. 用已存的神经网络应用在一个新的任务task上"></a>1. 用已存的神经网络应用在一个新的任务task上</h4><h4 id="2-_u5F00_u53D1_u51FA_u4E00_u4E2A_u65B0_u7684_u795E_u7ECF_u7F51_u7EDC_u7ED3_u6784"><a href="#2-_u5F00_u53D1_u51FA_u4E00_u4E2A_u65B0_u7684_u795E_u7ECF_u7F51_u7EDC_u7ED3_u6784" class="headerlink" title="2.开发出一个新的神经网络结构"></a>2.开发出一个新的神经网络结构</h4><h1 id="Class_Project_3A_Apply_Existing_NNets_to_Tasks"><a href="#Class_Project_3A_Apply_Existing_NNets_to_Tasks" class="headerlink" title="<strong>Class Project: Apply Existing NNets to Tasks</strong>"></a><strong>Class Project: Apply Existing NNets to Tasks</strong></h1><h3 id="1-_u6784_u5EFA_u4EFB_u52A1_uFF0C_u5982_uFF1A_u751F_u6210_u6458_u8981"><a href="#1-_u6784_u5EFA_u4EFB_u52A1_uFF0C_u5982_uFF1A_u751F_u6210_u6458_u8981" class="headerlink" title="1.构建任务，如：生成摘要"></a>1.构建任务，如：生成摘要</h3><h3 id="2-_u51C6_u5907_u6570_u636E_u53CA_uFF1A"><a href="#2-_u51C6_u5907_u6570_u636E_u53CA_uFF1A" class="headerlink" title="2.准备数据及："></a>2.准备数据及：</h3><h4 id="1_uFF09-_u5DF2_u7ECF_u6709_u57FA_u51C6_u7EBF_u7684_u5B66_u672F_u4E0A_u7684_u6570_u636E_u96C6_uFF0C_u5982_uFF1ADocument_Understanding_Conference__28DUC_29"><a href="#1_uFF09-_u5DF2_u7ECF_u6709_u57FA_u51C6_u7EBF_u7684_u5B66_u672F_u4E0A_u7684_u6570_u636E_u96C6_uFF0C_u5982_uFF1ADocument_Understanding_Conference__28DUC_29" class="headerlink" title="1）.已经有基准线的学术上的数据集，如：Document Understanding Conference (DUC)"></a>1）.已经有基准线的学术上的数据集，如：Document Understanding Conference (DUC)</h4><h4 id="2_uFF09-_u6784_u5EFA_u4F60_u81EA_u5DF1_u7684_u6570_u636E_u96C6_uFF0C_u53EF_u4EE5_u662FTwiMer_2CBlogs_2CNews_u7B49"><a href="#2_uFF09-_u6784_u5EFA_u4F60_u81EA_u5DF1_u7684_u6570_u636E_u96C6_uFF0C_u53EF_u4EE5_u662FTwiMer_2CBlogs_2CNews_u7B49" class="headerlink" title="2）.构建你自己的数据集，可以是TwiMer,Blogs,News等"></a>2）.构建你自己的数据集，可以是TwiMer,Blogs,News等</h4><h3 id="3-_u5B9A_u4E49_u597D_u4EFB_u52A1task_u7684_u8861_u91CF_u6807_u51C6"><a href="#3-_u5B9A_u4E49_u597D_u4EFB_u52A1task_u7684_u8861_u91CF_u6807_u51C6" class="headerlink" title="3.定义好任务task的衡量标准"></a>3.定义好任务task的衡量标准</h3><h3 id="4-_u5212_u5206_u597D_u6570_u636E_u96C6_uFF0Ctrain/cv/test-_u5B66_u672F_u4E0A_u5E38_u7528_u7684_u6570_u636E_u96C6_u4E00_u822C_u5DF2_u7ECF_u5212_u5206_u597D_u4E86"><a href="#4-_u5212_u5206_u597D_u6570_u636E_u96C6_uFF0Ctrain/cv/test-_u5B66_u672F_u4E0A_u5E38_u7528_u7684_u6570_u636E_u96C6_u4E00_u822C_u5DF2_u7ECF_u5212_u5206_u597D_u4E86" class="headerlink" title="4.划分好数据集，train/cv/test.学术上常用的数据集一般已经划分好了"></a>4.划分好数据集，train/cv/test.学术上常用的数据集一般已经划分好了</h3><h3 id="5-_u5EFA_u7ACB_u57FA_u51C6_u7EBF_uFF1A_u9996_u5148_u5B8C_u6210_u4E00_u4E2A_u7B80_u5355_u7684_u6A21_u578B_uFF08_u5982_u4E00_u5143_u6216_u8005_u4E8C_u5143_u7684_u903B_u8F91_u56DE_u5F52_uFF09_uFF0C_u7136_u540E_u518Dtrain/cv_dataset_u4E0A_u8BA1_u7B97_u9519_u8BEF_u7387_uFF0C_u5206_u6790_u9519_u8BEF_u539F_u56E0_u3002_u5982_u4F55_u6CA1_u6709_u9519_u8BEF_uFF0C_u91CD_u65B0_u6765_u8FC7_uFF1A_uFF09"><a href="#5-_u5EFA_u7ACB_u57FA_u51C6_u7EBF_uFF1A_u9996_u5148_u5B8C_u6210_u4E00_u4E2A_u7B80_u5355_u7684_u6A21_u578B_uFF08_u5982_u4E00_u5143_u6216_u8005_u4E8C_u5143_u7684_u903B_u8F91_u56DE_u5F52_uFF09_uFF0C_u7136_u540E_u518Dtrain/cv_dataset_u4E0A_u8BA1_u7B97_u9519_u8BEF_u7387_uFF0C_u5206_u6790_u9519_u8BEF_u539F_u56E0_u3002_u5982_u4F55_u6CA1_u6709_u9519_u8BEF_uFF0C_u91CD_u65B0_u6765_u8FC7_uFF1A_uFF09" class="headerlink" title="5.建立基准线：首先完成一个简单的模型（如一元或者二元的逻辑回归），然后再train/cv dataset上计算错误率，分析错误原因。如何没有错误，重新来过：）"></a>5.建立基准线：首先完成一个简单的模型（如一元或者二元的逻辑回归），然后再train/cv dataset上计算错误率，分析错误原因。如何没有错误，重新来过：）</h3><h3 id="6-_u5728_u5DF2_u7ECF_u5B58_u5728_u7684_u795E_u7ECF_u7F51_u7EDC_u6A21_u578B_u4E0A_u5B9E_u73B0_uFF1A_u8BA1_u7B97train/cv_dataset_u7684_u9519_u8BEF_u7387_u5E76_u5206_u6790"><a href="#6-_u5728_u5DF2_u7ECF_u5B58_u5728_u7684_u795E_u7ECF_u7F51_u7EDC_u6A21_u578B_u4E0A_u5B9E_u73B0_uFF1A_u8BA1_u7B97train/cv_dataset_u7684_u9519_u8BEF_u7387_u5E76_u5206_u6790" class="headerlink" title="6.在已经存在的神经网络模型上实现：计算train/cv dataset的错误率并分析"></a>6.在已经存在的神经网络模型上实现：计算train/cv dataset的错误率并分析</h3><h3 id="7-_u53EF_u89C6_u5316_u6570_u636E_u96C6_uFF0C_u6536_u96C6_u6458_u8981_u7EDF_u8BA1_u4FE1_u606F_uFF0C_u5206_u6790_u9519_u8BEF_uFF0C_u5206_u6790_u4E0D_u540C_u7684_u53C2_u6570_u5BF9_u8FD0_u884C_u7ED3_u679C_u7684_u5F71_u54CD_u3002"><a href="#7-_u53EF_u89C6_u5316_u6570_u636E_u96C6_uFF0C_u6536_u96C6_u6458_u8981_u7EDF_u8BA1_u4FE1_u606F_uFF0C_u5206_u6790_u9519_u8BEF_uFF0C_u5206_u6790_u4E0D_u540C_u7684_u53C2_u6570_u5BF9_u8FD0_u884C_u7ED3_u679C_u7684_u5F71_u54CD_u3002" class="headerlink" title="7.可视化数据集，收集摘要统计信息，分析错误，分析不同的参数对运行结果的影响。"></a>7.可视化数据集，收集摘要统计信息，分析错误，分析不同的参数对运行结果的影响。</h3><h3 id="8-_u5C1D_u8BD5_u66F4_u591A_u4E0D_u540C_u79CD_u7C7B_u7684_u6A21_u578B"><a href="#8-_u5C1D_u8BD5_u66F4_u591A_u4E0D_u540C_u79CD_u7C7B_u7684_u6A21_u578B" class="headerlink" title="8.尝试更多不同种类的模型"></a>8.尝试更多不同种类的模型</h3><h1 id="Class_Project_3AA_New_Model_-_AD_u2010-_AD_u2010_Advanced_Option"><a href="#Class_Project_3AA_New_Model_-_AD_u2010-_AD_u2010_Advanced_Option" class="headerlink" title="<strong>Class Project:A New Model -­‐-­‐ Advanced Option</strong>"></a><strong>Class Project:A New Model -­‐-­‐ Advanced Option</strong></h1><p><img src="http://img.blog.csdn.net/20150705130832756" alt="这里写图片描述"></p>
+<h1 id="Project_Ideas"><a href="#Project_Ideas" class="headerlink" title="<strong>Project Ideas</strong>"></a><strong>Project Ideas</strong></h1><p><img src="http://img.blog.csdn.net/20150705130937000" alt="这里写图片描述"></p>
+<h1 id="Summary_3AFeed-_AD_u2010forward_Computation"><a href="#Summary_3AFeed-_AD_u2010forward_Computation" class="headerlink" title="<strong>Summary:Feed-­‐forward Computation</strong>"></a><strong>Summary:Feed-­‐forward Computation</strong></h1><h3 id="u7535_u5F71_u8BC4_u8BBA_u60C5_u611F_u5206_u6790_u53C2_u8003_uFF1Ahttp_3A//nlp-stanford-edu/sentiment/"><a href="#u7535_u5F71_u8BC4_u8BBA_u60C5_u611F_u5206_u6790_u53C2_u8003_uFF1Ahttp_3A//nlp-stanford-edu/sentiment/" class="headerlink" title="电影评论情感分析参考：<a href=" http:="" nlp.stanford.edu="" sentiment="" "="">http://nlp.stanford.edu/sentiment/</a>">电影评论情感分析参考：<a href="http://nlp.stanford.edu/sentiment/" target="_blank" rel="external">http://nlp.stanford.edu/sentiment/</a></h3><h3 id="u5047_u8BBE_uFF1A1-s_3Dscore_28museums_in_Paris_are_amazing_29_2-sc_3Dscore_28Not_all_museums_in_Paris_29"><a href="#u5047_u8BBE_uFF1A1-s_3Dscore_28museums_in_Paris_are_amazing_29_2-sc_3Dscore_28Not_all_museums_in_Paris_29" class="headerlink" title="假设：1.s=score(museums in Paris are amazing) 2.s<sub>c</sub>=score(Not all museums in Paris)"></a>假设：1.s=score(museums in Paris are amazing) 2.s<sub>c</sub>=score(Not all museums in Paris)</h3><h3 id="u8BAD_u7EC3_u76EE_u6807_u51FD_u6570_u7684_u4E00_u4E9B_u601D_u60F3idea_uFF1A_u6700_u5927_u5316true_window_u7684sore_uFF0C_u6700_u5C0F_u5316correct_window_u7684score_uFF0C_u4E5F_u5C31_u662F_u6700_u5C0F_u5316_u4E0B_u9762_u7684_u51FD_u6570_uFF08_u56E0_u4E3A_u662F_u8FDE_u7EED_u7684_uFF0C_u6240_u4EE5_u53EF_u4EE5_u91C7_u7528SGD_uFF0C_u4E0B_u9762_u7684_u51FD_u6570_u9488_u5BF9_u5355_u4E2Awindow_uFF09_uFF1A"><a href="#u8BAD_u7EC3_u76EE_u6807_u51FD_u6570_u7684_u4E00_u4E9B_u601D_u60F3idea_uFF1A_u6700_u5927_u5316true_window_u7684sore_uFF0C_u6700_u5C0F_u5316correct_window_u7684score_uFF0C_u4E5F_u5C31_u662F_u6700_u5C0F_u5316_u4E0B_u9762_u7684_u51FD_u6570_uFF08_u56E0_u4E3A_u662F_u8FDE_u7EED_u7684_uFF0C_u6240_u4EE5_u53EF_u4EE5_u91C7_u7528SGD_uFF0C_u4E0B_u9762_u7684_u51FD_u6570_u9488_u5BF9_u5355_u4E2Awindow_uFF09_uFF1A" class="headerlink" title="训练目标函数的一些思想idea：最大化true window的sore，最小化correct window的score，也就是最小化下面的函数（因为是连续的，所以可以采用SGD，下面的函数针对单个window）："></a>训练目标函数的一些思想idea：最大化true window的sore，最小化correct window的score，也就是最小化下面的函数（因为是连续的，所以可以采用SGD，下面的函数针对单个window）：</h3><p><img src="http://img.blog.csdn.net/20150705133953039" alt="这里写图片描述"></p>
+<h3 id="u5C31_u4F8B_u5B50s_u800C_u8A00_uFF0C_u5BF9_u4E8E_u4E00_u4E2A_u4E2D_u5FC3_u8BCD_u662F_u4E00_u4E2Alocation_u7684window_uFF0C_u4F1A_u6BD4_u4E2D_u5FC3_u8BCD_u4E0D_u662Flocation_u7684window_u5F97_u5230_u7684_u5206_u6570_u9AD8score+1"><a href="#u5C31_u4F8B_u5B50s_u800C_u8A00_uFF0C_u5BF9_u4E8E_u4E00_u4E2A_u4E2D_u5FC3_u8BCD_u662F_u4E00_u4E2Alocation_u7684window_uFF0C_u4F1A_u6BD4_u4E2D_u5FC3_u8BCD_u4E0D_u662Flocation_u7684window_u5F97_u5230_u7684_u5206_u6570_u9AD8score+1" class="headerlink" title="就例子s而言，对于一个中心词是一个location的window，会比中心词不是location的window得到的分数高score+1"></a>就例子s而言，对于一个中心词是一个location的window，会比中心词不是location的window得到的分数高score+1</h3><h3 id="u6574_u4F53_u7684_uFF0C_u9488_u5BF9_u6574_u4E2A_u6570_u636E_u96C6_u7684_u76EE_u6807_u65B9_u7A0B_u5C31_u662F_u8BB2_u6BCF_u4E2A_u5355_u72ECwindow_u5BF9_u5E94_u7684_u76EE_u6807_u65B9_u7A0B_u76F8_u52A0_u3002"><a href="#u6574_u4F53_u7684_uFF0C_u9488_u5BF9_u6574_u4E2A_u6570_u636E_u96C6_u7684_u76EE_u6807_u65B9_u7A0B_u5C31_u662F_u8BB2_u6BCF_u4E2A_u5355_u72ECwindow_u5BF9_u5E94_u7684_u76EE_u6807_u65B9_u7A0B_u76F8_u52A0_u3002" class="headerlink" title="整体的，针对整个数据集的目标方程就是讲每个单独window对应的目标方程相加。"></a>整体的，针对整个数据集的目标方程就是讲每个单独window对应的目标方程相加。</h3><h1 id="Training_with_Backpropagation"><a href="#Training_with_Backpropagation" class="headerlink" title="<strong>Training with Backpropagation</strong>"></a><strong>Training with Backpropagation</strong></h1><p><img src="http://img.blog.csdn.net/20150705135516121" alt="这里写图片描述"><br>带下标c的一般表示负样本</p>
+<h3 id="u5047_u8BBEJ_26gt_3B0_uFF0C_u6C42s_u548Csc_u5173_u4E8EU_2CW_uFF0Cb_uFF0Cx_u7684_u5BFC_u6570_u3002_u793A_u4F8B_uFF1A"><a href="#u5047_u8BBEJ_26gt_3B0_uFF0C_u6C42s_u548Csc_u5173_u4E8EU_2CW_uFF0Cb_uFF0Cx_u7684_u5BFC_u6570_u3002_u793A_u4F8B_uFF1A" class="headerlink" title="假设J&gt;0，求s和s<sub>c</sub>关于U,W，b，x的导数。示例："></a>假设J&gt;0，求s和s<sub>c</sub>关于U,W，b，x的导数。示例：</h3><p><img src="http://img.blog.csdn.net/20150705135754529" alt="这里写图片描述"></p>
+<h3 id="u5148_u8003_u8651s_u5BF9_u5355_u4E2A_u6743_u91CDWij_u7684_u5BFC_u6570_uFF0C_u53C2_u8003_u4E0B_u9762_u7684_u51FD_u6570_u53D8_u5F62_uFF0C_u6240_u4EE5Wij_u53EA_u5F71_u54CDai_uFF1A"><a href="#u5148_u8003_u8651s_u5BF9_u5355_u4E2A_u6743_u91CDWij_u7684_u5BFC_u6570_uFF0C_u53C2_u8003_u4E0B_u9762_u7684_u51FD_u6570_u53D8_u5F62_uFF0C_u6240_u4EE5Wij_u53EA_u5F71_u54CDai_uFF1A" class="headerlink" title="先考虑s对单个权重W<sub>ij</sub>的导数，参考下面的函数变形，所以W<sub>ij</sub>只影响a<sub>i</sub>："></a>先考虑s对单个权重W<sub>ij</sub>的导数，参考下面的函数变形，所以W<sub>ij</sub>只影响a<sub>i</sub>：</h3><p><img src="http://img.blog.csdn.net/20150705140000958" alt="这里写图片描述"></p>
+<h3 id="u4EE5W23_u4E3A_u4F8B_uFF0CW23_u53EA_u80FD_u7528_u6765_u8BA1_u7B97a2_uFF1A"><a href="#u4EE5W23_u4E3A_u4F8B_uFF0CW23_u53EA_u80FD_u7528_u6765_u8BA1_u7B97a2_uFF1A" class="headerlink" title="以W<sub>23</sub>为例，W<sub>23</sub>只能用来计算a<sub>2</sub>："></a>以W<sub>23</sub>为例，W<sub>23</sub>只能用来计算a<sub>2</sub>：</h3><p><img src="http://img.blog.csdn.net/20150705140326080" alt="这里写图片描述"></p>
+<h3 id="u6240_u4EE5_u5C06s_u5BF9Wij__u6C42_u5BFC_uFF1A"><a href="#u6240_u4EE5_u5C06s_u5BF9Wij__u6C42_u5BFC_uFF1A" class="headerlink" title="所以将s对W<sub>ij</sub> 求导："></a>所以将s对W<sub>ij</sub> 求导：</h3><p><img src="http://img.blog.csdn.net/20150705151640676" alt="这里写图片描述"><br><img src="http://img.blog.csdn.net/20150705151753479" alt="这里写图片描述"></p>
+<h3 id="u6C42_u51FA_u4E86_u5BF9Wij_u5355_u4E2A_u5143_u7D20_u7684_u5BFC_u6570_uFF0C_u90A3_u4E48_u5982_u4F55_u6C42s_u5BF9_u6574_u4E2AW_u77E9_u9635_u7684_u5BFC_u6570_u5462_uFF1F_u7B54_u6848_uFF08_24_5Cdelta_24__u8868_u793A_u7684_u662F_u6BCF_u4E2Aactivation_u7684_u9519_u8BEF_u4FE1_u606F_uFF0C_u5176_u7EF4_u6570_u4E0E_u76F8_u5BF9_u5E94_u7684hidden_layer_u7684_u7EF4_u6570_u76F8_u7B49_uFF09_uFF1A"><a href="#u6C42_u51FA_u4E86_u5BF9Wij_u5355_u4E2A_u5143_u7D20_u7684_u5BFC_u6570_uFF0C_u90A3_u4E48_u5982_u4F55_u6C42s_u5BF9_u6574_u4E2AW_u77E9_u9635_u7684_u5BFC_u6570_u5462_uFF1F_u7B54_u6848_uFF08_24_5Cdelta_24__u8868_u793A_u7684_u662F_u6BCF_u4E2Aactivation_u7684_u9519_u8BEF_u4FE1_u606F_uFF0C_u5176_u7EF4_u6570_u4E0E_u76F8_u5BF9_u5E94_u7684hidden_layer_u7684_u7EF4_u6570_u76F8_u7B49_uFF09_uFF1A" class="headerlink" title="求出了对W<sub>ij</sub>单个元素的导数，那么如何求s对整个W矩阵的导数呢？答案（$\delta$ 表示的是每个activation的错误信息，其维数与相对应的hidden layer的维数相等）："></a>求出了对W<sub>ij</sub>单个元素的导数，那么如何求s对整个W矩阵的导数呢？答案（$\delta$ 表示的是每个activation的错误信息，其维数与相对应的hidden layer的维数相等）：</h3><p><img src="http://img.blog.csdn.net/20150705202901545" alt="这里写图片描述"></p>
+<h3 id="u800C_u5BF9_u4E8E_u504F_u7F6Eb_uFF1A"><a href="#u800C_u5BF9_u4E8E_u504F_u7F6Eb_uFF1A" class="headerlink" title="而对于偏置b："></a>而对于偏置b：</h3><p><img src="http://img.blog.csdn.net/20150705204148461" alt="这里写图片描述"></p>
+<h3 id="u63A5_u4E0B_u6765_u6211_u4EEC_u5BF9word_vector_uFF08x_uFF09_u8FDB_u884C_u6C42_u5BFC_uFF1A"><a href="#u63A5_u4E0B_u6765_u6211_u4EEC_u5BF9word_vector_uFF08x_uFF09_u8FDB_u884C_u6C42_u5BFC_uFF1A" class="headerlink" title="接下来我们对word vector（x）进行求导："></a>接下来我们对word vector（x）进行求导：</h3><p><img src="http://img.blog.csdn.net/20150705204638285" alt="这里写图片描述"></p>
+<h3 id="u5BF9U_u8FDB_u884C_u6C42_u5BFC_uFF1A"><a href="#u5BF9U_u8FDB_u884C_u6C42_u5BFC_uFF1A" class="headerlink" title="对U进行求导："></a>对U进行求导：</h3><p><img src="http://img.blog.csdn.net/20150705204942810" alt="这里写图片描述"></p>
+<h1 id="Two_layer_neural_nets_and_full_backprop"><a href="#Two_layer_neural_nets_and_full_backprop" class="headerlink" title="<strong>Two layer neural nets and full backprop</strong>"></a><strong>Two layer neural nets and full backprop</strong></h1><h3 id="x_uFF0Cscore_function_u7684_u5B9A_u4E49_u4E0E_u524D_u9762_u4E00_u6837"><a href="#x_uFF0Cscore_function_u7684_u5B9A_u4E49_u4E0E_u524D_u9762_u4E00_u6837" class="headerlink" title="x，score function的定义与前面一样"></a>x，score function的定义与前面一样</h3><p><img src="http://img.blog.csdn.net/20150705205727298" alt="这里写图片描述"></p>
+<h3 id="u6C42_u5BFC_u8FC7_u7A0B_u8BF7_u53C2_u8003_u539F_u8BB2_u4E49_lecture_uFF0C_u8FD9_u91CC_u7ED9_u51FA_u7ED3_u8BBA_uFF1A_u4E00_u822C_u6765_u8BB2_uFF0C_u5BF9_u4E8E_u6240_u6709_u7684_u666E_u901A_u7684_u591A_u5C42_u795E_u7ECF_u7F51_u7EDC_uFF0C_u5728_u8BE5_u795E_u7ECF_u7F51_u7EDC_u5185_u7684hidden_u5C42_u6743_u91CD_u77E9_u9635W_28l_29__u548Cregularization_u540E_u7684_u9519_u8BEF_u6D41ER_uFF08_u5C31_u662F_u76EE_u6807_u51FD_u6570J_uFF09_2C_u53EF_u4EE5_u603B_u7ED3_u4E3A_u4EE5_u4E0B_u4E24_u4E2A_u5F0F_u5B50_uFF08_u5BF9_u4E8E_u591A_u5C42_u795E_u7ECF_u7F51_u7EDC_u7684_u9876_u5C42_u548C_u5E95_u5C42_uFF0C_u6709_u66F4_u52A0_u7B80_u5355_u7684_24_5Cdelta_24__u8868_u8FBE_u5F0F_uFF09_uFF1A"><a href="#u6C42_u5BFC_u8FC7_u7A0B_u8BF7_u53C2_u8003_u539F_u8BB2_u4E49_lecture_uFF0C_u8FD9_u91CC_u7ED9_u51FA_u7ED3_u8BBA_uFF1A_u4E00_u822C_u6765_u8BB2_uFF0C_u5BF9_u4E8E_u6240_u6709_u7684_u666E_u901A_u7684_u591A_u5C42_u795E_u7ECF_u7F51_u7EDC_uFF0C_u5728_u8BE5_u795E_u7ECF_u7F51_u7EDC_u5185_u7684hidden_u5C42_u6743_u91CD_u77E9_u9635W_28l_29__u548Cregularization_u540E_u7684_u9519_u8BEF_u6D41ER_uFF08_u5C31_u662F_u76EE_u6807_u51FD_u6570J_uFF09_2C_u53EF_u4EE5_u603B_u7ED3_u4E3A_u4EE5_u4E0B_u4E24_u4E2A_u5F0F_u5B50_uFF08_u5BF9_u4E8E_u591A_u5C42_u795E_u7ECF_u7F51_u7EDC_u7684_u9876_u5C42_u548C_u5E95_u5C42_uFF0C_u6709_u66F4_u52A0_u7B80_u5355_u7684_24_5Cdelta_24__u8868_u8FBE_u5F0F_uFF09_uFF1A" class="headerlink" title="求导过程请参考原讲义 lecture，这里给出结论：一般来讲，对于所有的普通的多层神经网络，在该神经网络内的hidden层权重矩阵W<sup>(l)</sup> 和regularization后的错误流E<sub>R</sub>（就是目标函数J）,可以总结为以下两个式子（对于多层神经网络的顶层和底层，有更加简单的$\delta$ 表达式）："></a>求导过程请参考原讲义 lecture，这里给出结论：一般来讲，对于所有的普通的多层神经网络，在该神经网络内的hidden层权重矩阵W<sup>(l)</sup> 和regularization后的错误流E<sub>R</sub>（就是目标函数J）,可以总结为以下两个式子（对于多层神经网络的顶层和底层，有更加简单的$\delta$ 表达式）：</h3><p><img src="http://img.blog.csdn.net/20150705210712508" alt="这里写图片描述"><br><strong>注意$\delta$  中有个element-­‐wise product</strong></p>
+<h3 id="u800C_u5BF9_u4E8E_u795E_u7ECF_u7F51_u7EDC_u7684_u8F93_u51FA_u5C42_u7684_24_5Cdelta_24__uFF08_u5C31_u662F_u5BF9_u8F93_u51FA_u5C42_u7684_uFF0C_u975E_u7EBF_u6027_u53D8_u5316_u4E4B_u524D_u7684Wa+b_u8FDB_u884C_u6C42_u5BFC_uFF09"><a href="#u800C_u5BF9_u4E8E_u795E_u7ECF_u7F51_u7EDC_u7684_u8F93_u51FA_u5C42_u7684_24_5Cdelta_24__uFF08_u5C31_u662F_u5BF9_u8F93_u51FA_u5C42_u7684_uFF0C_u975E_u7EBF_u6027_u53D8_u5316_u4E4B_u524D_u7684Wa+b_u8FDB_u884C_u6C42_u5BFC_uFF09" class="headerlink" title="而对于神经网络的输出层的$\delta$ （就是对输出层的，非线性变化之前的Wa+b进行求导）"></a>而对于神经网络的输出层的$\delta$ （就是对输出层的，非线性变化之前的Wa+b进行求导）</h3><p>：<br><img src="http://img.blog.csdn.net/20150705220531733" alt="这里写图片描述"></p>
+<h1 id="Back-_AD_u2010Prop"><a href="#Back-_AD_u2010Prop" class="headerlink" title="<strong>Back-­‐Prop</strong>"></a><strong>Back-­‐Prop</strong></h1><h3 id="u4ECB_u7ECD_u4E86_u4E00_u4E9B_u6C42_u5BFC_u65B9_u6CD5_u548C_u6280_u5DE7_uFF0C_u8BF7_u53C2_u8003_u539F_u6587"><a href="#u4ECB_u7ECD_u4E86_u4E00_u4E9B_u6C42_u5BFC_u65B9_u6CD5_u548C_u6280_u5DE7_uFF0C_u8BF7_u53C2_u8003_u539F_u6587" class="headerlink" title="介绍了一些求导方法和技巧，请参考原文"></a>介绍了一些求导方法和技巧，请参考原文</h3><h1 id="u4E0B_u4E00_u8BB2"><a href="#u4E0B_u4E00_u8BB2" class="headerlink" title="<strong>下一讲</strong>"></a><strong>下一讲</strong></h1><h3 id="u7B56_u7565_u548C_u6280_u5DE7"><a href="#u7B56_u7565_u548C_u6280_u5DE7" class="headerlink" title="策略和技巧"></a>策略和技巧</h3><h3 id="RNN"><a href="#RNN" class="headerlink" title="RNN"></a>RNN</h3></span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/10/04/NLP/deep-learning-for-nature-language-processing-e7-ac-ac-e5-9b-9b-e8-ae-b2-ef-bc-88-e4-b8-8b-ef-bc-89/" rel="next" title="Deep Learning for Nature Language Processing --- 第四讲（下）">
+                <i class="fa fa-chevron-left"></i> Deep Learning for Nature Language Processing --- 第四讲（下）
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/10/04/NLP/deep-learning-for-nature-language-processing-e7-ac-ac-e5-85-ad-e8-ae-b2/" rel="prev" title="Deep Learning for Nature Language Processing --- 第六讲">
+                Deep Learning for Nature Language Processing --- 第六讲 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+        </div>
+
+        
+
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="John Doe" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">John Doe</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Class_Project"><span class="nav-number">1.</span> <span class="nav-text">Class Project</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u536040_25_u7684_u6210_u7EE9_u6BD4_u91CD"><span class="nav-number">1.0.1.</span> <span class="nav-text">占40%的成绩比重</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u5C3D_u65E9_u89C4_u5212_u597D_u4EFB_u52A1_u548C_u6570_u636E_u96C6"><span class="nav-number">1.0.2.</span> <span class="nav-text">尽早规划好任务和数据集</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#project_u7C7B_u522B_uFF1A"><span class="nav-number">1.0.3.</span> <span class="nav-text">project类别：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-__u7528_u5DF2_u5B58_u7684_u795E_u7ECF_u7F51_u7EDC_u5E94_u7528_u5728_u4E00_u4E2A_u65B0_u7684_u4EFB_u52A1task_u4E0A"><span class="nav-number">1.0.3.1.</span> <span class="nav-text">1. 用已存的神经网络应用在一个新的任务task上</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-_u5F00_u53D1_u51FA_u4E00_u4E2A_u65B0_u7684_u795E_u7ECF_u7F51_u7EDC_u7ED3_u6784"><span class="nav-number">1.0.3.2.</span> <span class="nav-text">2.开发出一个新的神经网络结构</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Class_Project_3A_Apply_Existing_NNets_to_Tasks"><span class="nav-number">2.</span> <span class="nav-text">Class Project: Apply Existing NNets to Tasks</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-_u6784_u5EFA_u4EFB_u52A1_uFF0C_u5982_uFF1A_u751F_u6210_u6458_u8981"><span class="nav-number">2.0.1.</span> <span class="nav-text">1.构建任务，如：生成摘要</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-_u51C6_u5907_u6570_u636E_u53CA_uFF1A"><span class="nav-number">2.0.2.</span> <span class="nav-text">2.准备数据及：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1_uFF09-_u5DF2_u7ECF_u6709_u57FA_u51C6_u7EBF_u7684_u5B66_u672F_u4E0A_u7684_u6570_u636E_u96C6_uFF0C_u5982_uFF1ADocument_Understanding_Conference__28DUC_29"><span class="nav-number">2.0.2.1.</span> <span class="nav-text">1）.已经有基准线的学术上的数据集，如：Document Understanding Conference (DUC)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2_uFF09-_u6784_u5EFA_u4F60_u81EA_u5DF1_u7684_u6570_u636E_u96C6_uFF0C_u53EF_u4EE5_u662FTwiMer_2CBlogs_2CNews_u7B49"><span class="nav-number">2.0.2.2.</span> <span class="nav-text">2）.构建你自己的数据集，可以是TwiMer,Blogs,News等</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-_u5B9A_u4E49_u597D_u4EFB_u52A1task_u7684_u8861_u91CF_u6807_u51C6"><span class="nav-number">2.0.3.</span> <span class="nav-text">3.定义好任务task的衡量标准</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-_u5212_u5206_u597D_u6570_u636E_u96C6_uFF0Ctrain/cv/test-_u5B66_u672F_u4E0A_u5E38_u7528_u7684_u6570_u636E_u96C6_u4E00_u822C_u5DF2_u7ECF_u5212_u5206_u597D_u4E86"><span class="nav-number">2.0.4.</span> <span class="nav-text">4.划分好数据集，train/cv/test.学术上常用的数据集一般已经划分好了</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-_u5EFA_u7ACB_u57FA_u51C6_u7EBF_uFF1A_u9996_u5148_u5B8C_u6210_u4E00_u4E2A_u7B80_u5355_u7684_u6A21_u578B_uFF08_u5982_u4E00_u5143_u6216_u8005_u4E8C_u5143_u7684_u903B_u8F91_u56DE_u5F52_uFF09_uFF0C_u7136_u540E_u518Dtrain/cv_dataset_u4E0A_u8BA1_u7B97_u9519_u8BEF_u7387_uFF0C_u5206_u6790_u9519_u8BEF_u539F_u56E0_u3002_u5982_u4F55_u6CA1_u6709_u9519_u8BEF_uFF0C_u91CD_u65B0_u6765_u8FC7_uFF1A_uFF09"><span class="nav-number">2.0.5.</span> <span class="nav-text">5.建立基准线：首先完成一个简单的模型（如一元或者二元的逻辑回归），然后再train/cv dataset上计算错误率，分析错误原因。如何没有错误，重新来过：）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-_u5728_u5DF2_u7ECF_u5B58_u5728_u7684_u795E_u7ECF_u7F51_u7EDC_u6A21_u578B_u4E0A_u5B9E_u73B0_uFF1A_u8BA1_u7B97train/cv_dataset_u7684_u9519_u8BEF_u7387_u5E76_u5206_u6790"><span class="nav-number">2.0.6.</span> <span class="nav-text">6.在已经存在的神经网络模型上实现：计算train/cv dataset的错误率并分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-_u53EF_u89C6_u5316_u6570_u636E_u96C6_uFF0C_u6536_u96C6_u6458_u8981_u7EDF_u8BA1_u4FE1_u606F_uFF0C_u5206_u6790_u9519_u8BEF_uFF0C_u5206_u6790_u4E0D_u540C_u7684_u53C2_u6570_u5BF9_u8FD0_u884C_u7ED3_u679C_u7684_u5F71_u54CD_u3002"><span class="nav-number">2.0.7.</span> <span class="nav-text">7.可视化数据集，收集摘要统计信息，分析错误，分析不同的参数对运行结果的影响。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-_u5C1D_u8BD5_u66F4_u591A_u4E0D_u540C_u79CD_u7C7B_u7684_u6A21_u578B"><span class="nav-number">2.0.8.</span> <span class="nav-text">8.尝试更多不同种类的模型</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Class_Project_3AA_New_Model_-_AD_u2010-_AD_u2010_Advanced_Option"><span class="nav-number">3.</span> <span class="nav-text">Class Project:A New Model -­‐-­‐ Advanced Option</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Project_Ideas"><span class="nav-number">4.</span> <span class="nav-text">Project Ideas</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Summary_3AFeed-_AD_u2010forward_Computation"><span class="nav-number">5.</span> <span class="nav-text">Summary:Feed-­‐forward Computation</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u7535_u5F71_u8BC4_u8BBA_u60C5_u611F_u5206_u6790_u53C2_u8003_uFF1Ahttp_3A//nlp-stanford-edu/sentiment/"><span class="nav-number">5.0.1.</span> <span class="nav-text">http://nlp.stanford.edu/sentiment/">电影评论情感分析参考：http://nlp.stanford.edu/sentiment/</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u5047_u8BBE_uFF1A1-s_3Dscore_28museums_in_Paris_are_amazing_29_2-sc_3Dscore_28Not_all_museums_in_Paris_29"><span class="nav-number">5.0.2.</span> <span class="nav-text">假设：1.s=score(museums in Paris are amazing) 2.sc=score(Not all museums in Paris)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u8BAD_u7EC3_u76EE_u6807_u51FD_u6570_u7684_u4E00_u4E9B_u601D_u60F3idea_uFF1A_u6700_u5927_u5316true_window_u7684sore_uFF0C_u6700_u5C0F_u5316correct_window_u7684score_uFF0C_u4E5F_u5C31_u662F_u6700_u5C0F_u5316_u4E0B_u9762_u7684_u51FD_u6570_uFF08_u56E0_u4E3A_u662F_u8FDE_u7EED_u7684_uFF0C_u6240_u4EE5_u53EF_u4EE5_u91C7_u7528SGD_uFF0C_u4E0B_u9762_u7684_u51FD_u6570_u9488_u5BF9_u5355_u4E2Awindow_uFF09_uFF1A"><span class="nav-number">5.0.3.</span> <span class="nav-text">训练目标函数的一些思想idea：最大化true window的sore，最小化correct window的score，也就是最小化下面的函数（因为是连续的，所以可以采用SGD，下面的函数针对单个window）：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u5C31_u4F8B_u5B50s_u800C_u8A00_uFF0C_u5BF9_u4E8E_u4E00_u4E2A_u4E2D_u5FC3_u8BCD_u662F_u4E00_u4E2Alocation_u7684window_uFF0C_u4F1A_u6BD4_u4E2D_u5FC3_u8BCD_u4E0D_u662Flocation_u7684window_u5F97_u5230_u7684_u5206_u6570_u9AD8score+1"><span class="nav-number">5.0.4.</span> <span class="nav-text">就例子s而言，对于一个中心词是一个location的window，会比中心词不是location的window得到的分数高score+1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u6574_u4F53_u7684_uFF0C_u9488_u5BF9_u6574_u4E2A_u6570_u636E_u96C6_u7684_u76EE_u6807_u65B9_u7A0B_u5C31_u662F_u8BB2_u6BCF_u4E2A_u5355_u72ECwindow_u5BF9_u5E94_u7684_u76EE_u6807_u65B9_u7A0B_u76F8_u52A0_u3002"><span class="nav-number">5.0.5.</span> <span class="nav-text">整体的，针对整个数据集的目标方程就是讲每个单独window对应的目标方程相加。</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Training_with_Backpropagation"><span class="nav-number">6.</span> <span class="nav-text">Training with Backpropagation</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u5047_u8BBEJ_26gt_3B0_uFF0C_u6C42s_u548Csc_u5173_u4E8EU_2CW_uFF0Cb_uFF0Cx_u7684_u5BFC_u6570_u3002_u793A_u4F8B_uFF1A"><span class="nav-number">6.0.1.</span> <span class="nav-text">假设J>0，求s和sc关于U,W，b，x的导数。示例：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u5148_u8003_u8651s_u5BF9_u5355_u4E2A_u6743_u91CDWij_u7684_u5BFC_u6570_uFF0C_u53C2_u8003_u4E0B_u9762_u7684_u51FD_u6570_u53D8_u5F62_uFF0C_u6240_u4EE5Wij_u53EA_u5F71_u54CDai_uFF1A"><span class="nav-number">6.0.2.</span> <span class="nav-text">先考虑s对单个权重Wij的导数，参考下面的函数变形，所以Wij只影响ai：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u4EE5W23_u4E3A_u4F8B_uFF0CW23_u53EA_u80FD_u7528_u6765_u8BA1_u7B97a2_uFF1A"><span class="nav-number">6.0.3.</span> <span class="nav-text">以W23为例，W23只能用来计算a2：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u6240_u4EE5_u5C06s_u5BF9Wij__u6C42_u5BFC_uFF1A"><span class="nav-number">6.0.4.</span> <span class="nav-text">所以将s对Wij 求导：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u6C42_u51FA_u4E86_u5BF9Wij_u5355_u4E2A_u5143_u7D20_u7684_u5BFC_u6570_uFF0C_u90A3_u4E48_u5982_u4F55_u6C42s_u5BF9_u6574_u4E2AW_u77E9_u9635_u7684_u5BFC_u6570_u5462_uFF1F_u7B54_u6848_uFF08_24_5Cdelta_24__u8868_u793A_u7684_u662F_u6BCF_u4E2Aactivation_u7684_u9519_u8BEF_u4FE1_u606F_uFF0C_u5176_u7EF4_u6570_u4E0E_u76F8_u5BF9_u5E94_u7684hidden_layer_u7684_u7EF4_u6570_u76F8_u7B49_uFF09_uFF1A"><span class="nav-number">6.0.5.</span> <span class="nav-text">求出了对Wij单个元素的导数，那么如何求s对整个W矩阵的导数呢？答案（$\delta$ 表示的是每个activation的错误信息，其维数与相对应的hidden layer的维数相等）：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u800C_u5BF9_u4E8E_u504F_u7F6Eb_uFF1A"><span class="nav-number">6.0.6.</span> <span class="nav-text">而对于偏置b：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u63A5_u4E0B_u6765_u6211_u4EEC_u5BF9word_vector_uFF08x_uFF09_u8FDB_u884C_u6C42_u5BFC_uFF1A"><span class="nav-number">6.0.7.</span> <span class="nav-text">接下来我们对word vector（x）进行求导：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u5BF9U_u8FDB_u884C_u6C42_u5BFC_uFF1A"><span class="nav-number">6.0.8.</span> <span class="nav-text">对U进行求导：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Two_layer_neural_nets_and_full_backprop"><span class="nav-number">7.</span> <span class="nav-text">Two layer neural nets and full backprop</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#x_uFF0Cscore_function_u7684_u5B9A_u4E49_u4E0E_u524D_u9762_u4E00_u6837"><span class="nav-number">7.0.1.</span> <span class="nav-text">x，score function的定义与前面一样</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u6C42_u5BFC_u8FC7_u7A0B_u8BF7_u53C2_u8003_u539F_u8BB2_u4E49_lecture_uFF0C_u8FD9_u91CC_u7ED9_u51FA_u7ED3_u8BBA_uFF1A_u4E00_u822C_u6765_u8BB2_uFF0C_u5BF9_u4E8E_u6240_u6709_u7684_u666E_u901A_u7684_u591A_u5C42_u795E_u7ECF_u7F51_u7EDC_uFF0C_u5728_u8BE5_u795E_u7ECF_u7F51_u7EDC_u5185_u7684hidden_u5C42_u6743_u91CD_u77E9_u9635W_28l_29__u548Cregularization_u540E_u7684_u9519_u8BEF_u6D41ER_uFF08_u5C31_u662F_u76EE_u6807_u51FD_u6570J_uFF09_2C_u53EF_u4EE5_u603B_u7ED3_u4E3A_u4EE5_u4E0B_u4E24_u4E2A_u5F0F_u5B50_uFF08_u5BF9_u4E8E_u591A_u5C42_u795E_u7ECF_u7F51_u7EDC_u7684_u9876_u5C42_u548C_u5E95_u5C42_uFF0C_u6709_u66F4_u52A0_u7B80_u5355_u7684_24_5Cdelta_24__u8868_u8FBE_u5F0F_uFF09_uFF1A"><span class="nav-number">7.0.2.</span> <span class="nav-text">求导过程请参考原讲义 lecture，这里给出结论：一般来讲，对于所有的普通的多层神经网络，在该神经网络内的hidden层权重矩阵W(l) 和regularization后的错误流ER（就是目标函数J）,可以总结为以下两个式子（对于多层神经网络的顶层和底层，有更加简单的$\delta$ 表达式）：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u800C_u5BF9_u4E8E_u795E_u7ECF_u7F51_u7EDC_u7684_u8F93_u51FA_u5C42_u7684_24_5Cdelta_24__uFF08_u5C31_u662F_u5BF9_u8F93_u51FA_u5C42_u7684_uFF0C_u975E_u7EBF_u6027_u53D8_u5316_u4E4B_u524D_u7684Wa+b_u8FDB_u884C_u6C42_u5BFC_uFF09"><span class="nav-number">7.0.3.</span> <span class="nav-text">而对于神经网络的输出层的$\delta$ （就是对输出层的，非线性变化之前的Wa+b进行求导）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Back-_AD_u2010Prop"><span class="nav-number">8.</span> <span class="nav-text">Back-­‐Prop</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u4ECB_u7ECD_u4E86_u4E00_u4E9B_u6C42_u5BFC_u65B9_u6CD5_u548C_u6280_u5DE7_uFF0C_u8BF7_u53C2_u8003_u539F_u6587"><span class="nav-number">8.0.1.</span> <span class="nav-text">介绍了一些求导方法和技巧，请参考原文</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u4E0B_u4E00_u8BB2"><span class="nav-number">9.</span> <span class="nav-text">下一讲</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u7B56_u7565_u548C_u6280_u5DE7"><span class="nav-number">9.0.1.</span> <span class="nav-text">策略和技巧</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RNN"><span class="nav-number">9.0.2.</span> <span class="nav-text">RNN</span></a></li></ol></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+    
+    
+
+  
+
+
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
+
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    motionMiddleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+  
+  
+
+  
+  
+
+</body>
+</html>

@@ -1,0 +1,635 @@
+<!doctype html>
+<html class="theme-next   use-motion ">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+
+
+
+
+<meta name="description" content="这是2015年斯坦福和英伟达的一篇论文。
+1.简介：通过修剪训练后网络中的不重要连接（connections），来减少网络所需要的参数，减少内存和cpu的消耗，使网络更加适应在移动设备上运行。2.idea思想：1）首先训练整个网络，判断哪些是重要连接。2）修剪不重要的连接。3）重新训练修剪后的网络，微调保留下来的参数。3.达到的效果：1）在ImageNet上，减少了AlexNet 9倍的参数，从6">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Learning both Weights and Connections for Efficient Neural Network -- 论文笔记">
+<meta property="og:url" content="http://yoursite.com/2015/10/04/papers/learning-both-weights-and-connections-for-efficient-neural-network-e8-ae-ba-e6-96-87-e7-ac-94-e8-ae-b0/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="这是2015年斯坦福和英伟达的一篇论文。
+1.简介：通过修剪训练后网络中的不重要连接（connections），来减少网络所需要的参数，减少内存和cpu的消耗，使网络更加适应在移动设备上运行。2.idea思想：1）首先训练整个网络，判断哪些是重要连接。2）修剪不重要的连接。3）重新训练修剪后的网络，微调保留下来的参数。3.达到的效果：1）在ImageNet上，减少了AlexNet 9倍的参数，从6">
+<meta property="og:image" content="http://img.blog.csdn.net/20150924170455546">
+<meta property="og:image" content="http://img.blog.csdn.net/20150925165024751">
+<meta property="og:updated_time" content="2015-11-22T05:22:11.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Learning both Weights and Connections for Efficient Neural Network -- 论文笔记">
+<meta name="twitter:description" content="这是2015年斯坦福和英伟达的一篇论文。
+1.简介：通过修剪训练后网络中的不重要连接（connections），来减少网络所需要的参数，减少内存和cpu的消耗，使网络更加适应在移动设备上运行。2.idea思想：1）首先训练整个网络，判断哪些是重要连接。2）修剪不重要的连接。3）重新训练修剪后的网络，微调保留下来的参数。3.达到的效果：1）在ImageNet上，减少了AlexNet 9倍的参数，从6">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post',
+    motion: true
+  };
+</script>
+
+  <title> Learning both Weights and Connections for Efficient Neural Network -- 论文笔记 | Hexo </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Hexo</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Learning both Weights and Connections for Efficient Neural Network -- 论文笔记
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2015-10-04T19:31:01+08:00" content="2015-10-04">
+              2015-10-04
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分類於
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/papers/" itemprop="url" rel="index">
+                    <span itemprop="name">papers</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>这是2015年斯坦福和英伟达的一篇论文。</p>
+<h1 id="1-_u7B80_u4ECB_uFF1A"><a href="#1-_u7B80_u4ECB_uFF1A" class="headerlink" title="1.简介："></a>1.简介：</h1><h2 id="u901A_u8FC7_u4FEE_u526A_u8BAD_u7EC3_u540E_u7F51_u7EDC_u4E2D_u7684_u4E0D_u91CD_u8981_u8FDE_u63A5_uFF08connections_uFF09_uFF0C_u6765_u51CF_u5C11_u7F51_u7EDC_u6240_u9700_u8981_u7684_u53C2_u6570_uFF0C_u51CF_u5C11_u5185_u5B58_u548Ccpu_u7684_u6D88_u8017_uFF0C_u4F7F_u7F51_u7EDC_u66F4_u52A0_u9002_u5E94_u5728_u79FB_u52A8_u8BBE_u5907_u4E0A_u8FD0_u884C_u3002"><a href="#u901A_u8FC7_u4FEE_u526A_u8BAD_u7EC3_u540E_u7F51_u7EDC_u4E2D_u7684_u4E0D_u91CD_u8981_u8FDE_u63A5_uFF08connections_uFF09_uFF0C_u6765_u51CF_u5C11_u7F51_u7EDC_u6240_u9700_u8981_u7684_u53C2_u6570_uFF0C_u51CF_u5C11_u5185_u5B58_u548Ccpu_u7684_u6D88_u8017_uFF0C_u4F7F_u7F51_u7EDC_u66F4_u52A0_u9002_u5E94_u5728_u79FB_u52A8_u8BBE_u5907_u4E0A_u8FD0_u884C_u3002" class="headerlink" title="通过修剪训练后网络中的不重要连接（connections），来减少网络所需要的参数，减少内存和cpu的消耗，使网络更加适应在移动设备上运行。"></a>通过修剪训练后网络中的不重要连接（connections），来减少网络所需要的参数，减少内存和cpu的消耗，使网络更加适应在移动设备上运行。</h2><h1 id="2-idea_u601D_u60F3_uFF1A"><a href="#2-idea_u601D_u60F3_uFF1A" class="headerlink" title="2.idea思想："></a>2.idea思想：</h1><h4 id="1_uFF09_u9996_u5148_u8BAD_u7EC3_u6574_u4E2A_u7F51_u7EDC_uFF0C_u5224_u65AD_u54EA_u4E9B_u662F_u91CD_u8981_u8FDE_u63A5_u3002"><a href="#1_uFF09_u9996_u5148_u8BAD_u7EC3_u6574_u4E2A_u7F51_u7EDC_uFF0C_u5224_u65AD_u54EA_u4E9B_u662F_u91CD_u8981_u8FDE_u63A5_u3002" class="headerlink" title="1）首先训练整个网络，判断哪些是重要连接。"></a>1）首先训练整个网络，判断哪些是重要连接。</h4><h4 id="2_uFF09_u4FEE_u526A_u4E0D_u91CD_u8981_u7684_u8FDE_u63A5_u3002"><a href="#2_uFF09_u4FEE_u526A_u4E0D_u91CD_u8981_u7684_u8FDE_u63A5_u3002" class="headerlink" title="2）修剪不重要的连接。"></a>2）修剪不重要的连接。</h4><h4 id="3_uFF09_u91CD_u65B0_u8BAD_u7EC3_u4FEE_u526A_u540E_u7684_u7F51_u7EDC_uFF0C_u5FAE_u8C03_u4FDD_u7559_u4E0B_u6765_u7684_u53C2_u6570_u3002"><a href="#3_uFF09_u91CD_u65B0_u8BAD_u7EC3_u4FEE_u526A_u540E_u7684_u7F51_u7EDC_uFF0C_u5FAE_u8C03_u4FDD_u7559_u4E0B_u6765_u7684_u53C2_u6570_u3002" class="headerlink" title="3）重新训练修剪后的网络，微调保留下来的参数。"></a>3）重新训练修剪后的网络，微调保留下来的参数。</h4><h1 id="3-_u8FBE_u5230_u7684_u6548_u679C_uFF1A"><a href="#3-_u8FBE_u5230_u7684_u6548_u679C_uFF1A" class="headerlink" title="3.达到的效果："></a>3.达到的效果：</h1><h4 id="1_uFF09_u5728ImageNet_u4E0A_uFF0C_u51CF_u5C11_u4E86AlexNet_9_u500D_u7684_u53C2_u6570_uFF0C_u4ECE61_million_u7684_u53C2_u6570_u51CF_u5C11_u52306-1_million_u7684_u53C2_u6570_uFF1BVGG_u7F51_u7EDC_u5219_u66F4_u662F_u51CF_u5C11_u4E8616_u500D_uFF0C_u5E76_u4E14_u4FEE_u526A_u540E_u7684_u7F51_u8DEF_u7684accuracy_u6CA1_u6709_u4E0B_u964D_u3002"><a href="#1_uFF09_u5728ImageNet_u4E0A_uFF0C_u51CF_u5C11_u4E86AlexNet_9_u500D_u7684_u53C2_u6570_uFF0C_u4ECE61_million_u7684_u53C2_u6570_u51CF_u5C11_u52306-1_million_u7684_u53C2_u6570_uFF1BVGG_u7F51_u7EDC_u5219_u66F4_u662F_u51CF_u5C11_u4E8616_u500D_uFF0C_u5E76_u4E14_u4FEE_u526A_u540E_u7684_u7F51_u8DEF_u7684accuracy_u6CA1_u6709_u4E0B_u964D_u3002" class="headerlink" title="1）在ImageNet上，减少了AlexNet 9倍的参数，从61 million的参数减少到6.1 million的参数；VGG网络则更是减少了16倍，并且修剪后的网路的accuracy没有下降。"></a>1）在ImageNet上，减少了AlexNet 9倍的参数，从61 million的参数减少到6.1 million的参数；VGG网络则更是减少了16倍，并且修剪后的网路的accuracy没有下降。</h4><h4 id="2_uFF09_u53EF_u4EE5_u9632_u6B62_u8FC7_u62DF_u5408"><a href="#2_uFF09_u53EF_u4EE5_u9632_u6B62_u8FC7_u62DF_u5408" class="headerlink" title="2）可以防止过拟合"></a>2）可以防止过拟合</h4><h1 id="4-_u5176_u5B83_u76F8_u5173_u7684_u5DE5_u4F5C_uFF1A"><a href="#4-_u5176_u5B83_u76F8_u5173_u7684_u5DE5_u4F5C_uFF1A" class="headerlink" title="4.其它相关的工作："></a>4.其它相关的工作：</h1><h4 id="1_uFF09_u75288_u4F4Dint_u578B_u7684activation_u4EE3_u66FF16_u4F4Dfloat_u3002"><a href="#1_uFF09_u75288_u4F4Dint_u578B_u7684activation_u4EE3_u66FF16_u4F4Dfloat_u3002" class="headerlink" title="1）用8位int型的activation代替16位float。"></a>1）用8位int型的activation代替16位float。</h4><h4 id="2_uFF09Network_in_Network_u548CGoogleNet_u6A21_u578B_u4E2D_u4F7F_u7528_u4E86global_average_pooling_u4EE3_u66FFFC_u5C42_u6765_u51CF_u5C11_u53C2_u6570_uFF0C_u4F46_u5728_u4F7F_u7528ImageNet_u7684_u53C2_u6570_u65F6_uFF0C_u9700_u8981_u53E6_u5916_u589E_u52A0_u4E00_u4E2A_u7EBF_u6027_u5C42_u3002"><a href="#2_uFF09Network_in_Network_u548CGoogleNet_u6A21_u578B_u4E2D_u4F7F_u7528_u4E86global_average_pooling_u4EE3_u66FFFC_u5C42_u6765_u51CF_u5C11_u53C2_u6570_uFF0C_u4F46_u5728_u4F7F_u7528ImageNet_u7684_u53C2_u6570_u65F6_uFF0C_u9700_u8981_u53E6_u5916_u589E_u52A0_u4E00_u4E2A_u7EBF_u6027_u5C42_u3002" class="headerlink" title="2）Network in Network和GoogleNet模型中使用了global average pooling代替FC层来减少参数，但在使用ImageNet的参数时，需要另外增加一个线性层。"></a>2）Network in Network和GoogleNet模型中使用了global average pooling代替FC层来减少参数，但在使用ImageNet的参数时，需要另外增加一个线性层。</h4><h4 id="3_uFF09dropout_u548C_u672C_u6587_u7684_u65B9_u6CD5_u4E0D_u540C_uFF0Cdropout_u4E3B_u8981_u7528_u6765_u9632_u6B62_u8FC7_u62DF_u5408_uFF0C_u5E76_u4E14_u662F_u5728_u8BAD_u7EC3_u8FC7_u7A0B_u4E2D_u5C31_u4EA7_u751F0_u8FDE_u63A5_uFF0C_u800C_u672C_u6587_u7684_u65B9_u6CD5_u5219_u662F_u5728_u7F51_u7EDC_u8BAD_u7EC3_u5B8C_u4E4B_u540E_u5BF9_u7F51_u7EDC_u8FDB_u884C_u4FEE_u526A_uFF0C_u4EA7_u751F0_u8FDE_u63A5_u3002"><a href="#3_uFF09dropout_u548C_u672C_u6587_u7684_u65B9_u6CD5_u4E0D_u540C_uFF0Cdropout_u4E3B_u8981_u7528_u6765_u9632_u6B62_u8FC7_u62DF_u5408_uFF0C_u5E76_u4E14_u662F_u5728_u8BAD_u7EC3_u8FC7_u7A0B_u4E2D_u5C31_u4EA7_u751F0_u8FDE_u63A5_uFF0C_u800C_u672C_u6587_u7684_u65B9_u6CD5_u5219_u662F_u5728_u7F51_u7EDC_u8BAD_u7EC3_u5B8C_u4E4B_u540E_u5BF9_u7F51_u7EDC_u8FDB_u884C_u4FEE_u526A_uFF0C_u4EA7_u751F0_u8FDE_u63A5_u3002" class="headerlink" title="3）dropout和本文的方法不同，dropout主要用来防止过拟合，并且是在训练过程中就产生0连接，而本文的方法则是在网络训练完之后对网络进行修剪，产生0连接。"></a>3）dropout和本文的方法不同，dropout主要用来防止过拟合，并且是在训练过程中就产生0连接，而本文的方法则是在网络训练完之后对网络进行修剪，产生0连接。</h4><h4 id="4_uFF09HashNet_u8FD9_u4E2A_u672C_u4EBA_u6CA1_u6709_u770B_u8FC7_uFF0C_u8BBA_u6587_u91CC_u4F5C_u8005_u731C_u60F3HashNet_u548Cpruning_u7ED3_u5408_u53EF_u80FD_u6548_u679C_u66F4_u597D_u3002"><a href="#4_uFF09HashNet_u8FD9_u4E2A_u672C_u4EBA_u6CA1_u6709_u770B_u8FC7_uFF0C_u8BBA_u6587_u91CC_u4F5C_u8005_u731C_u60F3HashNet_u548Cpruning_u7ED3_u5408_u53EF_u80FD_u6548_u679C_u66F4_u597D_u3002" class="headerlink" title="4）HashNet这个本人没有看过，论文里作者猜想HashNet和pruning结合可能效果更好。"></a>4）HashNet这个本人没有看过，论文里作者猜想HashNet和pruning结合可能效果更好。</h4><h1 id="5-_u5177_u4F53_u6D41_u7A0B_uFF1A"><a href="#5-_u5177_u4F53_u6D41_u7A0B_uFF1A" class="headerlink" title="5.具体流程："></a>5.具体流程：</h1><h3 id="u9996_u5148_u8BAD_u7EC3_u6574_u4E2A_u7F51_u7EDC_uFF0C_u76EE_u7684_u662F_u627E_u51FA_u54EA_u4E9B_u662F_u91CD_u8981_u7684_u8FDE_u63A5_uFF1B_u63A5_u7740_u8BBE_u7F6E_u4E00_u4E2Athreshold_uFF0Cpruning_u6389low-weight_u7684_u8FDE_u63A5_uFF0C_u5C06_u5BC6_u96C6_u7684_u7F51_u7EDC_u53D8_u6210_u7A00_u758F_u7684_u7F51_u7EDC_uFF1B_u6700_u540E_u5219_u662F_u5BF9_u4F59_u4E0B_u6765_u7684params_u8FDB_u884C_u5FAE_u8C03_uFF0C_u5982_u679C_u4E0D_u5FAE_u8C03_uFF0C_u90A3_u4E48_u5BF9_u7F51_u7EDC_u7684_u6027_u80FD_u4F1A_u6709_u5F88_u5927_u7684_u5F71_u54CD_u3002_u5982_u56FE_uFF1A"><a href="#u9996_u5148_u8BAD_u7EC3_u6574_u4E2A_u7F51_u7EDC_uFF0C_u76EE_u7684_u662F_u627E_u51FA_u54EA_u4E9B_u662F_u91CD_u8981_u7684_u8FDE_u63A5_uFF1B_u63A5_u7740_u8BBE_u7F6E_u4E00_u4E2Athreshold_uFF0Cpruning_u6389low-weight_u7684_u8FDE_u63A5_uFF0C_u5C06_u5BC6_u96C6_u7684_u7F51_u7EDC_u53D8_u6210_u7A00_u758F_u7684_u7F51_u7EDC_uFF1B_u6700_u540E_u5219_u662F_u5BF9_u4F59_u4E0B_u6765_u7684params_u8FDB_u884C_u5FAE_u8C03_uFF0C_u5982_u679C_u4E0D_u5FAE_u8C03_uFF0C_u90A3_u4E48_u5BF9_u7F51_u7EDC_u7684_u6027_u80FD_u4F1A_u6709_u5F88_u5927_u7684_u5F71_u54CD_u3002_u5982_u56FE_uFF1A" class="headerlink" title="首先训练整个网络，目的是找出哪些是重要的连接；接着设置一个threshold，pruning掉low-weight的连接，将密集的网络变成稀疏的网络；最后则是对余下来的params进行微调，如果不微调，那么对网络的性能会有很大的影响。如图："></a>首先训练整个网络，目的是找出哪些是重要的连接；接着设置一个threshold，pruning掉low-weight的连接，将密集的网络变成稀疏的网络；最后则是对余下来的params进行微调，如果不微调，那么对网络的性能会有很大的影响。如图：</h3><p><img src="http://img.blog.csdn.net/20150924170455546" alt="这里写图片描述"></p>
+<h3 id="u800C_u4F7F_u7528_u672C_u6587_u7684_u65B9_u6CD5_u9700_u8981_u5F88_u5927_u7684_u6280_u5DE7_u6027_uFF1A"><a href="#u800C_u4F7F_u7528_u672C_u6587_u7684_u65B9_u6CD5_u9700_u8981_u5F88_u5927_u7684_u6280_u5DE7_u6027_uFF1A" class="headerlink" title="而使用本文的方法需要很大的技巧性："></a>而使用本文的方法需要很大的技巧性：</h3><h4 id="1_uFF09Regularization_uFF1A_u9700_u8981_u9009_u62E9_u5408_u9002_u7684regularization_u3002L1_u8303_u5F0F_u4F1A_u5C06_u66F4_u591A_u7684params_u8F6C_u6362_u6210_u63A5_u8FD10_uFF0C_u8FD9_u5728_u8FDB_u884Cpruning_u4E4B_u540E_uFF0CreTrain_u4E4B_u524D_u6709_u5F88_u597D_u7684accuracy_uFF1BL2_u8303_u5F0F_u5728pruning_u548CreTrain_u4E4B_u540E_u4F1A_u964D_u4F4Eaccuracy_u3002"><a href="#1_uFF09Regularization_uFF1A_u9700_u8981_u9009_u62E9_u5408_u9002_u7684regularization_u3002L1_u8303_u5F0F_u4F1A_u5C06_u66F4_u591A_u7684params_u8F6C_u6362_u6210_u63A5_u8FD10_uFF0C_u8FD9_u5728_u8FDB_u884Cpruning_u4E4B_u540E_uFF0CreTrain_u4E4B_u524D_u6709_u5F88_u597D_u7684accuracy_uFF1BL2_u8303_u5F0F_u5728pruning_u548CreTrain_u4E4B_u540E_u4F1A_u964D_u4F4Eaccuracy_u3002" class="headerlink" title="1）Regularization：需要选择合适的regularization。L1范式会将更多的params转换成接近0，这在进行pruning之后，reTrain之前有很好的accuracy；L2范式在pruning和reTrain之后会降低accuracy。"></a>1）Regularization：需要选择合适的regularization。L1范式会将更多的params转换成接近0，这在进行pruning之后，reTrain之前有很好的accuracy；L2范式在pruning和reTrain之后会降低accuracy。</h4><h4 id="2_uFF09Dropout_and_capacity_control_uFF1Adropout_u88AB_u5F53_u505A_u201Csoft_dropout_u201D_uFF0C_u800C_u672C_u6587_u7684_u65B9_u6CD5_u5219_u88AB_u5F53_u505A_u201Chard_dropout_u201D_uFF1B_u8FD9_u662F_u56E0_u4E3Adropout_u4E2D_u88ABdrop_u7684_u5728_u65B0_u7684_u8BAD_u7EC3_u6279_u65F6_uFF0C_u53EF_u4EE5_u88AB_u91CD_u65B0_u8BAD_u7EC3_uFF1B_u800C_u672C_u6587_u7684_u5219_u662F_u76F4_u63A5_u53BB_u6389_u8FDE_u63A5connections_u3002_u800C_u5728_u4F7F_u7528_u672C_u6587_u65B9_u6CD5_u7684_u65F6_u5019_uFF0Cdropout_u7684ratio_u4E5F_u5206pruning_u4E4B_u524D_u548Cpruning_u4E0D_u4E00_u6837_uFF0C_u5177_u4F53_u5982_u56FE_u6240_u793A_uFF1A"><a href="#2_uFF09Dropout_and_capacity_control_uFF1Adropout_u88AB_u5F53_u505A_u201Csoft_dropout_u201D_uFF0C_u800C_u672C_u6587_u7684_u65B9_u6CD5_u5219_u88AB_u5F53_u505A_u201Chard_dropout_u201D_uFF1B_u8FD9_u662F_u56E0_u4E3Adropout_u4E2D_u88ABdrop_u7684_u5728_u65B0_u7684_u8BAD_u7EC3_u6279_u65F6_uFF0C_u53EF_u4EE5_u88AB_u91CD_u65B0_u8BAD_u7EC3_uFF1B_u800C_u672C_u6587_u7684_u5219_u662F_u76F4_u63A5_u53BB_u6389_u8FDE_u63A5connections_u3002_u800C_u5728_u4F7F_u7528_u672C_u6587_u65B9_u6CD5_u7684_u65F6_u5019_uFF0Cdropout_u7684ratio_u4E5F_u5206pruning_u4E4B_u524D_u548Cpruning_u4E0D_u4E00_u6837_uFF0C_u5177_u4F53_u5982_u56FE_u6240_u793A_uFF1A" class="headerlink" title="2）Dropout and capacity control：dropout被当做“soft dropout”，而本文的方法则被当做“hard dropout”；这是因为dropout中被drop的在新的训练批时，可以被重新训练；而本文的则是直接去掉连接connections。而在使用本文方法的时候，dropout的ratio也分pruning之前和pruning不一样，具体如图所示："></a>2）Dropout and capacity control：dropout被当做“soft dropout”，而本文的方法则被当做“hard dropout”；这是因为dropout中被drop的在新的训练批时，可以被重新训练；而本文的则是直接去掉连接connections。而在使用本文方法的时候，dropout的ratio也分pruning之前和pruning不一样，具体如图所示：</h4><p><img src="http://img.blog.csdn.net/20150925165024751" alt="这里写图片描述"></p>
+<h4 id="3_uFF09Local_Pruning_and_Parameter_Co-adaptation_uFF1A_u5728reTrain_u7684_u8FC7_u7A0B_u4E2D_uFF0C_u91CD_u65B0_u8BAD_u7EC3pruning_u540E_u4FDD_u5B58_u4E0B_u6765_u7684weights_u6BD4_u8BAD_u7EC3_u518D_u6B21_u521D_u59CB_u5316_u7684weights_u66F4_u597D_u3002_u5176_u6B21_uFF0C_u4E3A_u4E86_u514B_u670Dvanish_gradient_problem_u7684_u95EE_u9898_uFF0C_u4F5C_u8005_u53EA_u8BAD_u7EC3pruning_u540Eshallow_layer_u4FDD_u5B58_u4E0B_u6765_u7684params_u3002"><a href="#3_uFF09Local_Pruning_and_Parameter_Co-adaptation_uFF1A_u5728reTrain_u7684_u8FC7_u7A0B_u4E2D_uFF0C_u91CD_u65B0_u8BAD_u7EC3pruning_u540E_u4FDD_u5B58_u4E0B_u6765_u7684weights_u6BD4_u8BAD_u7EC3_u518D_u6B21_u521D_u59CB_u5316_u7684weights_u66F4_u597D_u3002_u5176_u6B21_uFF0C_u4E3A_u4E86_u514B_u670Dvanish_gradient_problem_u7684_u95EE_u9898_uFF0C_u4F5C_u8005_u53EA_u8BAD_u7EC3pruning_u540Eshallow_layer_u4FDD_u5B58_u4E0B_u6765_u7684params_u3002" class="headerlink" title="3）Local Pruning and Parameter Co-adaptation：在reTrain的过程中，重新训练pruning后保存下来的weights比训练再次初始化的weights更好。其次，为了克服vanish gradient problem的问题，作者只训练pruning后shallow layer保存下来的params。"></a>3）Local Pruning and Parameter Co-adaptation：在reTrain的过程中，重新训练pruning后保存下来的weights比训练再次初始化的weights更好。其次，为了克服vanish gradient problem的问题，作者只训练pruning后shallow layer保存下来的params。</h4><h4 id="4_uFF09Iterative_Pruning_3A_u5176_u5B9E_u5C31_u662F_u91CD_u590D_u7684pruning_uFF0C_u53CD_u590D_u7684_u627E_u51FA_u4E0D_u91CD_u8981_u7684_u8FDE_u63A5_u7136_u540Epruning_u3002"><a href="#4_uFF09Iterative_Pruning_3A_u5176_u5B9E_u5C31_u662F_u91CD_u590D_u7684pruning_uFF0C_u53CD_u590D_u7684_u627E_u51FA_u4E0D_u91CD_u8981_u7684_u8FDE_u63A5_u7136_u540Epruning_u3002" class="headerlink" title="4）Iterative Pruning:其实就是重复的pruning，反复的找出不重要的连接然后pruning。"></a>4）Iterative Pruning:其实就是重复的pruning，反复的找出不重要的连接然后pruning。</h4><h4 id="5_uFF09Pruning_Neurons_uFF1A_u4E00_u4E9B0_u8F93_u5165_u6216_u80050_u8F93_u51FA_u7684_neurons_u4E5F_u80FD_u88ABpruned_u3002"><a href="#5_uFF09Pruning_Neurons_uFF1A_u4E00_u4E9B0_u8F93_u5165_u6216_u80050_u8F93_u51FA_u7684_neurons_u4E5F_u80FD_u88ABpruned_u3002" class="headerlink" title="5）Pruning Neurons：一些0输入或者0输出的 neurons也能被pruned。"></a>5）Pruning Neurons：一些0输入或者0输出的 neurons也能被pruned。</h4><p><strong>本文系作者原创，转载请先联系作者: 18254275587@163.com</strong></p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/10/04/papers/network-in-network-e8-ae-ba-e6-96-87-e7-ac-94-e8-ae-b0/" rel="next" title="Network in Network -- 论文笔记">
+                <i class="fa fa-chevron-left"></i> Network in Network -- 论文笔记
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/10/04/papers/batch-normalization-e7-ae-80-e5-8d-95-e7-90-86-e8-a7-a3/" rel="prev" title="Batch Normalization 简单理解">
+                Batch Normalization 简单理解 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+        </div>
+
+        
+
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="John Doe" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">John Doe</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-_u7B80_u4ECB_uFF1A"><span class="nav-number">1.</span> <span class="nav-text">1.简介：</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#u901A_u8FC7_u4FEE_u526A_u8BAD_u7EC3_u540E_u7F51_u7EDC_u4E2D_u7684_u4E0D_u91CD_u8981_u8FDE_u63A5_uFF08connections_uFF09_uFF0C_u6765_u51CF_u5C11_u7F51_u7EDC_u6240_u9700_u8981_u7684_u53C2_u6570_uFF0C_u51CF_u5C11_u5185_u5B58_u548Ccpu_u7684_u6D88_u8017_uFF0C_u4F7F_u7F51_u7EDC_u66F4_u52A0_u9002_u5E94_u5728_u79FB_u52A8_u8BBE_u5907_u4E0A_u8FD0_u884C_u3002"><span class="nav-number">1.1.</span> <span class="nav-text">通过修剪训练后网络中的不重要连接（connections），来减少网络所需要的参数，减少内存和cpu的消耗，使网络更加适应在移动设备上运行。</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-idea_u601D_u60F3_uFF1A"><span class="nav-number">2.</span> <span class="nav-text">2.idea思想：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1_uFF09_u9996_u5148_u8BAD_u7EC3_u6574_u4E2A_u7F51_u7EDC_uFF0C_u5224_u65AD_u54EA_u4E9B_u662F_u91CD_u8981_u8FDE_u63A5_u3002"><span class="nav-number">2.0.0.1.</span> <span class="nav-text">1）首先训练整个网络，判断哪些是重要连接。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2_uFF09_u4FEE_u526A_u4E0D_u91CD_u8981_u7684_u8FDE_u63A5_u3002"><span class="nav-number">2.0.0.2.</span> <span class="nav-text">2）修剪不重要的连接。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3_uFF09_u91CD_u65B0_u8BAD_u7EC3_u4FEE_u526A_u540E_u7684_u7F51_u7EDC_uFF0C_u5FAE_u8C03_u4FDD_u7559_u4E0B_u6765_u7684_u53C2_u6570_u3002"><span class="nav-number">2.0.0.3.</span> <span class="nav-text">3）重新训练修剪后的网络，微调保留下来的参数。</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-_u8FBE_u5230_u7684_u6548_u679C_uFF1A"><span class="nav-number">3.</span> <span class="nav-text">3.达到的效果：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1_uFF09_u5728ImageNet_u4E0A_uFF0C_u51CF_u5C11_u4E86AlexNet_9_u500D_u7684_u53C2_u6570_uFF0C_u4ECE61_million_u7684_u53C2_u6570_u51CF_u5C11_u52306-1_million_u7684_u53C2_u6570_uFF1BVGG_u7F51_u7EDC_u5219_u66F4_u662F_u51CF_u5C11_u4E8616_u500D_uFF0C_u5E76_u4E14_u4FEE_u526A_u540E_u7684_u7F51_u8DEF_u7684accuracy_u6CA1_u6709_u4E0B_u964D_u3002"><span class="nav-number">3.0.0.1.</span> <span class="nav-text">1）在ImageNet上，减少了AlexNet 9倍的参数，从61 million的参数减少到6.1 million的参数；VGG网络则更是减少了16倍，并且修剪后的网路的accuracy没有下降。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2_uFF09_u53EF_u4EE5_u9632_u6B62_u8FC7_u62DF_u5408"><span class="nav-number">3.0.0.2.</span> <span class="nav-text">2）可以防止过拟合</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-_u5176_u5B83_u76F8_u5173_u7684_u5DE5_u4F5C_uFF1A"><span class="nav-number">4.</span> <span class="nav-text">4.其它相关的工作：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1_uFF09_u75288_u4F4Dint_u578B_u7684activation_u4EE3_u66FF16_u4F4Dfloat_u3002"><span class="nav-number">4.0.0.1.</span> <span class="nav-text">1）用8位int型的activation代替16位float。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2_uFF09Network_in_Network_u548CGoogleNet_u6A21_u578B_u4E2D_u4F7F_u7528_u4E86global_average_pooling_u4EE3_u66FFFC_u5C42_u6765_u51CF_u5C11_u53C2_u6570_uFF0C_u4F46_u5728_u4F7F_u7528ImageNet_u7684_u53C2_u6570_u65F6_uFF0C_u9700_u8981_u53E6_u5916_u589E_u52A0_u4E00_u4E2A_u7EBF_u6027_u5C42_u3002"><span class="nav-number">4.0.0.2.</span> <span class="nav-text">2）Network in Network和GoogleNet模型中使用了global average pooling代替FC层来减少参数，但在使用ImageNet的参数时，需要另外增加一个线性层。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3_uFF09dropout_u548C_u672C_u6587_u7684_u65B9_u6CD5_u4E0D_u540C_uFF0Cdropout_u4E3B_u8981_u7528_u6765_u9632_u6B62_u8FC7_u62DF_u5408_uFF0C_u5E76_u4E14_u662F_u5728_u8BAD_u7EC3_u8FC7_u7A0B_u4E2D_u5C31_u4EA7_u751F0_u8FDE_u63A5_uFF0C_u800C_u672C_u6587_u7684_u65B9_u6CD5_u5219_u662F_u5728_u7F51_u7EDC_u8BAD_u7EC3_u5B8C_u4E4B_u540E_u5BF9_u7F51_u7EDC_u8FDB_u884C_u4FEE_u526A_uFF0C_u4EA7_u751F0_u8FDE_u63A5_u3002"><span class="nav-number">4.0.0.3.</span> <span class="nav-text">3）dropout和本文的方法不同，dropout主要用来防止过拟合，并且是在训练过程中就产生0连接，而本文的方法则是在网络训练完之后对网络进行修剪，产生0连接。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4_uFF09HashNet_u8FD9_u4E2A_u672C_u4EBA_u6CA1_u6709_u770B_u8FC7_uFF0C_u8BBA_u6587_u91CC_u4F5C_u8005_u731C_u60F3HashNet_u548Cpruning_u7ED3_u5408_u53EF_u80FD_u6548_u679C_u66F4_u597D_u3002"><span class="nav-number">4.0.0.4.</span> <span class="nav-text">4）HashNet这个本人没有看过，论文里作者猜想HashNet和pruning结合可能效果更好。</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-_u5177_u4F53_u6D41_u7A0B_uFF1A"><span class="nav-number">5.</span> <span class="nav-text">5.具体流程：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u9996_u5148_u8BAD_u7EC3_u6574_u4E2A_u7F51_u7EDC_uFF0C_u76EE_u7684_u662F_u627E_u51FA_u54EA_u4E9B_u662F_u91CD_u8981_u7684_u8FDE_u63A5_uFF1B_u63A5_u7740_u8BBE_u7F6E_u4E00_u4E2Athreshold_uFF0Cpruning_u6389low-weight_u7684_u8FDE_u63A5_uFF0C_u5C06_u5BC6_u96C6_u7684_u7F51_u7EDC_u53D8_u6210_u7A00_u758F_u7684_u7F51_u7EDC_uFF1B_u6700_u540E_u5219_u662F_u5BF9_u4F59_u4E0B_u6765_u7684params_u8FDB_u884C_u5FAE_u8C03_uFF0C_u5982_u679C_u4E0D_u5FAE_u8C03_uFF0C_u90A3_u4E48_u5BF9_u7F51_u7EDC_u7684_u6027_u80FD_u4F1A_u6709_u5F88_u5927_u7684_u5F71_u54CD_u3002_u5982_u56FE_uFF1A"><span class="nav-number">5.0.1.</span> <span class="nav-text">首先训练整个网络，目的是找出哪些是重要的连接；接着设置一个threshold，pruning掉low-weight的连接，将密集的网络变成稀疏的网络；最后则是对余下来的params进行微调，如果不微调，那么对网络的性能会有很大的影响。如图：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u800C_u4F7F_u7528_u672C_u6587_u7684_u65B9_u6CD5_u9700_u8981_u5F88_u5927_u7684_u6280_u5DE7_u6027_uFF1A"><span class="nav-number">5.0.2.</span> <span class="nav-text">而使用本文的方法需要很大的技巧性：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1_uFF09Regularization_uFF1A_u9700_u8981_u9009_u62E9_u5408_u9002_u7684regularization_u3002L1_u8303_u5F0F_u4F1A_u5C06_u66F4_u591A_u7684params_u8F6C_u6362_u6210_u63A5_u8FD10_uFF0C_u8FD9_u5728_u8FDB_u884Cpruning_u4E4B_u540E_uFF0CreTrain_u4E4B_u524D_u6709_u5F88_u597D_u7684accuracy_uFF1BL2_u8303_u5F0F_u5728pruning_u548CreTrain_u4E4B_u540E_u4F1A_u964D_u4F4Eaccuracy_u3002"><span class="nav-number">5.0.2.1.</span> <span class="nav-text">1）Regularization：需要选择合适的regularization。L1范式会将更多的params转换成接近0，这在进行pruning之后，reTrain之前有很好的accuracy；L2范式在pruning和reTrain之后会降低accuracy。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2_uFF09Dropout_and_capacity_control_uFF1Adropout_u88AB_u5F53_u505A_u201Csoft_dropout_u201D_uFF0C_u800C_u672C_u6587_u7684_u65B9_u6CD5_u5219_u88AB_u5F53_u505A_u201Chard_dropout_u201D_uFF1B_u8FD9_u662F_u56E0_u4E3Adropout_u4E2D_u88ABdrop_u7684_u5728_u65B0_u7684_u8BAD_u7EC3_u6279_u65F6_uFF0C_u53EF_u4EE5_u88AB_u91CD_u65B0_u8BAD_u7EC3_uFF1B_u800C_u672C_u6587_u7684_u5219_u662F_u76F4_u63A5_u53BB_u6389_u8FDE_u63A5connections_u3002_u800C_u5728_u4F7F_u7528_u672C_u6587_u65B9_u6CD5_u7684_u65F6_u5019_uFF0Cdropout_u7684ratio_u4E5F_u5206pruning_u4E4B_u524D_u548Cpruning_u4E0D_u4E00_u6837_uFF0C_u5177_u4F53_u5982_u56FE_u6240_u793A_uFF1A"><span class="nav-number">5.0.2.2.</span> <span class="nav-text">2）Dropout and capacity control：dropout被当做“soft dropout”，而本文的方法则被当做“hard dropout”；这是因为dropout中被drop的在新的训练批时，可以被重新训练；而本文的则是直接去掉连接connections。而在使用本文方法的时候，dropout的ratio也分pruning之前和pruning不一样，具体如图所示：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3_uFF09Local_Pruning_and_Parameter_Co-adaptation_uFF1A_u5728reTrain_u7684_u8FC7_u7A0B_u4E2D_uFF0C_u91CD_u65B0_u8BAD_u7EC3pruning_u540E_u4FDD_u5B58_u4E0B_u6765_u7684weights_u6BD4_u8BAD_u7EC3_u518D_u6B21_u521D_u59CB_u5316_u7684weights_u66F4_u597D_u3002_u5176_u6B21_uFF0C_u4E3A_u4E86_u514B_u670Dvanish_gradient_problem_u7684_u95EE_u9898_uFF0C_u4F5C_u8005_u53EA_u8BAD_u7EC3pruning_u540Eshallow_layer_u4FDD_u5B58_u4E0B_u6765_u7684params_u3002"><span class="nav-number">5.0.2.3.</span> <span class="nav-text">3）Local Pruning and Parameter Co-adaptation：在reTrain的过程中，重新训练pruning后保存下来的weights比训练再次初始化的weights更好。其次，为了克服vanish gradient problem的问题，作者只训练pruning后shallow layer保存下来的params。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4_uFF09Iterative_Pruning_3A_u5176_u5B9E_u5C31_u662F_u91CD_u590D_u7684pruning_uFF0C_u53CD_u590D_u7684_u627E_u51FA_u4E0D_u91CD_u8981_u7684_u8FDE_u63A5_u7136_u540Epruning_u3002"><span class="nav-number">5.0.2.4.</span> <span class="nav-text">4）Iterative Pruning:其实就是重复的pruning，反复的找出不重要的连接然后pruning。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5_uFF09Pruning_Neurons_uFF1A_u4E00_u4E9B0_u8F93_u5165_u6216_u80050_u8F93_u51FA_u7684_neurons_u4E5F_u80FD_u88ABpruned_u3002"><span class="nav-number">5.0.2.5.</span> <span class="nav-text">5）Pruning Neurons：一些0输入或者0输出的 neurons也能被pruned。</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+    
+    
+
+  
+
+
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
+
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    motionMiddleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+  
+  
+
+  
+  
+
+</body>
+</html>
