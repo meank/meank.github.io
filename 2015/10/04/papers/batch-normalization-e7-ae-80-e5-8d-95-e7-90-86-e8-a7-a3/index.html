@@ -53,7 +53,7 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="Batch Normalization 简单理解">
 <meta property="og:url" content="http://yoursite.com/2015/10/04/papers/batch-normalization-e7-ae-80-e5-8d-95-e7-90-86-e8-a7-a3/index.html">
-<meta property="og:site_name" content="Hexo">
+<meta property="og:site_name" content="Meank's Learning Blog">
 <meta property="og:description" content="1：背景由于在训练神经网络的过程中，每一层的 params是不断更新的，由于params的更新会导致下一层输入的分布情况发生改变，所以这就要求我们进行权重初始化，减小学习率。这个现象就叫做internal covariate shift。2：idea思想虽然可以通过whitening来加速收敛，但是需要的计算资源会很大。而Batch Normalizationn的思想则是对于每一组batch，在网">
 <meta property="og:image" content="http://img.blog.csdn.net/20150923144511118">
 <meta property="og:image" content="http://img.blog.csdn.net/20150923144548232">
@@ -72,10 +72,10 @@
   };
 </script>
 
-  <title> Batch Normalization 简单理解 | Hexo </title>
+  <title> Batch Normalization 简单理解 | Meank's Learning Blog </title>
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="">
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
   <!--[if lte IE 8]>
   <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
@@ -103,7 +103,7 @@
   <div class="custom-logo-site-title">
     <a href="/"  class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
-      <span class="site-title">Hexo</span>
+      <span class="site-title">Meank's Learning Blog</span>
       <span class="logo-line-after"><i></i></span>
     </a>
   </div>
@@ -130,7 +130,7 @@
             
               <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
             
-            首頁
+            首页
           </a>
         </li>
       
@@ -140,7 +140,7 @@
             
               <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
             
-            分類
+            分类
           </a>
         </li>
       
@@ -150,7 +150,7 @@
             
               <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
             
-            歸檔
+            归档
           </a>
         </li>
       
@@ -200,7 +200,7 @@
 
         <div class="post-meta">
           <span class="post-time">
-            發表於
+            发表于
             <time itemprop="dateCreated" datetime="2015-10-04T19:32:05+08:00" content="2015-10-04">
               2015-10-04
             </time>
@@ -208,7 +208,7 @@
 
           
             <span class="post-category" >
-              &nbsp; | &nbsp; 分類於
+              &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
                   <a href="/categories/papers/" itemprop="url" rel="index">
@@ -376,39 +376,39 @@ def get_config(self):
       
         <ul class="sidebar-nav motion-element">
           <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            文章目錄
+            文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
-            本站概覽
+            站点概览
           </li>
         </ul>
       
 
       <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" src="/images/default_avatar.jpg" alt="John Doe" itemprop="image"/>
-          <p class="site-author-name" itemprop="name">John Doe</p>
+          <img class="site-author-image" src="/images/avotar.jpg" alt="Meank" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Meank</p>
         </div>
         <p class="site-description motion-element" itemprop="description"></p>
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
               <span class="site-state-item-count">31</span>
-              <span class="site-state-item-name">文章</span>
+              <span class="site-state-item-name">日志</span>
             </a>
           </div>
 
           <div class="site-state-item site-state-categories">
             <a href="/categories">
               <span class="site-state-item-count">5</span>
-              <span class="site-state-item-name">分類</span>
+              <span class="site-state-item-name">分类</span>
               </a>
           </div>
 
           <div class="site-state-item site-state-tags">
             
               <span class="site-state-item-count">0</span>
-              <span class="site-state-item-name">標籤</span>
+              <span class="site-state-item-name">标签</span>
               
           </div>
 
@@ -464,15 +464,15 @@ def get_config(self):
   <span class="with-love">
     <i class="icon-next-heart fa fa-heart"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder">John Doe</span>
+  <span class="author" itemprop="copyrightHolder">Meank</span>
 </div>
 
 <div class="powered-by">
-  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
 </div>
 
 <div class="theme-info">
-  主題 -
+  主题 -
   <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
     NexT
   </a>
