@@ -49,28 +49,16 @@
 
 
 
-<meta name="description" content="微软亚研院2015的一篇文章，优点是能够满足任意大小图像的输入。
-主要思想：（1）Spatial Pyramid Pooling Layer. 正是因为该层，才让Spp_net能够实现任意图片的输入，并且得到固定长度的特征向量：
-stride和window的计算：
-（2）Mapping a Window to Feature Maps. 将原图输入Spp_net后，通过下面图片中介绍的方法，能够将">
+<meta name="description">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Spatial Pyramid Pooling in Deep Convolutional --- Spp_net">
-<meta property="og:url" content="http://yoursite.com/2015/10/04/papers/spatial-pyramid-pooling-in-deep-convolutional-spp-net/index.html">
+<meta property="og:title" content="Window10安装theano keras cuda">
+<meta property="og:url" content="http://yoursite.com/2015/12/11/闲谈/windows10TheanoKerasCuda/index.html">
 <meta property="og:site_name" content="Meank's Learning Blog">
-<meta property="og:description" content="微软亚研院2015的一篇文章，优点是能够满足任意大小图像的输入。
-主要思想：（1）Spatial Pyramid Pooling Layer. 正是因为该层，才让Spp_net能够实现任意图片的输入，并且得到固定长度的特征向量：
-stride和window的计算：
-（2）Mapping a Window to Feature Maps. 将原图输入Spp_net后，通过下面图片中介绍的方法，能够将">
-<meta property="og:image" content="http://img.blog.csdn.net/20150901145828613">
-<meta property="og:image" content="http://img.blog.csdn.net/20150929192305267">
-<meta property="og:image" content="http://img.blog.csdn.net/20150901150356441">
-<meta property="og:updated_time" content="2015-11-22T05:23:29.000Z">
+<meta property="og:description">
+<meta property="og:updated_time" content="2015-12-11T12:43:11.383Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Spatial Pyramid Pooling in Deep Convolutional --- Spp_net">
-<meta name="twitter:description" content="微软亚研院2015的一篇文章，优点是能够满足任意大小图像的输入。
-主要思想：（1）Spatial Pyramid Pooling Layer. 正是因为该层，才让Spp_net能够实现任意图片的输入，并且得到固定长度的特征向量：
-stride和window的计算：
-（2）Mapping a Window to Feature Maps. 将原图输入Spp_net后，通过下面图片中介绍的方法，能够将">
+<meta name="twitter:title" content="Window10安装theano keras cuda">
+<meta name="twitter:description">
 
 
 
@@ -82,7 +70,7 @@ stride和window的计算：
   };
 </script>
 
-  <title> Spatial Pyramid Pooling in Deep Convolutional --- Spp_net | Meank's Learning Blog </title>
+  <title> Window10安装theano keras cuda | Meank's Learning Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -202,7 +190,7 @@ stride和window的计算：
             
             
               
-                Spatial Pyramid Pooling in Deep Convolutional --- Spp_net
+                Window10安装theano keras cuda
               
             
           </h1>
@@ -211,8 +199,8 @@ stride和window的计算：
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2015-10-04T19:34:17+08:00" content="2015-10-04">
-              2015-10-04
+            <time itemprop="dateCreated" datetime="2015-12-11T20:44:00+08:00" content="2015-12-11">
+              2015-12-11
             </time>
           </span>
 
@@ -221,8 +209,8 @@ stride和window的计算：
               &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/papers/" itemprop="url" rel="index">
-                    <span itemprop="name">papers</span>
+                  <a href="/categories/Deep-Learning-译文/" itemprop="url" rel="index">
+                    <span itemprop="name">Deep Learning 译文</span>
                   </a>
                 </span>
 
@@ -250,45 +238,7 @@ stride和window的计算：
       
 
       
-        <span itemprop="articleBody"><p>微软亚研院2015的一篇文章，优点是能够满足任意大小图像的输入。</p>
-<h1 id="u4E3B_u8981_u601D_u60F3_uFF1A"><a href="#u4E3B_u8981_u601D_u60F3_uFF1A" class="headerlink" title="主要思想："></a>主要思想：</h1><h3 id="uFF081_uFF09Spatial_Pyramid_Pooling_Layer-__u6B63_u662F_u56E0_u4E3A_u8BE5_u5C42_uFF0C_u624D_u8BA9Spp_net_u80FD_u591F_u5B9E_u73B0_u4EFB_u610F_u56FE_u7247_u7684_u8F93_u5165_uFF0C_u5E76_u4E14_u5F97_u5230_u56FA_u5B9A_u957F_u5EA6_u7684_u7279_u5F81_u5411_u91CF_uFF1A"><a href="#uFF081_uFF09Spatial_Pyramid_Pooling_Layer-__u6B63_u662F_u56E0_u4E3A_u8BE5_u5C42_uFF0C_u624D_u8BA9Spp_net_u80FD_u591F_u5B9E_u73B0_u4EFB_u610F_u56FE_u7247_u7684_u8F93_u5165_uFF0C_u5E76_u4E14_u5F97_u5230_u56FA_u5B9A_u957F_u5EA6_u7684_u7279_u5F81_u5411_u91CF_uFF1A" class="headerlink" title="（1）Spatial Pyramid Pooling Layer. 正是因为该层，才让Spp_net能够实现任意图片的输入，并且得到固定长度的特征向量："></a>（1）Spatial Pyramid Pooling Layer. 正是因为该层，才让Spp_net能够实现任意图片的输入，并且得到固定长度的特征向量：</h3><p><img src="http://img.blog.csdn.net/20150901145828613" alt="这里写图片描述"></p>
-<h3 id="stride_u548Cwindow_u7684_u8BA1_u7B97_uFF1A"><a href="#stride_u548Cwindow_u7684_u8BA1_u7B97_uFF1A" class="headerlink" title="stride和window的计算："></a>stride和window的计算：</h3><p><img src="http://img.blog.csdn.net/20150929192305267" alt="这里写图片描述"></p>
-<h3 id="uFF082_uFF09Mapping_a_Window_to_Feature_Maps-__u5C06_u539F_u56FE_u8F93_u5165Spp_net_u540E_uFF0C_u901A_u8FC7_u4E0B_u9762_u56FE_u7247_u4E2D_u4ECB_u7ECD_u7684_u65B9_u6CD5_uFF0C_u80FD_u591F_u5C06_u539F_u56FE_u4E2D_u7684_u70B9_u6620_u5C04_u5230feature_map_u4E0A_uFF0C_u4E3Aobject_detection_u6253_u4E0B_u57FA_u7840_uFF1A"><a href="#uFF082_uFF09Mapping_a_Window_to_Feature_Maps-__u5C06_u539F_u56FE_u8F93_u5165Spp_net_u540E_uFF0C_u901A_u8FC7_u4E0B_u9762_u56FE_u7247_u4E2D_u4ECB_u7ECD_u7684_u65B9_u6CD5_uFF0C_u80FD_u591F_u5C06_u539F_u56FE_u4E2D_u7684_u70B9_u6620_u5C04_u5230feature_map_u4E0A_uFF0C_u4E3Aobject_detection_u6253_u4E0B_u57FA_u7840_uFF1A" class="headerlink" title="（2）Mapping a Window to Feature Maps. 将原图输入Spp_net后，通过下面图片中介绍的方法，能够将原图中的点映射到feature map上，为object detection打下基础："></a>（2）Mapping a Window to Feature Maps. 将原图输入Spp_net后，通过下面图片中介绍的方法，能够将原图中的点映射到feature map上，为object detection打下基础：</h3><p><img src="http://img.blog.csdn.net/20150901150356441" alt="这里写图片描述"></p>
-<h1 id="u4E3B_u8981_u4EE3_u7801_u5B9E_u73B0_uFF08_u57FA_u4E8Etheano/keras_uFF09_uFF1A"><a href="#u4E3B_u8981_u4EE3_u7801_u5B9E_u73B0_uFF08_u57FA_u4E8Etheano/keras_uFF09_uFF1A" class="headerlink" title="主要代码实现（基于theano/keras）："></a>主要代码实现（基于theano/keras）：</h1><h3 id="uFF081_uFF09spp_layer_3A"><a href="#uFF081_uFF09spp_layer_3A" class="headerlink" title="（1）spp_layer:"></a>（1）spp_layer:</h3><pre><code>def __init__(self,bins,feature_map_size=0):
-    super(SppLayer,self).__init__()
-    self.strides = []
-    self.windows = []
-    self.a = feature_map_size#feature_map size
-    self.bins = bins
-    self.num_bins = len(bins)
-
-def get_output(self,train):
-    self.input = self.get_input(train)
-    for i in range(self.num_bins):
-        self.strides.append(int(math.floor(self.a/self.bins[i])))
-        self.windows.append(int(math.ceil(self.a/self.bins[i])))
-
-    self.pooled_out = []
-    for j in range(self.num_bins):
-        self.pooled_out.append(downsample.max_pool_2d(input=self.input,
-                                                          ds=(self.windows[j],self.windows[j]),
-                                                          st=(self.strides[j],self.strides[j]),
-                                                          ignore_border=False))
-
-    for k in range(self.num_bins):
-        self.pooled_out[k] = self.pooled_out[k].flatten(2)
-        &amp;quot;&amp;quot;&amp;quot;
-        print self.windows[k]
-        print self.strides[k]
-        print &amp;#039;K: &amp;#039;+str(k)
-        &amp;quot;&amp;quot;&amp;quot;
-    # batch_size * image_size
-    self.output = T.concatenate([self.pooled_out[0],self.pooled_out[1],self.pooled_out[2]],axis=1)
-
-    return self.output
-</code></pre><h3 id="282_29Mapping_a_Window_to_Feature_Maps_3A"><a href="#282_29Mapping_a_Window_to_Feature_Maps_3A" class="headerlink" title="(2)Mapping a Window to Feature Maps:"></a>(2)Mapping a Window to Feature Maps:</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">window_t</span><span class="params">(window_point_x1,window_point_y1,window_point_x2,window_point_y2,</span><br><span class="line">                         window_size_x,window_size_y,map_size_x,map_size_y)</span>:</span></span><br><span class="line">   	map_point_x1 = window_point_x1*math.ceil(map_size_x/window_size_x)-<span class="number">1</span></span><br><span class="line">   	map_point_y1 = window_point_y1*math.ceil(map_size_y/window_size_y)-<span class="number">1</span></span><br><span class="line">   	map_point_x2 = window_point_x2*math.ceil(map_size_x/window_size_x)-<span class="number">1</span></span><br><span class="line">   	map_point_y2 = window_point_y2*math.ceil(map_size_y/window_size_y)-<span class="number">1</span></span><br><span class="line"></span><br><span class="line">   	<span class="keyword">return</span> map_point_x1,map_point_y1,map_point_x2,map_point_y2</span><br></pre></td></tr></table></figure>
-<p><strong>本文系作者原创，转载请先联系作者: 18254275587@163.com</strong></p>
-</span>
+        <span itemprop="articleBody"></span>
       
     </div>
 
@@ -299,16 +249,16 @@ def get_output(self,train):
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/10/04/papers/batch-normalization-e7-ae-80-e5-8d-95-e7-90-86-e8-a7-a3/" rel="next" title="Batch Normalization 简单理解">
-                <i class="fa fa-chevron-left"></i> Batch Normalization 简单理解
+              <a href="/2015/12/10/‎Summarize/DeepLearning/" rel="next" title="深度学习资料汇总">
+                <i class="fa fa-chevron-left"></i> 深度学习资料汇总
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2015/10/04/‎Summarize/e6-b5-85-e6-9e-90sae-e4-b8-8edbm-ef-bc-88deep-learning-ef-bc-89/" rel="prev" title="浅析SAE与DBM（Deep Learning）">
-                浅析SAE与DBM（Deep Learning） <i class="fa fa-chevron-right"></i>
+              <a href="/2015/12/12/DeepLearning译文/windows10/" rel="prev" title="Window10安装theano keras cuda">
+                Window10安装theano keras cuda <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -423,7 +373,7 @@ def get_output(self,train):
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#u4E3B_u8981_u601D_u60F3_uFF1A"><span class="nav-number">1.</span> <span class="nav-text">主要思想：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#uFF081_uFF09Spatial_Pyramid_Pooling_Layer-__u6B63_u662F_u56E0_u4E3A_u8BE5_u5C42_uFF0C_u624D_u8BA9Spp_net_u80FD_u591F_u5B9E_u73B0_u4EFB_u610F_u56FE_u7247_u7684_u8F93_u5165_uFF0C_u5E76_u4E14_u5F97_u5230_u56FA_u5B9A_u957F_u5EA6_u7684_u7279_u5F81_u5411_u91CF_uFF1A"><span class="nav-number">1.0.1.</span> <span class="nav-text">（1）Spatial Pyramid Pooling Layer. 正是因为该层，才让Spp_net能够实现任意图片的输入，并且得到固定长度的特征向量：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#stride_u548Cwindow_u7684_u8BA1_u7B97_uFF1A"><span class="nav-number">1.0.2.</span> <span class="nav-text">stride和window的计算：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#uFF082_uFF09Mapping_a_Window_to_Feature_Maps-__u5C06_u539F_u56FE_u8F93_u5165Spp_net_u540E_uFF0C_u901A_u8FC7_u4E0B_u9762_u56FE_u7247_u4E2D_u4ECB_u7ECD_u7684_u65B9_u6CD5_uFF0C_u80FD_u591F_u5C06_u539F_u56FE_u4E2D_u7684_u70B9_u6620_u5C04_u5230feature_map_u4E0A_uFF0C_u4E3Aobject_detection_u6253_u4E0B_u57FA_u7840_uFF1A"><span class="nav-number">1.0.3.</span> <span class="nav-text">（2）Mapping a Window to Feature Maps. 将原图输入Spp_net后，通过下面图片中介绍的方法，能够将原图中的点映射到feature map上，为object detection打下基础：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u4E3B_u8981_u4EE3_u7801_u5B9E_u73B0_uFF08_u57FA_u4E8Etheano/keras_uFF09_uFF1A"><span class="nav-number">2.</span> <span class="nav-text">主要代码实现（基于theano/keras）：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#uFF081_uFF09spp_layer_3A"><span class="nav-number">2.0.1.</span> <span class="nav-text">（1）spp_layer:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#282_29Mapping_a_Window_to_Feature_Maps_3A"><span class="nav-number">2.0.2.</span> <span class="nav-text">(2)Mapping a Window to Feature Maps:</span></a></li></ol></li></ol></li></ol></div>
+              <p class="post-toc-empty">此文章未包含目录</p>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">

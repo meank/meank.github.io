@@ -49,28 +49,37 @@
 
 
 
-<meta name="description" content="微软亚研院2015的一篇文章，优点是能够满足任意大小图像的输入。
-主要思想：（1）Spatial Pyramid Pooling Layer. 正是因为该层，才让Spp_net能够实现任意图片的输入，并且得到固定长度的特征向量：
-stride和window的计算：
-（2）Mapping a Window to Feature Maps. 将原图输入Spp_net后，通过下面图片中介绍的方法，能够将">
+<meta name="description" content="一: 软件安装（安装路径均默认）首先安装pycharm
+再安装VS2012
+继续安装Git（后面需要用git指令安装theano keras）
+接下来安装Anaconda（需要配置环境变量，后面说）
+打开pycharm，使用pycharm安装pip，指定版本为1.2.1（需要配置环境变量，后面说）
+打开cmd，使用以下指令安装theano(兼容keras，不然无法使用relu函数)：
+
+pip i">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Spatial Pyramid Pooling in Deep Convolutional --- Spp_net">
-<meta property="og:url" content="http://yoursite.com/2015/10/04/papers/spatial-pyramid-pooling-in-deep-convolutional-spp-net/index.html">
+<meta property="og:title" content="Window10安装theano keras cuda">
+<meta property="og:url" content="http://yoursite.com/2015/12/12/DeepLearning译文/windows10/index.html">
 <meta property="og:site_name" content="Meank's Learning Blog">
-<meta property="og:description" content="微软亚研院2015的一篇文章，优点是能够满足任意大小图像的输入。
-主要思想：（1）Spatial Pyramid Pooling Layer. 正是因为该层，才让Spp_net能够实现任意图片的输入，并且得到固定长度的特征向量：
-stride和window的计算：
-（2）Mapping a Window to Feature Maps. 将原图输入Spp_net后，通过下面图片中介绍的方法，能够将">
-<meta property="og:image" content="http://img.blog.csdn.net/20150901145828613">
-<meta property="og:image" content="http://img.blog.csdn.net/20150929192305267">
-<meta property="og:image" content="http://img.blog.csdn.net/20150901150356441">
-<meta property="og:updated_time" content="2015-11-22T05:23:29.000Z">
+<meta property="og:description" content="一: 软件安装（安装路径均默认）首先安装pycharm
+再安装VS2012
+继续安装Git（后面需要用git指令安装theano keras）
+接下来安装Anaconda（需要配置环境变量，后面说）
+打开pycharm，使用pycharm安装pip，指定版本为1.2.1（需要配置环境变量，后面说）
+打开cmd，使用以下指令安装theano(兼容keras，不然无法使用relu函数)：
+
+pip i">
+<meta property="og:updated_time" content="2015-12-12T13:42:13.515Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Spatial Pyramid Pooling in Deep Convolutional --- Spp_net">
-<meta name="twitter:description" content="微软亚研院2015的一篇文章，优点是能够满足任意大小图像的输入。
-主要思想：（1）Spatial Pyramid Pooling Layer. 正是因为该层，才让Spp_net能够实现任意图片的输入，并且得到固定长度的特征向量：
-stride和window的计算：
-（2）Mapping a Window to Feature Maps. 将原图输入Spp_net后，通过下面图片中介绍的方法，能够将">
+<meta name="twitter:title" content="Window10安装theano keras cuda">
+<meta name="twitter:description" content="一: 软件安装（安装路径均默认）首先安装pycharm
+再安装VS2012
+继续安装Git（后面需要用git指令安装theano keras）
+接下来安装Anaconda（需要配置环境变量，后面说）
+打开pycharm，使用pycharm安装pip，指定版本为1.2.1（需要配置环境变量，后面说）
+打开cmd，使用以下指令安装theano(兼容keras，不然无法使用relu函数)：
+
+pip i">
 
 
 
@@ -82,7 +91,7 @@ stride和window的计算：
   };
 </script>
 
-  <title> Spatial Pyramid Pooling in Deep Convolutional --- Spp_net | Meank's Learning Blog </title>
+  <title> Window10安装theano keras cuda | Meank's Learning Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -202,7 +211,7 @@ stride和window的计算：
             
             
               
-                Spatial Pyramid Pooling in Deep Convolutional --- Spp_net
+                Window10安装theano keras cuda
               
             
           </h1>
@@ -211,8 +220,8 @@ stride和window的计算：
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2015-10-04T19:34:17+08:00" content="2015-10-04">
-              2015-10-04
+            <time itemprop="dateCreated" datetime="2015-12-12T21:42:13+08:00" content="2015-12-12">
+              2015-12-12
             </time>
           </span>
 
@@ -221,8 +230,8 @@ stride和window的计算：
               &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/papers/" itemprop="url" rel="index">
-                    <span itemprop="name">papers</span>
+                  <a href="/categories/闲谈/" itemprop="url" rel="index">
+                    <span itemprop="name">闲谈</span>
                   </a>
                 </span>
 
@@ -250,45 +259,85 @@ stride和window的计算：
       
 
       
-        <span itemprop="articleBody"><p>微软亚研院2015的一篇文章，优点是能够满足任意大小图像的输入。</p>
-<h1 id="u4E3B_u8981_u601D_u60F3_uFF1A"><a href="#u4E3B_u8981_u601D_u60F3_uFF1A" class="headerlink" title="主要思想："></a>主要思想：</h1><h3 id="uFF081_uFF09Spatial_Pyramid_Pooling_Layer-__u6B63_u662F_u56E0_u4E3A_u8BE5_u5C42_uFF0C_u624D_u8BA9Spp_net_u80FD_u591F_u5B9E_u73B0_u4EFB_u610F_u56FE_u7247_u7684_u8F93_u5165_uFF0C_u5E76_u4E14_u5F97_u5230_u56FA_u5B9A_u957F_u5EA6_u7684_u7279_u5F81_u5411_u91CF_uFF1A"><a href="#uFF081_uFF09Spatial_Pyramid_Pooling_Layer-__u6B63_u662F_u56E0_u4E3A_u8BE5_u5C42_uFF0C_u624D_u8BA9Spp_net_u80FD_u591F_u5B9E_u73B0_u4EFB_u610F_u56FE_u7247_u7684_u8F93_u5165_uFF0C_u5E76_u4E14_u5F97_u5230_u56FA_u5B9A_u957F_u5EA6_u7684_u7279_u5F81_u5411_u91CF_uFF1A" class="headerlink" title="（1）Spatial Pyramid Pooling Layer. 正是因为该层，才让Spp_net能够实现任意图片的输入，并且得到固定长度的特征向量："></a>（1）Spatial Pyramid Pooling Layer. 正是因为该层，才让Spp_net能够实现任意图片的输入，并且得到固定长度的特征向量：</h3><p><img src="http://img.blog.csdn.net/20150901145828613" alt="这里写图片描述"></p>
-<h3 id="stride_u548Cwindow_u7684_u8BA1_u7B97_uFF1A"><a href="#stride_u548Cwindow_u7684_u8BA1_u7B97_uFF1A" class="headerlink" title="stride和window的计算："></a>stride和window的计算：</h3><p><img src="http://img.blog.csdn.net/20150929192305267" alt="这里写图片描述"></p>
-<h3 id="uFF082_uFF09Mapping_a_Window_to_Feature_Maps-__u5C06_u539F_u56FE_u8F93_u5165Spp_net_u540E_uFF0C_u901A_u8FC7_u4E0B_u9762_u56FE_u7247_u4E2D_u4ECB_u7ECD_u7684_u65B9_u6CD5_uFF0C_u80FD_u591F_u5C06_u539F_u56FE_u4E2D_u7684_u70B9_u6620_u5C04_u5230feature_map_u4E0A_uFF0C_u4E3Aobject_detection_u6253_u4E0B_u57FA_u7840_uFF1A"><a href="#uFF082_uFF09Mapping_a_Window_to_Feature_Maps-__u5C06_u539F_u56FE_u8F93_u5165Spp_net_u540E_uFF0C_u901A_u8FC7_u4E0B_u9762_u56FE_u7247_u4E2D_u4ECB_u7ECD_u7684_u65B9_u6CD5_uFF0C_u80FD_u591F_u5C06_u539F_u56FE_u4E2D_u7684_u70B9_u6620_u5C04_u5230feature_map_u4E0A_uFF0C_u4E3Aobject_detection_u6253_u4E0B_u57FA_u7840_uFF1A" class="headerlink" title="（2）Mapping a Window to Feature Maps. 将原图输入Spp_net后，通过下面图片中介绍的方法，能够将原图中的点映射到feature map上，为object detection打下基础："></a>（2）Mapping a Window to Feature Maps. 将原图输入Spp_net后，通过下面图片中介绍的方法，能够将原图中的点映射到feature map上，为object detection打下基础：</h3><p><img src="http://img.blog.csdn.net/20150901150356441" alt="这里写图片描述"></p>
-<h1 id="u4E3B_u8981_u4EE3_u7801_u5B9E_u73B0_uFF08_u57FA_u4E8Etheano/keras_uFF09_uFF1A"><a href="#u4E3B_u8981_u4EE3_u7801_u5B9E_u73B0_uFF08_u57FA_u4E8Etheano/keras_uFF09_uFF1A" class="headerlink" title="主要代码实现（基于theano/keras）："></a>主要代码实现（基于theano/keras）：</h1><h3 id="uFF081_uFF09spp_layer_3A"><a href="#uFF081_uFF09spp_layer_3A" class="headerlink" title="（1）spp_layer:"></a>（1）spp_layer:</h3><pre><code>def __init__(self,bins,feature_map_size=0):
-    super(SppLayer,self).__init__()
-    self.strides = []
-    self.windows = []
-    self.a = feature_map_size#feature_map size
-    self.bins = bins
-    self.num_bins = len(bins)
+        <span itemprop="articleBody"><h2 id="u4E00_3A__u8F6F_u4EF6_u5B89_u88C5_uFF08_u5B89_u88C5_u8DEF_u5F84_u5747_u9ED8_u8BA4_uFF09"><a href="#u4E00_3A__u8F6F_u4EF6_u5B89_u88C5_uFF08_u5B89_u88C5_u8DEF_u5F84_u5747_u9ED8_u8BA4_uFF09" class="headerlink" title="一: 软件安装（安装路径均默认）"></a>一: 软件安装（安装路径均默认）</h2><p>首先安装<a href="http://www.jetbrains.com/pycharm/download/" target="_blank" rel="external">pycharm</a></p>
+<p>再安装VS2012</p>
+<p>继续安装<a href="http://git-scm.com/download/" target="_blank" rel="external">Git</a>（后面需要用git指令安装theano keras）</p>
+<p>接下来安装<a href="https://www.continuum.io/downloads" target="_blank" rel="external">Anaconda</a>（<strong>需要配置环境变量</strong>，后面说）</p>
+<p>打开pycharm，使用pycharm安装pip，指定版本为1.2.1（<strong>需要配置环境变量</strong>，后面说）</p>
+<p>打开cmd，使用以下指令安装theano(兼容keras，不然无法使用relu函数)：</p>
+<ul>
+<li>pip install git+<a href="https://github.com/Theano/Theano.git@15c90dd3#egg=Theano==0.8.git" target="_blank" rel="external">https://github.com/Theano/Theano.git@15c90dd3#egg=Theano==0.8.git</a></li>
+</ul>
+<p>安装keras：</p>
+<p>打开cmd，使用以下指令安装keras：</p>
+<ul>
+<li>pip install keras</li>
+</ul>
+<p>接下安装mingw，打开cmd，运行以下指令（<strong>需要配置环境变量</strong>，后面说）：</p>
+<ul>
+<li>conda install mingw libpython （中间可能会卡主几次，关掉窗口重新运行指令即可）</li>
+</ul>
+<p>安装<a href="https://developer.nvidia.com/cuda-downloads/" target="_blank" rel="external">cuda</a>，离线安装方式，默认安装即可</p>
+<p><strong>严格按照以上顺序安装</strong></p>
+<h2 id="u73AF_u5883_u53D8_u91CF_u8BBE_u7F6E"><a href="#u73AF_u5883_u53D8_u91CF_u8BBE_u7F6E" class="headerlink" title="环境变量设置"></a>环境变量设置</h2><p>环境变量只需要配置用户变量中的PATH，我的变量最后如下：</p>
+<pre><code>C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Users\wxm\AppData\Roaming\npm;C:\Users\wxm\AppData\Local\Programs\Git\cmd;C:\Users\wxm\AppData\Local\Programs\Git\mingw64\bin;C:\Users\wxm\AppData\Local\Programs\Git\usr\bin;C:\Anaconda2\Lib\site-packages\pip;C:\Anaconda2;C:\Anaconda2\MinGW 
+</code></pre><p>在进行第一步的时候，安装完什么软件，就配置好什么环境变量。</p>
+<h2 id="thenao_u914D_u7F6E_u6587_u4EF6_uFF1A"><a href="#thenao_u914D_u7F6E_u6587_u4EF6_uFF1A" class="headerlink" title="thenao配置文件："></a>thenao配置文件：</h2><p>在cmd窗口的路径下：如C:\Users\wxm，新建.theanorc.txt文件，填写以下内容：</p>
+<ul>
+<li>[global] </li>
+<li>openmp=False </li>
+<li>device = gpu </li>
+<li>floatX = float32 </li>
+<li>allow_input_downcast=True </li>
+<li>[blas] </li>
+<li>ldflags= </li>
+<li>[gcc] </li>
+<li>cxxflags=-IC:\Anaconda2\MinGW</li>
+<li>[nvcc] </li>
+<li>flags = -LE:\Anaconda2\libs</li>
+<li>flags=-arch=sm_30</li>
+<li>compiler_bindir = C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin  </li>
+<li>fastmath = True </li>
+</ul>
+<h2 id="u6D4B_u8BD5"><a href="#u6D4B_u8BD5" class="headerlink" title="测试"></a>测试</h2><p>运行以下代码，若打印 using the gpu，说明配置成功</p>
+<pre><code>import theano.tensor as T
 
-def get_output(self,train):
-    self.input = self.get_input(train)
-    for i in range(self.num_bins):
-        self.strides.append(int(math.floor(self.a/self.bins[i])))
-        self.windows.append(int(math.ceil(self.a/self.bins[i])))
+import numpy
 
-    self.pooled_out = []
-    for j in range(self.num_bins):
-        self.pooled_out.append(downsample.max_pool_2d(input=self.input,
-                                                          ds=(self.windows[j],self.windows[j]),
-                                                          st=(self.strides[j],self.strides[j]),
-                                                          ignore_border=False))
+import time
 
-    for k in range(self.num_bins):
-        self.pooled_out[k] = self.pooled_out[k].flatten(2)
-        &amp;quot;&amp;quot;&amp;quot;
-        print self.windows[k]
-        print self.strides[k]
-        print &amp;#039;K: &amp;#039;+str(k)
-        &amp;quot;&amp;quot;&amp;quot;
-    # batch_size * image_size
-    self.output = T.concatenate([self.pooled_out[0],self.pooled_out[1],self.pooled_out[2]],axis=1)
+vlen = 10 * 30 * 768  # 10 x #cores x # threads per core
 
-    return self.output
-</code></pre><h3 id="282_29Mapping_a_Window_to_Feature_Maps_3A"><a href="#282_29Mapping_a_Window_to_Feature_Maps_3A" class="headerlink" title="(2)Mapping a Window to Feature Maps:"></a>(2)Mapping a Window to Feature Maps:</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">window_t</span><span class="params">(window_point_x1,window_point_y1,window_point_x2,window_point_y2,</span><br><span class="line">                         window_size_x,window_size_y,map_size_x,map_size_y)</span>:</span></span><br><span class="line">   	map_point_x1 = window_point_x1*math.ceil(map_size_x/window_size_x)-<span class="number">1</span></span><br><span class="line">   	map_point_y1 = window_point_y1*math.ceil(map_size_y/window_size_y)-<span class="number">1</span></span><br><span class="line">   	map_point_x2 = window_point_x2*math.ceil(map_size_x/window_size_x)-<span class="number">1</span></span><br><span class="line">   	map_point_y2 = window_point_y2*math.ceil(map_size_y/window_size_y)-<span class="number">1</span></span><br><span class="line"></span><br><span class="line">   	<span class="keyword">return</span> map_point_x1,map_point_y1,map_point_x2,map_point_y2</span><br></pre></td></tr></table></figure>
-<p><strong>本文系作者原创，转载请先联系作者: 18254275587@163.com</strong></p>
-</span>
+iters = 1000
+
+rng = numpy.random.RandomState(22)
+
+x = shared(numpy.asarray(rng.rand(vlen), config.floatX))
+
+f = function([], T.exp(x))
+
+print (f.maker.fgraph.toposort())
+
+t0 = time.time()
+
+for i in range(iters):
+
+    r = f()
+
+t1 = time.time()
+
+print (&apos;Looping %d times took&apos; % iters, t1 - t0, &apos;seconds&apos;)
+
+print (&apos;Result is&apos;, r)
+
+if numpy.any([isinstance(x.op, T.Elemwise) for x in f.maker.fgraph.toposort()]):
+
+    print (&apos;Used the cpu&apos;)
+
+else:
+
+    print (&apos;Used the gpu&apos;)
+</code></pre></span>
       
     </div>
 
@@ -299,17 +348,13 @@ def get_output(self,train):
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/10/04/papers/batch-normalization-e7-ae-80-e5-8d-95-e7-90-86-e8-a7-a3/" rel="next" title="Batch Normalization 简单理解">
-                <i class="fa fa-chevron-left"></i> Batch Normalization 简单理解
+              <a href="/2015/12/11/闲谈/windows10TheanoKerasCuda/" rel="next" title="Window10安装theano keras cuda">
+                <i class="fa fa-chevron-left"></i> Window10安装theano keras cuda
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2015/10/04/‎Summarize/e6-b5-85-e6-9e-90sae-e4-b8-8edbm-ef-bc-88deep-learning-ef-bc-89/" rel="prev" title="浅析SAE与DBM（Deep Learning）">
-                浅析SAE与DBM（Deep Learning） <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -423,7 +468,7 @@ def get_output(self,train):
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#u4E3B_u8981_u601D_u60F3_uFF1A"><span class="nav-number">1.</span> <span class="nav-text">主要思想：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#uFF081_uFF09Spatial_Pyramid_Pooling_Layer-__u6B63_u662F_u56E0_u4E3A_u8BE5_u5C42_uFF0C_u624D_u8BA9Spp_net_u80FD_u591F_u5B9E_u73B0_u4EFB_u610F_u56FE_u7247_u7684_u8F93_u5165_uFF0C_u5E76_u4E14_u5F97_u5230_u56FA_u5B9A_u957F_u5EA6_u7684_u7279_u5F81_u5411_u91CF_uFF1A"><span class="nav-number">1.0.1.</span> <span class="nav-text">（1）Spatial Pyramid Pooling Layer. 正是因为该层，才让Spp_net能够实现任意图片的输入，并且得到固定长度的特征向量：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#stride_u548Cwindow_u7684_u8BA1_u7B97_uFF1A"><span class="nav-number">1.0.2.</span> <span class="nav-text">stride和window的计算：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#uFF082_uFF09Mapping_a_Window_to_Feature_Maps-__u5C06_u539F_u56FE_u8F93_u5165Spp_net_u540E_uFF0C_u901A_u8FC7_u4E0B_u9762_u56FE_u7247_u4E2D_u4ECB_u7ECD_u7684_u65B9_u6CD5_uFF0C_u80FD_u591F_u5C06_u539F_u56FE_u4E2D_u7684_u70B9_u6620_u5C04_u5230feature_map_u4E0A_uFF0C_u4E3Aobject_detection_u6253_u4E0B_u57FA_u7840_uFF1A"><span class="nav-number">1.0.3.</span> <span class="nav-text">（2）Mapping a Window to Feature Maps. 将原图输入Spp_net后，通过下面图片中介绍的方法，能够将原图中的点映射到feature map上，为object detection打下基础：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u4E3B_u8981_u4EE3_u7801_u5B9E_u73B0_uFF08_u57FA_u4E8Etheano/keras_uFF09_uFF1A"><span class="nav-number">2.</span> <span class="nav-text">主要代码实现（基于theano/keras）：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#uFF081_uFF09spp_layer_3A"><span class="nav-number">2.0.1.</span> <span class="nav-text">（1）spp_layer:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#282_29Mapping_a_Window_to_Feature_Maps_3A"><span class="nav-number">2.0.2.</span> <span class="nav-text">(2)Mapping a Window to Feature Maps:</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#u4E00_3A__u8F6F_u4EF6_u5B89_u88C5_uFF08_u5B89_u88C5_u8DEF_u5F84_u5747_u9ED8_u8BA4_uFF09"><span class="nav-number">1.</span> <span class="nav-text">一: 软件安装（安装路径均默认）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u73AF_u5883_u53D8_u91CF_u8BBE_u7F6E"><span class="nav-number">2.</span> <span class="nav-text">环境变量设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#thenao_u914D_u7F6E_u6587_u4EF6_uFF1A"><span class="nav-number">3.</span> <span class="nav-text">thenao配置文件：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u6D4B_u8BD5"><span class="nav-number">4.</span> <span class="nav-text">测试</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
