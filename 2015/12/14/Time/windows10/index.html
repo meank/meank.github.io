@@ -49,29 +49,37 @@
 
 
 
-<meta name="description" content="Part 2 : Deep Networks： Modern Practices本书的这部分内容主要介绍一些已经有实际应用的深度学习方法。
-深度学习拥有很长的历史，也有宏大的愿景。一些深度学习方法尚未成熟，充满野心的目标也尚未实现，这些待发展的深度学习分支将在本书的最后一部分讨论。
-这部分讨论那些早已在工业界落地，正在大规模使用的深度学习方法。
-现在的深度学习提供了的一个强有力的监督学习的框架（f">
+<meta name="description" content="一: 软件安装（安装路径均默认）首先安装pycharm
+再安装VS2012
+继续安装Git（后面需要用git指令安装theano keras）
+接下来安装Anaconda（需要配置环境变量，后面说）
+打开pycharm，使用pycharm安装pip，指定版本为1.2.1（需要配置环境变量，后面说）
+打开cmd，使用以下指令安装theano(兼容keras，不然无法使用relu函数)：
+
+pip i">
 <meta property="og:type" content="article">
-<meta property="og:title" content="DeepLearning--Part2--Chapter6：Feedforward-Deep-Networks（1）">
-<meta property="og:url" content="http://yoursite.com/2015/12/08/DeepLearning译文/DeepLearning--Part2--Chapter6：Feedforward-Deep-Networks（1）/index.html">
+<meta property="og:title" content="Window10安装theano keras cuda">
+<meta property="og:url" content="http://yoursite.com/2015/12/14/Time/windows10/index.html">
 <meta property="og:site_name" content="Meank's Learning Blog">
-<meta property="og:description" content="Part 2 : Deep Networks： Modern Practices本书的这部分内容主要介绍一些已经有实际应用的深度学习方法。
-深度学习拥有很长的历史，也有宏大的愿景。一些深度学习方法尚未成熟，充满野心的目标也尚未实现，这些待发展的深度学习分支将在本书的最后一部分讨论。
-这部分讨论那些早已在工业界落地，正在大规模使用的深度学习方法。
-现在的深度学习提供了的一个强有力的监督学习的框架（f">
-<meta property="og:image" content="http://i.imgur.com/MEDyeRf.png">
-<meta property="og:image" content="http://i.imgur.com/AJNPydP.png">
-<meta property="og:image" content="http://i.imgur.com/HKcUrzi.png">
-<meta property="og:image" content="http://i.imgur.com/GjzfkbA.png">
-<meta property="og:updated_time" content="2015-11-22T05:24:33.000Z">
+<meta property="og:description" content="一: 软件安装（安装路径均默认）首先安装pycharm
+再安装VS2012
+继续安装Git（后面需要用git指令安装theano keras）
+接下来安装Anaconda（需要配置环境变量，后面说）
+打开pycharm，使用pycharm安装pip，指定版本为1.2.1（需要配置环境变量，后面说）
+打开cmd，使用以下指令安装theano(兼容keras，不然无法使用relu函数)：
+
+pip i">
+<meta property="og:updated_time" content="2015-12-13T17:49:51.846Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="DeepLearning--Part2--Chapter6：Feedforward-Deep-Networks（1）">
-<meta name="twitter:description" content="Part 2 : Deep Networks： Modern Practices本书的这部分内容主要介绍一些已经有实际应用的深度学习方法。
-深度学习拥有很长的历史，也有宏大的愿景。一些深度学习方法尚未成熟，充满野心的目标也尚未实现，这些待发展的深度学习分支将在本书的最后一部分讨论。
-这部分讨论那些早已在工业界落地，正在大规模使用的深度学习方法。
-现在的深度学习提供了的一个强有力的监督学习的框架（f">
+<meta name="twitter:title" content="Window10安装theano keras cuda">
+<meta name="twitter:description" content="一: 软件安装（安装路径均默认）首先安装pycharm
+再安装VS2012
+继续安装Git（后面需要用git指令安装theano keras）
+接下来安装Anaconda（需要配置环境变量，后面说）
+打开pycharm，使用pycharm安装pip，指定版本为1.2.1（需要配置环境变量，后面说）
+打开cmd，使用以下指令安装theano(兼容keras，不然无法使用relu函数)：
+
+pip i">
 
 
 
@@ -83,7 +91,7 @@
   };
 </script>
 
-  <title> DeepLearning--Part2--Chapter6：Feedforward-Deep-Networks（1） | Meank's Learning Blog </title>
+  <title> Window10安装theano keras cuda | Meank's Learning Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -203,7 +211,7 @@
             
             
               
-                DeepLearning--Part2--Chapter6：Feedforward-Deep-Networks（1）
+                Window10安装theano keras cuda
               
             
           </h1>
@@ -212,8 +220,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2015-12-08T13:39:47+08:00" content="2015-12-08">
-              2015-12-08
+            <time itemprop="dateCreated" datetime="2015-12-14T01:50:23+08:00" content="2015-12-14">
+              2015-12-14
             </time>
           </span>
 
@@ -222,8 +230,8 @@
               &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Deep-Learning-译文/" itemprop="url" rel="index">
-                    <span itemprop="name">Deep Learning 译文</span>
+                  <a href="/categories/Time/" itemprop="url" rel="index">
+                    <span itemprop="name">Time</span>
                   </a>
                 </span>
 
@@ -251,40 +259,85 @@
       
 
       
-        <span itemprop="articleBody"><h1 id="Part_2__3A_Deep_Networks_uFF1A_Modern_Practices"><a href="#Part_2__3A_Deep_Networks_uFF1A_Modern_Practices" class="headerlink" title="Part 2 : Deep Networks： Modern Practices"></a>Part 2 : Deep Networks： Modern Practices</h1><p>本书的这部分内容主要介绍一些已经有实际应用的深度学习方法。</p>
-<p>深度学习拥有很长的历史，也有宏大的愿景。一些深度学习方法尚未成熟，充满野心的目标也尚未实现，这些待发展的深度学习分支将在本书的最后一部分讨论。</p>
-<p>这部分讨论那些早已在工业界落地，正在大规模使用的深度学习方法。</p>
-<p>现在的深度学习提供了的一个强有力的监督学习的框架（framework）。通过增加layers数量以及增加layer内的单元（units）数量，一个深度网络能够表示越来越复杂的模式。一些将输入向量映射成输出向量的简单任务（比如：看图，语音），能够通过深度学习实现。而一些不能将事物简单描述为向量间关系的更复杂的任务（比如：人们要花时间思考与反思的任务），这类任务就超出了现在深度学习的范围。</p>
-<p>此部分讲述基本上所有实际应用的深度学习背后的技术–core parametric function approximation technology。包括：如何用ConVNet卷积网络处理图片数据，如何用RNN网络处理序列数据；以及一些数据预处理和网络参数设置的建议。</p>
-<p>这部分内容的章节对于那些想实现深度学习算法，去解决实际工程任务的人是很有帮助的。</p>
-<h2 id="Chapter_6__uFF1A_Feedforward_Deep_Networks"><a href="#Chapter_6__uFF1A_Feedforward_Deep_Networks" class="headerlink" title="Chapter 6 ： Feedforward Deep Networks"></a>Chapter 6 ： Feedforward Deep Networks</h2><p>前馈深度网络（Feedforward Deep Networks），也称为多层感知机（multi layer perceptrons）。他们其实是多个参数方程构成大的参数方程，其中每一个参数方程都是多输入多输出。在神经网络的术语当中，组成大参数方程的子参数方程被称为网络的一个layer，而一个子参数方程的每个标量输出被称作unit或者feature。尽管单个unit的输入到输出的转换相当简单，但是整个网络一叠加起来就变得有些复杂了。</p>
-<p>并不是所有的深度学习算法都可以理解为像前馈深层网络一样，依据于定义单个确定的的参数方程，但是layer内unit数量多，layer数量多是所用深度学习共有的特点。我们把了layer内units的数量定义为width，layer的数量定义为depth。前馈深度网络作为一个简单的例子，揭示了深度学习模型获得的许多优点来源于其depth和width的增加。前馈深度网络也是目前许多深度学习结合大数据进行商业应用的核心基础技术。</p>
-<p>在章节5，我们介绍了一些传统的机器学习算法，包括线性回归，线性分类器，逻辑回归以及核方法（kernel machines）。但是这些算法都是对给定的features作线性转换。虽然这些模型也能添加非线性，但是非线性的部分是固定不变的。也就是说，在输入x的区域是非线性的，但是在其他的一些预定义的区域又是线性的（译者理解为非线性是人为添加的，不是模型自己学习到的）。</p>
-<p>神经网络使得我们可以获得新的非线性（non-linearity）特征。换个角度看，神经网络可以将学习到的features提供给线性模型。从这个角度看，神经网络可以自己设计features–这个特性目前仍在全体研究员社区的共同努力下慢慢发展。</p>
-<h3 id="6-1__uFF1A_MLPs_from_the_1980_u2019s"><a href="#6-1__uFF1A_MLPs_from_the_1980_u2019s" class="headerlink" title="6.1 ： MLPs from the 1980’s"></a>6.1 ： MLPs from the 1980’s</h3><p>前向有监督神经网络可以说是第一个，也是最成功的一个非线性学习算法（Rumelhart et al., 1986e,c）。这类模型通常包括至少一个定义features的方程，以及一个将features映射到output的的方程（通常是线性）。网络中包含features的层通常称为隐含层（hidden layer）。称为隐含层是因为features事先是不知道的，是通过训练算法训练得到的。网络中的输入输出层则被称为可视层。Figure 6.1 给出了一个典型的MLP的结构，包含一个隐含层。而要使这个网络更深（deeper），只需简单的叠加隐含层即可。目前的一些新网络则改变了网络中的非线性函数或者训练的方法。</p>
-<p><img src="http://i.imgur.com/MEDyeRf.png" alt=""></p>
-<p>Example 6.1.1 介绍了一个浅层的MLP，Figure 6.1 是其插图。我们会在接下来的几个章节中推导MLP。</p>
-<p><strong>Example 6.1.1 ：应用于回归的浅层神经网络（Shallow Multi-Layer Neural Network for Regression）</strong></p>
+        <span itemprop="articleBody"><h2 id="u4E00_3A__u8F6F_u4EF6_u5B89_u88C5_uFF08_u5B89_u88C5_u8DEF_u5F84_u5747_u9ED8_u8BA4_uFF09"><a href="#u4E00_3A__u8F6F_u4EF6_u5B89_u88C5_uFF08_u5B89_u88C5_u8DEF_u5F84_u5747_u9ED8_u8BA4_uFF09" class="headerlink" title="一: 软件安装（安装路径均默认）"></a>一: 软件安装（安装路径均默认）</h2><p>首先安装<a href="http://www.jetbrains.com/pycharm/download/" target="_blank" rel="external">pycharm</a></p>
+<p>再安装VS2012</p>
+<p>继续安装<a href="http://git-scm.com/download/" target="_blank" rel="external">Git</a>（后面需要用git指令安装theano keras）</p>
+<p>接下来安装<a href="https://www.continuum.io/downloads" target="_blank" rel="external">Anaconda</a>（<strong>需要配置环境变量</strong>，后面说）</p>
+<p>打开pycharm，使用pycharm安装pip，指定版本为1.2.1（<strong>需要配置环境变量</strong>，后面说）</p>
+<p>打开cmd，使用以下指令安装theano(兼容keras，不然无法使用relu函数)：</p>
 <ul>
-<li>基于上面的一些定义，现在我们可以写出从输入到输出的总方程：<strong>f<sub>θ</sub>(x) = b<sub> theta </sub> + V sigmoid(c + Wx)</strong>,其中<strong>sigmoid(a) = 1/(1 + e<sup>−a</sup>)</strong>的运算方式是element-wise，输入向量 <strong>x∈R<sup>n<sub>i</sub></sup></strong>。隐含层由<strong>h = sigmoid(c + Wx)</strong> 计算得到，包含n<sub>h</sub>个元素。网络中的总参数<strong>θ = (b, c, V ,W )</strong>，通常θ 是flatten操作后的向量形式。<strong>b ∈ <sup>n<sub>o</sub></sup></strong> ,和output层的维数(n<sub>o</sub>)一致。<strong>c ∈ <sup>n<sub>h</sub></sup></strong>，和隐含层的维数(h)一致。<strong>V ∈ R<sup>n<sub>h</sub></sup><sup>×n<sub>o</sub></sup></strong> 和 <strong>W ∈ <sup>n<sub>i</sub></sup><sup>×n<sub>h</sub></sup></strong> 是权重矩阵。</li>
-<li>典型的损失函数（loss function）是均方差（squared error）：<strong>L( ˆy, y) = ||ˆy − y||<sup>2</sup></strong> (6.2 章节会讨论如何使ˆy作为<strong>E[Y | x]</strong>的estimator)。正则项（regularizer）可以是L2范式： <strong>||ω||<sup>2</sup> = (sum{ W<sup>2</sup><sub>ij</sub>} + sum{V<sup>2</sup><sub>ij</sub>})</strong>。ω 是W和V的集合。从公式可以看出，L2范式会“惩罚”权重，系数lambda越大，“惩罚”后的权重就越小。在训练的时候，我们将损失函数以及正则项一起最小化：</li>
+<li>pip install git+<a href="https://github.com/Theano/Theano.git@15c90dd3#egg=Theano==0.8.git" target="_blank" rel="external">https://github.com/Theano/Theano.git@15c90dd3#egg=Theano==0.8.git</a></li>
 </ul>
-<p><img src="http://i.imgur.com/AJNPydP.png" alt=""></p>
+<p>安装keras：</p>
+<p>打开cmd，使用以下指令安装keras：</p>
 <ul>
-<li><strong>(x<sup>(t)</sup>, y<sup>(t)</sup>)</strong>表示的是第t对example –（input，target）。经典的训练方法便是SGD，通过算法的不断迭代来修改网络的参数θ：</li>
+<li>pip install keras</li>
 </ul>
-<p><img src="http://i.imgur.com/HKcUrzi.png" alt=""></p>
+<p>接下安装mingw，打开cmd，运行以下指令（<strong>需要配置环境变量</strong>，后面说）：</p>
 <ul>
-<li>其中<strong>β = (b, c)</strong>是偏置参数，<strong>ω = (W , V )</strong>是权重矩阵，epsilon是学习率。t随着迭代次数的增加而增大,直到n（训练集总数）。章节 6.4.3 会介绍反向传播如何使得梯度能够高效的进行计算。</li>
+<li>conda install mingw libpython （中间可能会卡主几次，关掉窗口重新运行指令即可）</li>
 </ul>
-<p>MLPs可以通过训练获得一个很好地非线性转换：实际上，如果有足够多的隐含层，MLPs可以表示成任意复杂但平滑的函数，他们可以作为通用的逼近器（universal approximators），6.6章节会详细介绍。这是通过组合简单的非线性变换而得到的效果。通过将原始数据非线性转换至另一个空间上，一个线性不可分的问题能变成线性可分的问题（即原来线性分类器不能有效分类，经过MLPs的非线性转换后能够使用线性分类器进行有效分类）。</p>
-<p>如图 6.2 以及 6.3 ：</p>
-<p><img src="http://i.imgur.com/GjzfkbA.png" alt=""></p>
+<p>安装<a href="https://developer.nvidia.com/cuda-downloads/" target="_blank" rel="external">cuda</a>，离线安装方式，默认安装即可</p>
+<p><strong>严格按照以上顺序安装</strong></p>
+<h2 id="u73AF_u5883_u53D8_u91CF_u8BBE_u7F6E"><a href="#u73AF_u5883_u53D8_u91CF_u8BBE_u7F6E" class="headerlink" title="环境变量设置"></a>环境变量设置</h2><p>环境变量只需要配置用户变量中的PATH，我的变量最后如下：</p>
+<pre><code>C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Users\wxm\AppData\Roaming\npm;C:\Users\wxm\AppData\Local\Programs\Git\cmd;C:\Users\wxm\AppData\Local\Programs\Git\mingw64\bin;C:\Users\wxm\AppData\Local\Programs\Git\usr\bin;C:\Anaconda2\Lib\site-packages\pip;C:\Anaconda2;C:\Anaconda2\MinGW 
+</code></pre><p>在进行第一步的时候，安装完什么软件，就配置好什么环境变量。</p>
+<h2 id="thenao_u914D_u7F6E_u6587_u4EF6_uFF1A"><a href="#thenao_u914D_u7F6E_u6587_u4EF6_uFF1A" class="headerlink" title="thenao配置文件："></a>thenao配置文件：</h2><p>在cmd窗口的路径下：如C:\Users\wxm，新建.theanorc.txt文件，填写以下内容：</p>
 <ul>
-<li>Figure 6.2： 非线性神经网络中的每一层都会非线性转换其输入，扭曲数据空间，使得任务（如分类）更容易完成。如上图所示，该网络包含2-D的输入及隐含层，还有一个1-D的输出层，上图展示了神经网络如何非线性转换2-D的输入空间，使得任务变得线性可分。</li>
+<li>[global] </li>
+<li>openmp=False </li>
+<li>device = gpu </li>
+<li>floatX = float32 </li>
+<li>allow_input_downcast=True </li>
+<li>[blas] </li>
+<li>ldflags= </li>
+<li>[gcc] </li>
+<li>cxxflags=-IC:\Anaconda2\MinGW</li>
+<li>[nvcc] </li>
+<li>flags = -LE:\Anaconda2\libs</li>
+<li>flags=-arch=sm_30</li>
+<li>compiler_bindir = C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin  </li>
+<li>fastmath = True </li>
 </ul>
-<p><strong>本篇译文系作者原创，转载前请先联系作者: 18254275587@163.com，欢迎勘误。</strong></p>
-</span>
+<h2 id="u6D4B_u8BD5"><a href="#u6D4B_u8BD5" class="headerlink" title="测试"></a>测试</h2><p>运行以下代码，若打印 using the gpu，说明配置成功</p>
+<pre><code>import theano.tensor as T
+
+import numpy
+
+import time
+
+vlen = 10 * 30 * 768  # 10 x #cores x # threads per core
+
+iters = 1000
+
+rng = numpy.random.RandomState(22)
+
+x = shared(numpy.asarray(rng.rand(vlen), config.floatX))
+
+f = function([], T.exp(x))
+
+print (f.maker.fgraph.toposort())
+
+t0 = time.time()
+
+for i in range(iters):
+
+    r = f()
+
+t1 = time.time()
+
+print (&apos;Looping %d times took&apos; % iters, t1 - t0, &apos;seconds&apos;)
+
+print (&apos;Result is&apos;, r)
+
+if numpy.any([isinstance(x.op, T.Elemwise) for x in f.maker.fgraph.toposort()]):
+
+    print (&apos;Used the cpu&apos;)
+
+else:
+
+    print (&apos;Used the gpu&apos;)
+</code></pre></span>
       
     </div>
 
@@ -295,17 +348,13 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/12/08/‎Summarize/keggle-浮游生物分类--译文（一）/" rel="next" title="kaggle-浮游生物分类比赛一等奖---译文（第一部分）">
-                <i class="fa fa-chevron-left"></i> kaggle-浮游生物分类比赛一等奖---译文（第一部分）
+              <a href="/2015/12/14/DeepLearning译文/DeepLearning--Part2--Chapter6：Feedforward-Deep-Networks（1）/" rel="next" title="DeepLearning--Part2--Chapter6：Feedforward-Deep-Networks（1）">
+                <i class="fa fa-chevron-left"></i> DeepLearning--Part2--Chapter6：Feedforward-Deep-Networks（1）
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2015/12/08/闲谈/Github部署Hexo/" rel="prev" title="Github部署Hexo">
-                Github部署Hexo <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -373,14 +422,14 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">35</span>
+              <span class="site-state-item-count">34</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
 
           <div class="site-state-item site-state-categories">
             <a href="/categories">
-              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-count">7</span>
               <span class="site-state-item-name">分类</span>
               </a>
           </div>
@@ -419,7 +468,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Part_2__3A_Deep_Networks_uFF1A_Modern_Practices"><span class="nav-number">1.</span> <span class="nav-text">Part 2 : Deep Networks： Modern Practices</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Chapter_6__uFF1A_Feedforward_Deep_Networks"><span class="nav-number">1.1.</span> <span class="nav-text">Chapter 6 ： Feedforward Deep Networks</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1__uFF1A_MLPs_from_the_1980_u2019s"><span class="nav-number">1.1.1.</span> <span class="nav-text">6.1 ： MLPs from the 1980’s</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#u4E00_3A__u8F6F_u4EF6_u5B89_u88C5_uFF08_u5B89_u88C5_u8DEF_u5F84_u5747_u9ED8_u8BA4_uFF09"><span class="nav-number">1.</span> <span class="nav-text">一: 软件安装（安装路径均默认）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u73AF_u5883_u53D8_u91CF_u8BBE_u7F6E"><span class="nav-number">2.</span> <span class="nav-text">环境变量设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#thenao_u914D_u7F6E_u6587_u4EF6_uFF1A"><span class="nav-number">3.</span> <span class="nav-text">thenao配置文件：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u6D4B_u8BD5"><span class="nav-number">4.</span> <span class="nav-text">测试</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">

@@ -49,16 +49,29 @@
 
 
 
-<meta name="description" content="-Chapter 16: Representation Learning什么是好的Representation？有很多种可能的答案，这也是一个在以后的研究中还需要进行探索的问题。在本书中，我们给Representation下的定义则是Representation Learning能够使加下来的Learning task变得更加的简单。In an unsupervised learning sett">
+<meta name="description" content="Part 2 : Deep Networks： Modern Practices本书的这部分内容主要介绍一些已经有实际应用的深度学习方法。
+深度学习拥有很长的历史，也有宏大的愿景。一些深度学习方法尚未成熟，充满野心的目标也尚未实现，这些待发展的深度学习分支将在本书的最后一部分讨论。
+这部分讨论那些早已在工业界落地，正在大规模使用的深度学习方法。
+现在的深度学习提供了的一个强有力的监督学习的框架（f">
 <meta property="og:type" content="article">
-<meta property="og:title" content="DeepLearning--Part3--Chapter16:Representation Learning(1)">
-<meta property="og:url" content="http://yoursite.com/2015/12/08/DeepLearning译文/DeepLearningPart3Chapter16RepresentationLearning1/index.html">
+<meta property="og:title" content="DeepLearning--Part2--Chapter6：Feedforward-Deep-Networks（1）">
+<meta property="og:url" content="http://yoursite.com/2015/12/14/DeepLearning译文/DeepLearning--Part2--Chapter6：Feedforward-Deep-Networks（1）/index.html">
 <meta property="og:site_name" content="Meank's Learning Blog">
-<meta property="og:description" content="-Chapter 16: Representation Learning什么是好的Representation？有很多种可能的答案，这也是一个在以后的研究中还需要进行探索的问题。在本书中，我们给Representation下的定义则是Representation Learning能够使加下来的Learning task变得更加的简单。In an unsupervised learning sett">
-<meta property="og:updated_time" content="2015-12-08T08:04:59.899Z">
+<meta property="og:description" content="Part 2 : Deep Networks： Modern Practices本书的这部分内容主要介绍一些已经有实际应用的深度学习方法。
+深度学习拥有很长的历史，也有宏大的愿景。一些深度学习方法尚未成熟，充满野心的目标也尚未实现，这些待发展的深度学习分支将在本书的最后一部分讨论。
+这部分讨论那些早已在工业界落地，正在大规模使用的深度学习方法。
+现在的深度学习提供了的一个强有力的监督学习的框架（f">
+<meta property="og:image" content="http://i.imgur.com/MEDyeRf.png">
+<meta property="og:image" content="http://i.imgur.com/AJNPydP.png">
+<meta property="og:image" content="http://i.imgur.com/HKcUrzi.png">
+<meta property="og:image" content="http://i.imgur.com/GjzfkbA.png">
+<meta property="og:updated_time" content="2015-12-13T17:50:00.754Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="DeepLearning--Part3--Chapter16:Representation Learning(1)">
-<meta name="twitter:description" content="-Chapter 16: Representation Learning什么是好的Representation？有很多种可能的答案，这也是一个在以后的研究中还需要进行探索的问题。在本书中，我们给Representation下的定义则是Representation Learning能够使加下来的Learning task变得更加的简单。In an unsupervised learning sett">
+<meta name="twitter:title" content="DeepLearning--Part2--Chapter6：Feedforward-Deep-Networks（1）">
+<meta name="twitter:description" content="Part 2 : Deep Networks： Modern Practices本书的这部分内容主要介绍一些已经有实际应用的深度学习方法。
+深度学习拥有很长的历史，也有宏大的愿景。一些深度学习方法尚未成熟，充满野心的目标也尚未实现，这些待发展的深度学习分支将在本书的最后一部分讨论。
+这部分讨论那些早已在工业界落地，正在大规模使用的深度学习方法。
+现在的深度学习提供了的一个强有力的监督学习的框架（f">
 
 
 
@@ -70,7 +83,7 @@
   };
 </script>
 
-  <title> DeepLearning--Part3--Chapter16:Representation Learning(1) | Meank's Learning Blog </title>
+  <title> DeepLearning--Part2--Chapter6：Feedforward-Deep-Networks（1） | Meank's Learning Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -190,7 +203,7 @@
             
             
               
-                DeepLearning--Part3--Chapter16:Representation Learning(1)
+                DeepLearning--Part2--Chapter6：Feedforward-Deep-Networks（1）
               
             
           </h1>
@@ -199,8 +212,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2015-12-08T16:04:59+08:00" content="2015-12-08">
-              2015-12-08
+            <time itemprop="dateCreated" datetime="2015-12-14T01:50:00+08:00" content="2015-12-14">
+              2015-12-14
             </time>
           </span>
 
@@ -209,8 +222,8 @@
               &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Deep-Learning-译文/" itemprop="url" rel="index">
-                    <span itemprop="name">Deep Learning 译文</span>
+                  <a href="/categories/Deep-Learning-translation/" itemprop="url" rel="index">
+                    <span itemprop="name">Deep Learning translation</span>
                   </a>
                 </span>
 
@@ -238,14 +251,39 @@
       
 
       
-        <span itemprop="articleBody"><h2 id="Chapter_16_3A_Representation_Learning"><a href="#Chapter_16_3A_Representation_Learning" class="headerlink" title="-Chapter 16: Representation Learning"></a>-Chapter 16: Representation Learning</h2><p>什么是好的Representation？有很多种可能的答案，这也是一个在以后的研究中还需要进行探索的问题。在本书中，我们给Representation下的定义则是Representation Learning能够使加下来的Learning task变得更加的简单。In an unsupervised learning setting, this could mean that the joint distribution of the different elements of the representation (e.g., elements of the representation vector h) is one that is easy to model (e.g., in the extreme, these elements are marginally independent of each other).但这并不够： 一个丢弃的所有信息的Representation（例如给定一个inputx，使Representation <strong>h</strong>=0）很容易建模，但是这对模型无用。因此，我们需要我们学习到的Representation既能够保留住信息的（至少能够保留住在对supervised阶段有益的信息），并且能够使得其他模型能够简单高效的从这些Representation中获取到对其有用，感兴趣的信息。</p>
-<p>在Chapter 1中，我们介绍了Representation的概念，其中有一个idea是一些Representations会比其他的要好一些（例如给图片中的目标或者语音中的音素分类）。正如Chapter 1中讨论的，表明通过优化原始数据映射到Representation的方程的这种系统性的方法，要比handcrafting要好。基于这个动机，Section 6.7讨论了如何学习到输入数据的features，学习到input的features也是现在的前向深度神经网络的一个“副作用”（Chapter 6），特别是对于supervised Learning，通过匹配的（input，target）组合，能够直接获取到提升当前task performance的Representation。</p>
-<p>本书的作者认为以后研究以及工业应用会主要集中在unsupervised learning of representation。</p>
-<p>那么，我们如何从无标签或者少数有标签的数据中挖掘出信息呢？单纯的监督算法在少量的有标签数据上学习容易造成overfit。但另一方面， 人类（或者其他动物）却能够从少量的例子（有标签数据）中学习。 这在于他们先前获取到了足够的知识， 或者依靠直觉， 以及之前的学习经验（这个更符合人类）。 我们能够从无标签数据中发现好的Representation嘛（first four section in this Chapter）？ 我们能把无标签数据和有标签数据结合起来吗（semi-supervised Section 16.3）？ 如何将相同的Representation应用在多个任务中（multi-task Section 7.12）。 What<br>if we have “training tasks” (on which enough labeled examples are available) as well as “test tasks” (not known at the time of learning the representation, and for which only very few labeled examples will be provided)? 如果test task相似， 但是train task不相似(transfer learning， domain adaptation Section 16.2), 又该如何呢？ </p>
-<h3 id="16-1__uFF1A_Greedy_Layerwise_Unsupervised_Pre-Training"><a href="#16-1__uFF1A_Greedy_Layerwise_Unsupervised_Pre-Training" class="headerlink" title="16.1 ： Greedy Layerwise Unsupervised Pre-Training"></a>16.1 ： Greedy Layerwise Unsupervised Pre-Training</h3><p>无监督学习在深度神经网络的复兴中扮演了一个很重要的历史角色， 它使得训练深度监督网络成为可能。 我们把这类流程成为unsupervised pre-training（无监督预训练）， 或者更确切的说， 贪心逐层无监督预训练， 这是这个Section的主要讨论内容。</p>
-<p>一开始深度监督网络的成功秘诀依赖于这部分提及到的一些单层的Representation Learning算法： 比如Autoencoder， RBM。 每一层都通过无监督算法进行预训练， 将上一层的输出作为输入的新Representation， 其概率分布是相似的。</p>
-<p>基于无监督训练的贪心逐层训练标准很好地克服了训练深度监督网络的困难， 这种方法可以追溯到Neocognitron(Fukushima, 1975)， 贪心逐层训练被发现可以找到训练深度监督网络的好的初始点， 在学术上， 运用这种策略打破了SVM算法的benchmark。</p>
-<p>被称为逐层是因为训练时一次只会训练一层， 训练第k层时，前面所有层的Weights会保持不变。 被称为无监督是因为每一层都是使用无监督Representation算法进行训练。 被称为贪心是因为不同层的training objective是不一样的，不同于global training objective，而global training objective会造成局部最优。  </p>
+        <span itemprop="articleBody"><h1 id="Part_2__3A_Deep_Networks_uFF1A_Modern_Practices"><a href="#Part_2__3A_Deep_Networks_uFF1A_Modern_Practices" class="headerlink" title="Part 2 : Deep Networks： Modern Practices"></a>Part 2 : Deep Networks： Modern Practices</h1><p>本书的这部分内容主要介绍一些已经有实际应用的深度学习方法。</p>
+<p>深度学习拥有很长的历史，也有宏大的愿景。一些深度学习方法尚未成熟，充满野心的目标也尚未实现，这些待发展的深度学习分支将在本书的最后一部分讨论。</p>
+<p>这部分讨论那些早已在工业界落地，正在大规模使用的深度学习方法。</p>
+<p>现在的深度学习提供了的一个强有力的监督学习的框架（framework）。通过增加layers数量以及增加layer内的单元（units）数量，一个深度网络能够表示越来越复杂的模式。一些将输入向量映射成输出向量的简单任务（比如：看图，语音），能够通过深度学习实现。而一些不能将事物简单描述为向量间关系的更复杂的任务（比如：人们要花时间思考与反思的任务），这类任务就超出了现在深度学习的范围。</p>
+<p>此部分讲述基本上所有实际应用的深度学习背后的技术–core parametric function approximation technology。包括：如何用ConVNet卷积网络处理图片数据，如何用RNN网络处理序列数据；以及一些数据预处理和网络参数设置的建议。</p>
+<p>这部分内容的章节对于那些想实现深度学习算法，去解决实际工程任务的人是很有帮助的。</p>
+<h2 id="Chapter_6__uFF1A_Feedforward_Deep_Networks"><a href="#Chapter_6__uFF1A_Feedforward_Deep_Networks" class="headerlink" title="Chapter 6 ： Feedforward Deep Networks"></a>Chapter 6 ： Feedforward Deep Networks</h2><p>前馈深度网络（Feedforward Deep Networks），也称为多层感知机（multi layer perceptrons）。他们其实是多个参数方程构成大的参数方程，其中每一个参数方程都是多输入多输出。在神经网络的术语当中，组成大参数方程的子参数方程被称为网络的一个layer，而一个子参数方程的每个标量输出被称作unit或者feature。尽管单个unit的输入到输出的转换相当简单，但是整个网络一叠加起来就变得有些复杂了。</p>
+<p>并不是所有的深度学习算法都可以理解为像前馈深层网络一样，依据于定义单个确定的的参数方程，但是layer内unit数量多，layer数量多是所用深度学习共有的特点。我们把了layer内units的数量定义为width，layer的数量定义为depth。前馈深度网络作为一个简单的例子，揭示了深度学习模型获得的许多优点来源于其depth和width的增加。前馈深度网络也是目前许多深度学习结合大数据进行商业应用的核心基础技术。</p>
+<p>在章节5，我们介绍了一些传统的机器学习算法，包括线性回归，线性分类器，逻辑回归以及核方法（kernel machines）。但是这些算法都是对给定的features作线性转换。虽然这些模型也能添加非线性，但是非线性的部分是固定不变的。也就是说，在输入x的区域是非线性的，但是在其他的一些预定义的区域又是线性的（译者理解为非线性是人为添加的，不是模型自己学习到的）。</p>
+<p>神经网络使得我们可以获得新的非线性（non-linearity）特征。换个角度看，神经网络可以将学习到的features提供给线性模型。从这个角度看，神经网络可以自己设计features–这个特性目前仍在全体研究员社区的共同努力下慢慢发展。</p>
+<h3 id="6-1__uFF1A_MLPs_from_the_1980_u2019s"><a href="#6-1__uFF1A_MLPs_from_the_1980_u2019s" class="headerlink" title="6.1 ： MLPs from the 1980’s"></a>6.1 ： MLPs from the 1980’s</h3><p>前向有监督神经网络可以说是第一个，也是最成功的一个非线性学习算法（Rumelhart et al., 1986e,c）。这类模型通常包括至少一个定义features的方程，以及一个将features映射到output的的方程（通常是线性）。网络中包含features的层通常称为隐含层（hidden layer）。称为隐含层是因为features事先是不知道的，是通过训练算法训练得到的。网络中的输入输出层则被称为可视层。Figure 6.1 给出了一个典型的MLP的结构，包含一个隐含层。而要使这个网络更深（deeper），只需简单的叠加隐含层即可。目前的一些新网络则改变了网络中的非线性函数或者训练的方法。</p>
+<p><img src="http://i.imgur.com/MEDyeRf.png" alt=""></p>
+<p>Example 6.1.1 介绍了一个浅层的MLP，Figure 6.1 是其插图。我们会在接下来的几个章节中推导MLP。</p>
+<p><strong>Example 6.1.1 ：应用于回归的浅层神经网络（Shallow Multi-Layer Neural Network for Regression）</strong></p>
+<ul>
+<li>基于上面的一些定义，现在我们可以写出从输入到输出的总方程：<strong>f<sub>θ</sub>(x) = b<sub> theta </sub> + V sigmoid(c + Wx)</strong>,其中<strong>sigmoid(a) = 1/(1 + e<sup>−a</sup>)</strong>的运算方式是element-wise，输入向量 <strong>x∈R<sup>n<sub>i</sub></sup></strong>。隐含层由<strong>h = sigmoid(c + Wx)</strong> 计算得到，包含n<sub>h</sub>个元素。网络中的总参数<strong>θ = (b, c, V ,W )</strong>，通常θ 是flatten操作后的向量形式。<strong>b ∈ <sup>n<sub>o</sub></sup></strong> ,和output层的维数(n<sub>o</sub>)一致。<strong>c ∈ <sup>n<sub>h</sub></sup></strong>，和隐含层的维数(h)一致。<strong>V ∈ R<sup>n<sub>h</sub></sup><sup>×n<sub>o</sub></sup></strong> 和 <strong>W ∈ <sup>n<sub>i</sub></sup><sup>×n<sub>h</sub></sup></strong> 是权重矩阵。</li>
+<li>典型的损失函数（loss function）是均方差（squared error）：<strong>L( ˆy, y) = ||ˆy − y||<sup>2</sup></strong> (6.2 章节会讨论如何使ˆy作为<strong>E[Y | x]</strong>的estimator)。正则项（regularizer）可以是L2范式： <strong>||ω||<sup>2</sup> = (sum{ W<sup>2</sup><sub>ij</sub>} + sum{V<sup>2</sup><sub>ij</sub>})</strong>。ω 是W和V的集合。从公式可以看出，L2范式会“惩罚”权重，系数lambda越大，“惩罚”后的权重就越小。在训练的时候，我们将损失函数以及正则项一起最小化：</li>
+</ul>
+<p><img src="http://i.imgur.com/AJNPydP.png" alt=""></p>
+<ul>
+<li><strong>(x<sup>(t)</sup>, y<sup>(t)</sup>)</strong>表示的是第t对example –（input，target）。经典的训练方法便是SGD，通过算法的不断迭代来修改网络的参数θ：</li>
+</ul>
+<p><img src="http://i.imgur.com/HKcUrzi.png" alt=""></p>
+<ul>
+<li>其中<strong>β = (b, c)</strong>是偏置参数，<strong>ω = (W , V )</strong>是权重矩阵，epsilon是学习率。t随着迭代次数的增加而增大,直到n（训练集总数）。章节 6.4.3 会介绍反向传播如何使得梯度能够高效的进行计算。</li>
+</ul>
+<p>MLPs可以通过训练获得一个很好地非线性转换：实际上，如果有足够多的隐含层，MLPs可以表示成任意复杂但平滑的函数，他们可以作为通用的逼近器（universal approximators），6.6章节会详细介绍。这是通过组合简单的非线性变换而得到的效果。通过将原始数据非线性转换至另一个空间上，一个线性不可分的问题能变成线性可分的问题（即原来线性分类器不能有效分类，经过MLPs的非线性转换后能够使用线性分类器进行有效分类）。</p>
+<p>如图 6.2 以及 6.3 ：</p>
+<p><img src="http://i.imgur.com/GjzfkbA.png" alt=""></p>
+<ul>
+<li>Figure 6.2： 非线性神经网络中的每一层都会非线性转换其输入，扭曲数据空间，使得任务（如分类）更容易完成。如上图所示，该网络包含2-D的输入及隐含层，还有一个1-D的输出层，上图展示了神经网络如何非线性转换2-D的输入空间，使得任务变得线性可分。</li>
+</ul>
+<p><strong>本篇译文系作者原创，转载前请先联系作者: 18254275587@163.com，欢迎勘误。</strong></p>
 </span>
       
     </div>
@@ -257,16 +295,16 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/12/08/闲谈/Github部署Hexo/" rel="next" title="Github部署Hexo">
-                <i class="fa fa-chevron-left"></i> Github部署Hexo
+              <a href="/2015/12/14/DeepLearning译文/DeepLearningPart3Chapter16RepresentationLearning1/" rel="next" title="DeepLearning--Part3--Chapter16:Representation Learning(1)">
+                <i class="fa fa-chevron-left"></i> DeepLearning--Part3--Chapter16:Representation Learning(1)
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2015/12/10/‎Summarize/DeepLearning/" rel="prev" title="深度学习资料汇总">
-                深度学习资料汇总 <i class="fa fa-chevron-right"></i>
+              <a href="/2015/12/14/Time/windows10/" rel="prev" title="Window10安装theano keras cuda">
+                Window10安装theano keras cuda <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -335,14 +373,14 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">35</span>
+              <span class="site-state-item-count">34</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
 
           <div class="site-state-item site-state-categories">
             <a href="/categories">
-              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-count">7</span>
               <span class="site-state-item-name">分类</span>
               </a>
           </div>
@@ -381,7 +419,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Chapter_16_3A_Representation_Learning"><span class="nav-number">1.</span> <span class="nav-text">-Chapter 16: Representation Learning</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#16-1__uFF1A_Greedy_Layerwise_Unsupervised_Pre-Training"><span class="nav-number">1.1.</span> <span class="nav-text">16.1 ： Greedy Layerwise Unsupervised Pre-Training</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Part_2__3A_Deep_Networks_uFF1A_Modern_Practices"><span class="nav-number">1.</span> <span class="nav-text">Part 2 : Deep Networks： Modern Practices</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Chapter_6__uFF1A_Feedforward_Deep_Networks"><span class="nav-number">1.1.</span> <span class="nav-text">Chapter 6 ： Feedforward Deep Networks</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1__uFF1A_MLPs_from_the_1980_u2019s"><span class="nav-number">1.1.1.</span> <span class="nav-text">6.1 ： MLPs from the 1980’s</span></a></li></ol></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
